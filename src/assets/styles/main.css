@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+/**
+ * Design tokens — Tailwind v4 inline theme.
+ * Se completará en la Etapa 1.4 con la paleta off-white/off-black + acentos vivos.
+ * Por ahora dejamos el bloque preparado para que IDE/Tailwind lo detecten.
+ */
+@theme {
+  /* placeholder — tokens definitivos en 1.4 */
+}
