@@ -1,13 +1,14 @@
 <script setup lang="ts">
-// Etapa 1.3a — placeholder. Las secciones reales llegan en Etapa 1.5.
+// Etapa 1.4c — placeholder con tokens del sistema.
+// En Etapa 1.5 esto se reescribe con <BaseSection> para Hero, About, Skills, etc.
 </script>
 
 <template>
-  <section class="min-h-screen grid place-items-center bg-neutral-950 p-8 text-neutral-50">
+  <section class="grid min-h-[70vh] place-items-center p-8">
     <div class="max-w-xl space-y-4 text-center">
-      <p class="text-xs uppercase tracking-[0.3em] text-pink-400">Home</p>
-      <h1 class="text-4xl font-bold sm:text-5xl">Princess Portfolio</h1>
-      <p class="text-neutral-400">
+      <p class="text-xs font-medium uppercase tracking-[0.3em] text-primary">Home</p>
+      <h1 class="text-4xl font-semibold sm:text-5xl">Princess Portfolio</h1>
+      <p class="text-muted-foreground">
         Aquí montaremos Hero, About, Skills, Experience, Projects, Testimonials, Blog y Contact.
       </p>
     </div>

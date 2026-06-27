@@ -6,11 +6,11 @@ const slug = String(route.params.slug)
 </script>
 
 <template>
-  <article class="min-h-screen grid place-items-center bg-neutral-950 p-8 text-neutral-50">
+  <article class="grid min-h-[70vh] place-items-center p-8">
     <div class="max-w-xl space-y-4 text-center">
-      <p class="text-xs uppercase tracking-[0.3em] text-pink-400">Post</p>
-      <h1 class="text-4xl font-bold">{{ slug }}</h1>
-      <p class="text-neutral-400">Contenido del artículo.</p>
+      <p class="text-xs font-medium uppercase tracking-[0.3em] text-primary">Post</p>
+      <h1 class="text-4xl font-semibold">{{ slug }}</h1>
+      <p class="text-muted-foreground">Contenido del artículo.</p>
     </div>
   </article>
 </template>

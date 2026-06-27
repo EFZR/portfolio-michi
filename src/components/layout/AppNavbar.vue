@@ -20,14 +20,13 @@ const items: NavItem[] = [
 const { isOpen, toggle, close } = useDisclosure()
 const route = useRoute()
 
-// Cerramos el menú móvil cada vez que cambia la ruta:
-// si el usuario hace tap en "Blog" desde el menú, queremos que se cierre solo.
+// Cerramos el menú móvil cada vez que cambia la ruta.
 watch(() => route.fullPath, close)
 </script>
 
 <template>
   <header
-    class="fixed inset-x-0 top-0 z-50 border-b border-neutral-800/60 bg-neutral-950/80 backdrop-blur"
+    class="fixed inset-x-0 top-0 z-50 border-b border-border/70 bg-background/80 backdrop-blur"
   >
     <nav
       aria-label="Principal"
@@ -35,9 +34,9 @@ watch(() => route.fullPath, close)
     >
       <RouterLink
         to="/"
-        class="text-sm font-bold uppercase tracking-[0.25em] text-neutral-50 hover:text-pink-400"
+        class="font-heading text-base font-semibold tracking-tight transition-colors hover:text-primary"
       >
-        Princess<span class="text-pink-400">.</span>
+        Princess<span class="text-primary">.</span>
       </RouterLink>
 
       <!-- Desktop nav -->
@@ -45,8 +44,8 @@ watch(() => route.fullPath, close)
         <li v-for="item in items" :key="item.to">
           <RouterLink
             :to="item.to"
-            class="text-sm text-neutral-300 transition-colors hover:text-pink-400"
-            active-class="text-pink-400"
+            class="text-sm text-muted-foreground transition-colors hover:text-primary"
+            active-class="text-primary"
           >
             {{ item.label }}
           </RouterLink>
@@ -56,7 +55,7 @@ watch(() => route.fullPath, close)
       <!-- Mobile toggle -->
       <button
         type="button"
-        class="grid h-10 w-10 place-items-center text-neutral-200 md:hidden"
+        class="grid h-10 w-10 place-items-center text-foreground md:hidden"
         :aria-expanded="isOpen"
         aria-controls="mobile-menu"
         :aria-label="isOpen ? 'Cerrar menú' : 'Abrir menú'"
@@ -91,14 +90,14 @@ watch(() => route.fullPath, close)
     <div
       v-show="isOpen"
       id="mobile-menu"
-      class="border-t border-neutral-800/60 bg-neutral-950/95 md:hidden"
+      class="border-t border-border/70 bg-background/95 md:hidden"
     >
       <ul class="mx-auto flex max-w-5xl flex-col gap-1 px-6 py-4">
         <li v-for="item in items" :key="item.to">
           <RouterLink
             :to="item.to"
-            class="block rounded-md px-3 py-2 text-base text-neutral-200 hover:bg-neutral-900 hover:text-pink-400"
-            active-class="text-pink-400"
+            class="block rounded-md px-3 py-2 text-base text-foreground transition-colors hover:bg-surface hover:text-primary"
+            active-class="text-primary"
           >
             {{ item.label }}
           </RouterLink>

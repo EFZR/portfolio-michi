@@ -25,6 +25,9 @@ export default defineConfigWithVueTs(
       '@typescript-eslint/consistent-type-imports': 'error',
       // Permite componentes single-word como App.vue, Default.vue (layouts)
       'vue/multi-word-component-names': 'off',
+      // Con TS + defineProps<Props>() la opcionalidad ya está en el tipo
+      // (id?: string), no necesitamos default explícito para props opcionales.
+      'vue/require-default-prop': 'off',
     },
   },
 )
