@@ -17,6 +17,11 @@ dist-ssr
 .env.*
 !.env.example
 
+# Defensive: never accidentally commit untracked Markdown notes from root.
+# (Tracked docs/*.md still work because they were `git add`ed explicitly.)
+/*.md
+!README.md
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
