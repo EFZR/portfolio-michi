@@ -49,7 +49,13 @@ const classes = computed(() => [
 
 <template>
   <!-- 1. Navegación interna: RouterLink (SPA, sin recarga) -->
-  <RouterLink v-if="to" :to="to" :class="classes" v-bind="$attrs">
+  <RouterLink
+    v-if="to"
+    :to="to"
+    :class="classes"
+    data-cursor="grow"
+    v-bind="$attrs"
+  >
     <slot />
   </RouterLink>
 
@@ -60,13 +66,20 @@ const classes = computed(() => [
     target="_blank"
     rel="noopener noreferrer"
     :class="classes"
+    data-cursor="grow"
     v-bind="$attrs"
   >
     <slot />
   </a>
 
   <!-- 3. Default: botón estándar -->
-  <button v-else type="button" :class="classes" v-bind="$attrs">
+  <button
+    v-else
+    type="button"
+    :class="classes"
+    data-cursor="grow"
+    v-bind="$attrs"
+  >
     <slot />
   </button>
 </template>

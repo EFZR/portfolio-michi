@@ -63,4 +63,22 @@
     background-color: var(--color-primary);
     color: var(--color-background);
   }
+
+  /**
+   * Cursor custom: la clase `.cursor-hidden` la añade el composable
+   * `useCustomCursor` al <html> SOLO cuando el dispositivo tiene mouse
+   * (@media pointer: fine). En touch el cursor del sistema se mantiene.
+   *
+   * Cubrimos descendientes y pseudo-elementos para que botones/links
+   * (que tienen `cursor: pointer` por defecto del browser) también
+   * oculten el cursor del sistema y vean solo el puntito UV.
+   */
+  @media (pointer: fine) {
+    html.cursor-hidden,
+    html.cursor-hidden *,
+    html.cursor-hidden *::before,
+    html.cursor-hidden *::after {
+      cursor: none;
+    }
+  }
 }

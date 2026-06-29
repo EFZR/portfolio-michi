@@ -34,6 +34,7 @@ watch(() => route.fullPath, close)
     >
       <RouterLink
         to="/"
+        data-cursor="grow"
         class="font-heading text-base font-semibold tracking-tight transition-colors hover:text-primary"
       >
         Princess<span class="text-primary">.</span>
@@ -44,6 +45,7 @@ watch(() => route.fullPath, close)
         <li v-for="item in items" :key="item.to">
           <RouterLink
             :to="item.to"
+            data-cursor="grow"
             class="text-sm text-muted-foreground transition-colors hover:text-primary"
             active-class="text-primary"
           >
@@ -55,6 +57,7 @@ watch(() => route.fullPath, close)
       <!-- Mobile toggle -->
       <button
         type="button"
+        data-cursor="grow"
         class="grid h-10 w-10 place-items-center text-foreground md:hidden"
         :aria-expanded="isOpen"
         aria-controls="mobile-menu"
@@ -96,6 +99,7 @@ watch(() => route.fullPath, close)
         <li v-for="item in items" :key="item.to">
           <RouterLink
             :to="item.to"
+            data-cursor="grow"
             class="block rounded-md px-3 py-2 text-base text-foreground transition-colors hover:bg-surface hover:text-primary"
             active-class="text-primary"
           >
