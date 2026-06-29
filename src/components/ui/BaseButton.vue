@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { RouterLink, type RouteLocationRaw } from 'vue-router'
 
-type ButtonVariant = 'primary' | 'secondary' | 'ghost'
+type ButtonVariant = 'primary' | 'outline' | 'ghost'
 type ButtonSize = 'sm' | 'md' | 'lg'
 
 interface Props {
@@ -22,10 +22,13 @@ const { variant = 'primary', size = 'md', to, href } = defineProps<Props>()
 defineOptions({ inheritAttrs: false })
 
 const variantClasses: Record<ButtonVariant, string> = {
+  // Acento UV — CTA principal del sitio
   primary: 'bg-primary text-background hover:bg-primary/90 focus-visible:ring-primary/40',
-  secondary:
-    'bg-secondary text-foreground hover:bg-secondary/90 focus-visible:ring-secondary/40',
-  ghost: 'bg-transparent text-foreground hover:bg-foreground/5 focus-visible:ring-foreground/30',
+  // Borde negro sobre blanco — CTA secundario serio
+  outline:
+    'bg-transparent border border-foreground text-foreground hover:bg-foreground hover:text-background focus-visible:ring-foreground/30',
+  // Sin caja, hover sutil — acciones menos prominentes
+  ghost: 'bg-transparent text-foreground hover:bg-surface focus-visible:ring-foreground/30',
 }
 
 const sizeClasses: Record<ButtonSize, string> = {

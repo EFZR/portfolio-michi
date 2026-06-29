@@ -1,44 +1,39 @@
 @import "tailwindcss";
 
 /**
- * Design tokens — Sunset Riot palette + tipografía editorial.
+ * Design tokens — paleta 60/30/10 con Ultraviolet.
+ *
+ * Regla cromática estricta:
+ *   60% blanco roto (#FAFAFA)      — lienzo dominante
+ *   30% negro roto (#0A0A0A)       — texto, estructura, divisores
+ *   10% Ultraviolet (#7C00FF)      — CTAs, links activos, highlights puntuales
  *
  * Tailwind v4 expone automáticamente cada `--color-*` y `--font-*`
  * declarado en `@theme` como utility class:
  *   --color-primary   ->  bg-primary, text-primary, border-primary, etc.
  *   --font-heading    ->  font-heading
  *
- * Nombres semánticos (no específicos al color) para que el día que
- * añadamos modo oscuro sea solo swap de valores en :root.dark.
+ * Nombres semánticos (no específicos al color) — el día que se quiera
+ * cambiar el acento, es swap de un solo valor aquí.
  */
 @theme {
-  /* Colors — Sunset Riot (light mode por defecto) */
-  --color-background: #faf4ec; /* off-white cremoso cálido — lienzo principal */
-  --color-surface: #f5eee1; /* off-white más cálido — cards, secciones elevadas */
-  --color-foreground: #1b1320; /* chocolate ciruela — texto principal */
-  --color-muted-foreground: #6b5c73; /* texto secundario / placeholders */
+  /* Colors — 60/30/10 (light por defecto) */
+  --color-background: #fafafa; /* off-white roto — NO es #FFF puro */
+  --color-surface: #f4f4f4; /* surface ligeramente más oscura — cards, citas */
+  --color-foreground: #0a0a0a; /* off-black con leve gris — NO es #000 puro */
+  --color-muted-foreground: #6b6b6b; /* texto secundario / placeholders */
+  --color-primary: #7c00ff; /* Ultraviolet — acento único */
+  --color-border: #e5e5e5; /* divisores discretos sobre off-white */
 
-  --color-primary: #ff5a4d; /* coral encendido — CTA principal, marca */
-  --color-secondary: #ff9f1c; /* naranja mandarina — highlights energéticos */
-  --color-accent: #e84393; /* magenta chicle — hover, detalles emocionales */
-  --color-soft: #c8b4ff; /* lila pastel — surfaces secundarias, citas */
-
-  --color-border: #e8decd; /* divisores discretos sobre off-white */
-
-  /* Typography — Par 1: Fraunces (display) + Inter (body) + JetBrains Mono */
+  /* Typography — Fraunces (display) + Inter (body) + JetBrains Mono */
   --font-heading: 'Fraunces', ui-serif, Georgia, serif;
   --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 
   /* Radius — extender los defaults de Tailwind con un radio "card" */
-  --radius-card: 1.25rem; /* 20px */
+  --radius-card: 1.25rem;
 }
 
-/**
- * Base layer: estilos globales aplicados al document.
- * Van en @layer base para que Tailwind los inyecte ANTES de las utilities,
- * de modo que `class="text-primary"` siempre sobrescriba estos defaults.
- */
 @layer base {
   html {
     background-color: var(--color-background);
@@ -54,8 +49,6 @@
   h4 {
     font-family: var(--font-heading);
     letter-spacing: -0.02em;
-    /* Fraunces es más "ancha" ópticamente que una sans —
-       reducimos un poco el tracking para que respire mejor */
   }
 
   code,
@@ -65,7 +58,7 @@
     font-family: var(--font-mono);
   }
 
-  /* Detalle de personalidad: selección de texto con coral */
+  /* Selección de texto pintada en Ultraviolet — sello cromático */
   ::selection {
     background-color: var(--color-primary);
     color: var(--color-background);

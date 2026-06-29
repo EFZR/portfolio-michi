@@ -1,5 +1,5 @@
 <script setup lang="ts">
-type BadgeVariant = 'default' | 'primary' | 'accent' | 'mono'
+type BadgeVariant = 'default' | 'primary' | 'mono'
 
 interface Props {
   variant?: BadgeVariant
@@ -10,7 +10,6 @@ const { variant = 'default' } = defineProps<Props>()
 const variantClasses: Record<BadgeVariant, string> = {
   default: 'bg-surface text-foreground border border-border',
   primary: 'bg-primary/10 text-primary border border-primary/20',
-  accent: 'bg-accent/10 text-accent border border-accent/20',
   mono: 'bg-foreground text-background font-mono',
 }
 </script>
