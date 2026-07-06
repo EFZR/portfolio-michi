@@ -10,7 +10,7 @@ import AppCursor from '@/components/global/AppCursor.vue'
     <AppCursor />
 
     <AppNavbar />
-    <main class="flex-1 pt-16">
+    <main class="flex-1 pt-24">
       <slot />
     </main>
     <AppFooter />

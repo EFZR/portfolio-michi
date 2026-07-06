@@ -17,7 +17,7 @@ const variantClasses: Record<BadgeVariant, string> = {
 <template>
   <span
     :class="[
-      'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium',
+      'inline-flex items-center gap-1.5 rounded-md px-3 py-1 text-xs font-medium',
       variantClasses[variant],
     ]"
   >

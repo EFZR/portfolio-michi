@@ -38,7 +38,7 @@ const sizeClasses: Record<ButtonSize, string> = {
 }
 
 const classes = computed(() => [
-  'inline-flex items-center justify-center gap-2 rounded-full font-medium',
+  'inline-flex items-center justify-center gap-2 rounded-md font-medium',
   'transition-colors duration-200',
   'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
   'disabled:pointer-events-none disabled:opacity-50',

@@ -4,11 +4,11 @@ import HeroSection from '@/components/sections/HeroSection.vue'
 
 <template>
   <!--
-    -mt-16 absorbe el pt-16 del <main> en MainLayout: el Hero ocupa
+    -mt-24 absorbe el pt-24 del <main> en MainLayout: el Hero ocupa
     el viewport completo bajo la navbar fija, sin un gap blanco arriba.
     Las próximas secciones (1.8) sí respetarán el padding natural.
   -->
-  <div class="-mt-16">
+  <div class="-mt-24">
     <HeroSection />
   </div>
 </template>
