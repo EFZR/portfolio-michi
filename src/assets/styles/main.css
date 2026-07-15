@@ -1,6 +1,17 @@
 @import 'tailwindcss';
 
 /**
+ * Fuentes self-hosted en .woff2 (convertidas de .otf con `woff2_compress`).
+ *
+ * Vite resuelve las url() relativas y las emite en `dist/assets/` con hash de
+ * contenido — cache-busting automático. `font-display: swap` evita FOIT.
+ *
+ * Los @font-face solo declaran disponibilidad; el navegador NO descarga cada
+ * peso hasta que una regla CSS los use — declararlos todos no cuesta bytes
+ * hasta uso real.
+ */
+
+/**
  * Design tokens — paleta 60/30/10 con Ultraviolet.
  *
  * Regla cromática estricta:

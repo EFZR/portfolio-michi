@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { gsap } from 'gsap'
-import { useMediaQuery, usePreferredReducedMotion } from '@vueuse/core'
+import { useMediaQuery } from '@vueuse/core'
 import { useDisclosure } from '@/composables/useDisclosure'
 import { useScrollDirection } from '@/composables/useScrollDirection'
 import AppNavDrawer from './AppNavDrawer.vue'
+import BaseLogo from '@/components/ui/BaseLogo.vue'
 
 interface NavItem {
   label: string
@@ -55,102 +55,9 @@ const isContracted = computed(() => !isAtTop.value)
  */
 const showInlineNav = computed(() => !isContracted.value && isDesktop.value)
 
-// Split de "Hablemos" para el swap por letra (misma técnica que el H1 del Hero).
-const hablemosChars = [...'Hablemos']
-// DOS copias con las mismas letras — A es la "principal" que cae al hover,
-// B es la "réplica" que baja desde arriba para reemplazarla.
-const hablemosARef = ref<HTMLElement | null>(null)
-const hablemosBRef = ref<HTMLElement | null>(null)
-const reducedMotion = usePreferredReducedMotion()
-
-function getLettersOf(el: HTMLElement | null): NodeListOf<HTMLElement> | null {
-  return el?.querySelectorAll<HTMLElement>('.hablemos-letter') ?? null
-}
-
-/**
- * Timeline reusable para hover/leave. Se construye pausado en onMounted y se
- * controla con .play() (hover in) y .reverse() (hover out). "Volver en el tiempo"
- * literalmente: reverse reproduce la animación al revés, mismos eases mirroreados.
- *
- * Estados:
- *   - Natural (t=0):     A yPercent 0    | B yPercent -120  (solo A visible)
- *   - Hover (t=final):   A yPercent 120  | B yPercent  0    (solo B visible)
- *
- * Offset de 0.25s entre A y B: A empieza a caer y B recién arranca cuando A ya
- * salió a medio camino — reduce el "cruce" en el centro del mask.
- */
-let hoverTl: gsap.core.Timeline | null = null
-
-function onHablemosEnter() {
-  if (reducedMotion.value === 'reduce') return
-  hoverTl?.play()
-}
-
-function onHablemosLeave() {
-  if (reducedMotion.value === 'reduce') return
-  hoverTl?.reverse()
-}
-
-onMounted(() => {
-  const a = getLettersOf(hablemosARef.value)
-  const b = getLettersOf(hablemosBRef.value)
-  if (!a || !b) return
-
-  // Estado natural: B siempre arranca oculta arriba del mask.
-  gsap.set(b, { yPercent: -120 })
-
-  if (reducedMotion.value === 'reduce') {
-    // A visible en su posición final, B fuera del mask. Sin animación.
-    gsap.set(a, { yPercent: 0, opacity: 1 })
-    return
-  }
-
-  // Reveal inicial de A: cae desde arriba. Delay para respirar el Hero (t=0).
-  gsap.fromTo(
-    a,
-    { yPercent: -120, opacity: 0 },
-    {
-      yPercent: 0,
-      opacity: 1,
-      duration: 0.6,
-      stagger: 0.05,
-      ease: 'power3.out',
-      delay: 0.4,
-    },
-  )
-
-  // Timeline hover: A cae 0→120, B baja -120→0. defaults.overwrite: 'auto'
-  // mata cualquier tween que colisione (ej. el reveal inicial de A si el
-  // usuario hace hover a los 0.5s de cargar la página).
-  // Offset 0.35s → aire visible entre la salida de A y la llegada de B.
-  hoverTl = gsap
-    .timeline({ paused: true, defaults: { overwrite: 'auto' } })
-    .to(
-      a,
-      {
-        yPercent: 120,
-        duration: 0.4,
-        stagger: 0.05,
-        ease: 'power2.in',
-      },
-      0,
-    )
-    .to(
-      b,
-      {
-        yPercent: 0,
-        duration: 0.4,
-        stagger: 0.05,
-        ease: 'power3.out',
-      },
-      0.35,
-    )
-})
-
-onUnmounted(() => {
-  hoverTl?.kill()
-  hoverTl = null
-})
+// La animación letter-swap del CTA "Hablemos" vive ahora dentro de
+// <BaseCtaButton> (registrado globalmente en main.ts). El navbar solo
+// se encarga del layout responsive y del wiring del avatar como slot leading.
 </script>
 
 <template>
@@ -162,39 +69,36 @@ onUnmounted(() => {
   >
     <nav aria-label="Principal" class="relative flex h-24 items-center px-6 sm:px-8 lg:px-12">
       <!--
-        LOGO (izquierda absolute por flex natural).
-        Texto plano `my Princess.` con punto final en UV — el sello cromático.
+        LOGO: SVG inline (<BaseLogo/>). El corazón es UV, la silueta hereda
+        del token `text-foreground` del propio SVG. El hover del RouterLink
+        no cambia color — el "efecto vivo" lo aporta el heartbeat interno.
       -->
       <RouterLink
         to="/"
         data-cursor="grow"
-        class="font-heading text-2xl font-medium tracking-tight text-foreground transition-colors hover:text-primary"
+        aria-label="Inicio — my Princess"
+        class="block h-14 shrink-0 py-1"
       >
-        my Princess<span class="text-primary">.</span>
+        <BaseLogo aria-label="my Princess" />
       </RouterLink>
 
       <!--
         Wrapper del nav inline / botón MENÚ.
 
-        Posicionamiento responsivo:
-          - Desktop (`isDesktop`): absolute centrado al viewport. Esto mantiene
-            el nav inline o el MENÚ siempre al centro horizontal sin importar
-            si el CTA está visible — útil porque en estado A los 3 items
-            inline tienen que respirar simétricamente al centro.
-          - Mobile (`!isDesktop`): flex child con `ml-auto` → empuja al borde
-            derecho. Como en mobile NUNCA hay nav inline (showInlineNav = false)
-            y el CTA "Hablemos" está oculto, el botón MENÚ a la derecha es el
-            patrón mobile estándar (logo izq + MENÚ der).
+        Columna central flexible (`flex-1`) que vive ENTRE el logo (izq) y el
+        CTA (der). Al ser flex-1 absorbe todo el espacio sobrante, con lo que:
+          - Desktop: `justify-center` centra el nav inline dentro del hueco
+            disponible entre logo y CTA. A diferencia del centrado al viewport
+            anterior, aquí el nav NUNCA se solapa con "Hablemos" al angostar la
+            ventana — el CTA reserva su propio ancho (`shrink-0`) y la columna
+            central se contrae con él manteniendo los items respirando al medio.
+          - Mobile: `justify-end` empuja el botón MENÚ al borde derecho (el CTA
+            está oculto), preservando el patrón mobile logo-izq + MENÚ-der.
 
         El `<Transition mode="out-in">` hace el crossfade entre los dos estados
         sin que coexistan en el DOM — evita layout shift y duplicados de aria.
       -->
-      <div
-        :class="[
-          'pointer-events-none',
-          isDesktop ? 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2' : 'ml-auto',
-        ]"
-      >
+      <div class="pointer-events-none flex flex-1 justify-end md:justify-center">
         <Transition
           mode="out-in"
           enter-active-class="transition-opacity duration-200 ease-out"
@@ -219,101 +123,78 @@ onUnmounted(() => {
             </li>
           </ul>
 
-          <button
+          <!--
+            Botón MENÚ como <BaseCtaButton> (sin `to`/`href` → renderiza un
+            <button> nativo con `type="button"`). El `@click`, `aria-expanded`,
+            `aria-controls` y la clase `pointer-events-auto` se reenvían al botón
+            real vía `$attrs` (BaseCtaButton usa `inheritAttrs: false`).
+            El icono burger/X va en el slot `leading`, ocupando el lugar que en
+            el CTA "Hablemos" tiene el avatar — misma convención para todos los
+            botones de aquí en adelante.
+          -->
+          <BaseCtaButton
             v-else
             key="menu"
-            type="button"
-            data-cursor="grow"
+            :text="isDrawerOpen ? 'Cerrar' : 'Menú'"
+            class="pointer-events-auto"
             :aria-expanded="isDrawerOpen"
             aria-controls="nav-drawer"
-            class="pointer-events-auto flex items-center gap-3 rounded-md bg-foreground px-5 py-3 text-base font-medium uppercase tracking-wider text-background transition-colors hover:bg-primary"
             @click="toggleDrawer"
           >
-            {{ isDrawerOpen ? 'Cerrar' : 'Menú' }}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              class="h-5 w-5"
-              aria-hidden="true"
-            >
-              <template v-if="!isDrawerOpen">
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="18" x2="21" y2="18" />
-              </template>
-              <template v-else>
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </template>
-            </svg>
-          </button>
+            <template #leading>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                class="h-5 w-5"
+                aria-hidden="true"
+              >
+                <template v-if="!isDrawerOpen">
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="18" x2="21" y2="18" />
+                </template>
+                <template v-else>
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </template>
+              </svg>
+            </template>
+          </BaseCtaButton>
         </Transition>
       </div>
 
       <!--
-        CTA "Hablemos" (derecha, ml-auto empuja al borde derecho).
-        Oculto en mobile: el espacio es prioritario para logo + MENÚ.
-        El drawer (1.6c) tendrá su propio CTA grande dentro.
+        CTA "Hablemos" (derecha). La columna central `flex-1` lo empuja al
+        borde derecho — no necesita `ml-auto`. `shrink-0` garantiza que el CTA
+        conserve su ancho y no invada el espacio del nav central.
+        Oculto en mobile — el espacio es prioritario para logo + MENÚ.
 
-        Patrón hover:
-          - El wrapper de la imagen transiciona bg-foreground → bg-primary (UV).
-            Como el PNG tiene transparencia, las zonas alfa dejan ver el UV → la
-            imagen queda "rodeada/sustentada" por el accent color en lugar del
-            negro. El efecto es localizado al avatar, no a toda la cápsula.
-          - El texto "Hablemos" reproduce la cascada por letra del reveal inicial:
-            cada carácter cae desde arriba (yPercent: -120 → 0) con stagger. El
-            overflow-hidden del padre sirve de máscara.
-          - `@mouseenter` y `@focus` disparan `onHablemosEnter` para replay.
-            `group` en el <RouterLink> permite que la imagen reaccione con CSS.
+        Delegamos la responsividad al wrapper (`hidden md:block`) en lugar
+        del propio CTA. Motivo: `BaseCtaButton` tiene `inline-flex` hardcoded
+        en su root; y en Tailwind `inline-flex` gana sobre `hidden` por
+        orden del CSS compilado — pasar `class="hidden md:inline-flex"` al
+        CTA no lo ocultaba en mobile. El wrapper resuelve el conflicto sin
+        tocar la API del componente.
+
+        Toda la animación letter-swap y el layout base los provee `<BaseCtaButton>`;
+        aquí solo pasamos el avatar como slot `leading` para que el bg del
+        wrapper transicione a UV en hover gracias a `group-hover:bg-primary`.
       -->
-      <RouterLink
-        to="/#contact"
-        data-cursor="grow"
-        class="group ml-auto hidden items-center gap-3 rounded-md bg-foreground py-2 pl-2 pr-5 text-base font-medium uppercase tracking-wider text-background md:flex"
-        @mouseenter="onHablemosEnter"
-        @mouseleave="onHablemosLeave"
-        @focus="onHablemosEnter"
-        @blur="onHablemosLeave"
-      >
-        <span
-          class="block h-8 w-8 overflow-hidden rounded-md bg-muted-foreground pt-0.5 transition-colors duration-300 group-hover:bg-primary"
-        >
-          <img src="/contactame.png" alt="" class="h-full w-full object-contain" />
-        </span>
-        <!--
-          Wrapper mask (overflow-hidden) contiene DOS copias splitteadas de
-          "Hablemos". La copia A está en flujo normal (block). La copia B se
-          superpone con `absolute left-0 top-0` para ocupar el mismo lugar.
-          En estado normal: A en yPercent 0 (visible), B en yPercent -120
-          (oculta por encima del mask). En cada hover/leave, se hacen swap.
-        -->
-        <span class="relative inline-block overflow-hidden leading-none">
-          <span ref="hablemosARef" class="block whitespace-nowrap">
+      <div class="hidden shrink-0 md:block">
+        <BaseCtaButton to="/#contact" text="Hablemos">
+          <template #leading>
             <span
-              v-for="(char, i) in hablemosChars"
-              :key="`a-${i}`"
-              class="hablemos-letter inline-block"
-              >{{ char }}</span
+              class="block h-8 w-8 overflow-hidden rounded-md bg-muted-foreground pt-0.5 transition-colors duration-300 group-hover:bg-primary"
             >
-          </span>
-          <span
-            ref="hablemosBRef"
-            aria-hidden="true"
-            class="absolute left-0 top-0 block whitespace-nowrap"
-          >
-            <span
-              v-for="(char, i) in hablemosChars"
-              :key="`b-${i}`"
-              class="hablemos-letter inline-block"
-              >{{ char }}</span
-            >
-          </span>
-        </span>
-      </RouterLink>
+              <img src="/contactame.png" alt="" class="h-full w-full object-contain" />
+            </span>
+          </template>
+        </BaseCtaButton>
+      </div>
     </nav>
   </header>
 

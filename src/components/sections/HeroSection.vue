@@ -172,7 +172,7 @@ onUnmounted(() => {
       Los refs individuales se mantienen para que GSAP siga animando cada uno.
     -->
     <div
-      class="absolute inset-x-4 bottom-8 z-40 flex flex-col items-center gap-2 sm:inset-x-8 sm:flex-row sm:items-end sm:justify-between"
+      class="absolute inset-x-4 bottom-8 z-40 hidden items-center gap-2 sm:inset-x-8 sm:flex flex-row sm:items-end sm:justify-between"
     >
       <div
         ref="copyRef"

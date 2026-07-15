@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { nextTick, ref, watch } from 'vue'
+import { watch } from 'vue'
 import { RouterLink } from 'vue-router'
-import { gsap } from 'gsap'
 import { onKeyStroke, useScrollLock } from '@vueuse/core'
 
 interface DrawerItem {
@@ -38,16 +37,6 @@ const items: DrawerItem[] = [
   { index: '06', label: 'Contacto', to: '/#contact' },
 ]
 
-// Refs a los <a> de cada RouterLink — necesarios para que GSAP los anime
-// individualmente con stagger. Vue 3 + v-for: usar callback refs que reciben
-// la ComponentPublicInstance de RouterLink y nos quedamos con `$el` (el <a>).
-const itemRefs = ref<HTMLElement[]>([])
-const setItemRef = (index: number) => (el: unknown) => {
-  if (!el) return
-  const domEl = (el as { $el?: HTMLElement }).$el ?? (el as HTMLElement)
-  itemRefs.value[index] = domEl
-}
-
 /**
  * Bloquea el scroll del body mientras el drawer está abierto.
  * useScrollLock devuelve un ref booleano; lo sincronizamos con `props.open`.
@@ -60,30 +49,14 @@ onKeyStroke('Escape', () => {
   if (props.open) emit('close')
 })
 
+// La entrada de los items ya NO usa GSAP: cada label ejecuta el mismo drop-in de
+// letras del hover, disparado por una @keyframes que corre sola al montarse (el
+// `v-if` remonta los items en cada apertura). Aquí solo sincronizamos el scroll
+// lock con la visibilidad del drawer.
 watch(
   () => props.open,
-  async (isOpen) => {
+  (isOpen) => {
     bodyScrollLock.value = isOpen
-    if (!isOpen) return
-
-    // Esperamos a que el v-if monte los items en el DOM.
-    await nextTick()
-
-    /**
-     * Stagger GSAP: cada item emerge desde y=40px / opacity 0 con `back.out(1.7)`.
-     * El `delay: 0.2` espera a que el overlay haya empezado a subir antes de
-     * que los items aparezcan — sino el stagger ocurre detrás del slide y se
-     * pierde visualmente. El bounce `back.out` mantiene coherencia con el
-     * efecto word-replicate del Hero.
-     */
-    gsap.from(itemRefs.value, {
-      y: 40,
-      opacity: 0,
-      duration: 0.6,
-      ease: 'back.out(1.7)',
-      stagger: 0.06,
-      delay: 0.2,
-    })
   },
 )
 </script>
@@ -121,12 +94,11 @@ watch(
           class="flex flex-1 flex-col items-center justify-center gap-3 px-6"
         >
           <RouterLink
-            v-for="(item, index) in items"
+            v-for="item in items"
             :key="item.to"
-            :ref="setItemRef(index)"
             :to="item.to"
             data-cursor="grow"
-            class="group flex items-baseline gap-3 sm:gap-4"
+            class="group flex items-baseline gap-3 transition-opacity duration-300 sm:gap-4"
             @click="emit('close')"
           >
             <!--
@@ -140,15 +112,39 @@ watch(
               {{ item.index }}
             </span>
             <!--
-              Label MASIVO: Anton uppercase, sin line-height extra para que
-              los items se apilen con tight spacing.
-              Hover: leve translate-x-2 hacia la izquierda — micro-interacción
-              que indica "este item es la selección activa del cursor".
+              Label MASIVO con letter-swap 100% CSS (mismo efecto que el CTA
+              "Hablemos", pero sin GSAP para que sea infalible en hover):
+              mask overflow-hidden con dos copias del texto splitteado en letras.
+              - swap-a: copia visible en flujo. Su `aria-label` da el nombre
+                accesible del link (las letras van aria-hidden).
+              - swap-b: copia absolute superpuesta, oculta arriba del mask.
+              El `--i` por letra genera el stagger vía transition-delay (ver CSS).
             -->
             <span
-              class="font-hero text-5xl uppercase leading-none text-foreground transition-transform duration-300 group-hover:-translate-x-2 sm:text-6xl md:text-7xl lg:text-8xl"
+              class="relative inline-block overflow-hidden font-hero text-5xl uppercase leading-none text-foreground sm:text-6xl md:text-7xl lg:text-8xl"
             >
-              {{ item.label }}
+              <span class="swap-a block whitespace-nowrap" :aria-label="item.label">
+                <span
+                  v-for="(char, i) in [...item.label]"
+                  :key="`a-${i}`"
+                  aria-hidden="true"
+                  class="swap-letter inline-block"
+                  :style="{ '--i': i }"
+                  >{{ char === ' ' ? ' ' : char }}</span
+                >
+              </span>
+              <span
+                aria-hidden="true"
+                class="swap-b absolute left-0 top-0 block whitespace-nowrap"
+              >
+                <span
+                  v-for="(char, i) in [...item.label]"
+                  :key="`b-${i}`"
+                  class="swap-letter inline-block"
+                  :style="{ '--i': i }"
+                  >{{ char === ' ' ? ' ' : char }}</span
+                >
+              </span>
             </span>
           </RouterLink>
         </nav>
@@ -174,3 +170,80 @@ watch(
     </Transition>
   </Teleport>
 </template>
+
+<style scoped>
+/*
+  ── Letter-swap (100% CSS) ──────────────────────────────────────────────────
+  Réplica del efecto de <BaseCtaButton>: la copia A (swap-a) cae y la copia B
+  (swap-b) baja desde arriba, letra por letra. El stagger sale de `--i` (índice
+  de la letra, seteado inline) multiplicado por un paso fijo en el delay.
+
+  Se hace en CSS puro a propósito: no depende de refs/timelines/timing de Vue,
+  así que dispara siempre en hover sin poder romper la apertura del drawer.
+*/
+.swap-letter {
+  transition: transform 0.4s cubic-bezier(0.5, 0, 0.2, 1);
+  transition-delay: calc(var(--i, 0) * 30ms);
+  will-change: transform;
+}
+
+/*
+  ── Entrada ─────────────────────────────────────────────────────────────────
+  Al abrir el drawer (el `v-if` remonta los items), cada letra de la copia A cae
+  a su lugar desde arriba — el MISMO gesto del hover, pero como animación de
+  entrada. Corre sola en el mount, sin delay global (arranca "en el momento");
+  solo el stagger por letra (`--i`) le da el escalonado. `backwards` mantiene la
+  letra oculta arriba durante su delay; termina en translateY(0) = estado base.
+*/
+@keyframes drawer-letter-in {
+  from {
+    transform: translateY(-110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.swap-a .swap-letter {
+  animation: drawer-letter-in 0.45s cubic-bezier(0.5, 0, 0.2, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 30ms);
+}
+
+/* B arranca oculta 120% arriba del mask overflow-hidden. */
+.swap-b .swap-letter {
+  transform: translateY(-120%);
+}
+
+/* Hover: A sale por abajo, B entra a su lugar (con un pelín más de delay = onda). */
+.group:hover .swap-a .swap-letter {
+  transform: translateY(120%);
+}
+.group:hover .swap-b .swap-letter {
+  transform: translateY(0);
+  transition-delay: calc(var(--i, 0) * 30ms + 120ms);
+}
+
+/*
+  Sibling-dim: al hoverear un item, los demás "pierden color" bajando su opacity.
+  `:has(a:hover)` detecta que algún link está hovereado; `:not(:hover)` excluye
+  al activo. El <a> del footer está FUERA del <nav>, así que no se ve afectado.
+*/
+nav:has(a:hover) a:not(:hover) {
+  opacity: 0.35;
+}
+
+/* Accesibilidad: sin swap si el usuario pide reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .swap-letter {
+    transition: none;
+  }
+  .swap-a .swap-letter {
+    animation: none;
+  }
+  .group:hover .swap-a .swap-letter {
+    transform: none;
+  }
+  .group:hover .swap-b .swap-letter {
+    transform: translateY(-120%);
+  }
+}
+</style>
