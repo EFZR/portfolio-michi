@@ -69,36 +69,43 @@ const showInlineNav = computed(() => !isContracted.value && isDesktop.value)
   >
     <nav aria-label="Principal" class="relative flex h-24 items-center px-6 sm:px-8 lg:px-12">
       <!--
+        Columna IZQUIERDA (flex-1): logo. Junto con la columna derecha (también
+        flex-1) forma un layout de 3 columnas simétrico que mantiene la columna
+        central en el CENTRO EXACTO del viewport, sin importar los anchos de
+        logo/CTA.
+
         LOGO: SVG inline (<BaseLogo/>). El corazón es UV, la silueta hereda
         del token `text-foreground` del propio SVG. El hover del RouterLink
         no cambia color — el "efecto vivo" lo aporta el heartbeat interno.
       -->
-      <RouterLink
-        to="/"
-        data-cursor="grow"
-        aria-label="Inicio — my Princess"
-        class="block h-14 shrink-0 py-1"
-      >
-        <BaseLogo aria-label="my Princess" />
-      </RouterLink>
+      <div class="flex flex-1 justify-start">
+        <RouterLink
+          to="/"
+          data-cursor="grow"
+          aria-label="Inicio — my Princess"
+          class="block h-14 shrink-0 py-1"
+        >
+          <BaseLogo aria-label="my Princess" />
+        </RouterLink>
+      </div>
 
       <!--
-        Wrapper del nav inline / botón MENÚ.
+        Columna CENTRAL (shrink-0): nav inline / botón MENÚ.
 
-        Columna central flexible (`flex-1`) que vive ENTRE el logo (izq) y el
-        CTA (der). Al ser flex-1 absorbe todo el espacio sobrante, con lo que:
-          - Desktop: `justify-center` centra el nav inline dentro del hueco
-            disponible entre logo y CTA. A diferencia del centrado al viewport
-            anterior, aquí el nav NUNCA se solapa con "Hablemos" al angostar la
-            ventana — el CTA reserva su propio ancho (`shrink-0`) y la columna
-            central se contrae con él manteniendo los items respirando al medio.
-          - Mobile: `justify-end` empuja el botón MENÚ al borde derecho (el CTA
-            está oculto), preservando el patrón mobile logo-izq + MENÚ-der.
+        Al ser una columna de ancho natural flanqueada por dos columnas `flex-1`
+        idénticas (logo izq, CTA der), queda SIEMPRE en el centro exacto del
+        viewport — sin depender de los anchos de logo/CTA (que difieren). Si la
+        ventana se angosta, las columnas laterales ceden espacio de forma
+        simétrica hasta topar con su contenido, sin que el nav se solape con el CTA.
+
+        En mobile la columna derecha (CTA) está `hidden`, así que solo quedan
+        logo (flex-1) + esta columna: el flex-1 del logo empuja el MENÚ al borde
+        derecho, preservando el patrón mobile logo-izq + MENÚ-der.
 
         El `<Transition mode="out-in">` hace el crossfade entre los dos estados
         sin que coexistan en el DOM — evita layout shift y duplicados de aria.
       -->
-      <div class="pointer-events-none flex flex-1 justify-end md:justify-center">
+      <div class="pointer-events-none shrink-0">
         <Transition
           mode="out-in"
           enter-active-class="transition-opacity duration-200 ease-out"
@@ -168,23 +175,21 @@ const showInlineNav = computed(() => !isContracted.value && isDesktop.value)
       </div>
 
       <!--
-        CTA "Hablemos" (derecha). La columna central `flex-1` lo empuja al
-        borde derecho — no necesita `ml-auto`. `shrink-0` garantiza que el CTA
-        conserve su ancho y no invada el espacio del nav central.
-        Oculto en mobile — el espacio es prioritario para logo + MENÚ.
+        Columna DERECHA (flex-1, justify-end): CTA "Hablemos". Simétrica a la
+        columna izquierda del logo → es lo que mantiene la columna central en el
+        centro exacto del viewport. `justify-end` alinea el CTA al borde derecho.
 
-        Delegamos la responsividad al wrapper (`hidden md:block`) en lugar
-        del propio CTA. Motivo: `BaseCtaButton` tiene `inline-flex` hardcoded
-        en su root; y en Tailwind `inline-flex` gana sobre `hidden` por
-        orden del CSS compilado — pasar `class="hidden md:inline-flex"` al
-        CTA no lo ocultaba en mobile. El wrapper resuelve el conflicto sin
-        tocar la API del componente.
+        `hidden md:flex` la oculta en mobile: sin ella, solo quedan logo + nav
+        central, y el flex-1 del logo empuja el MENÚ a la derecha (patrón mobile).
+        El wrapper resuelve además que `BaseCtaButton` (con `inline-flex`
+        hardcodeado) no se pueda ocultar pasándole `hidden` directamente, ya que
+        `inline-flex` gana por orden del CSS compilado.
 
         Toda la animación letter-swap y el layout base los provee `<BaseCtaButton>`;
         aquí solo pasamos el avatar como slot `leading` para que el bg del
         wrapper transicione a UV en hover gracias a `group-hover:bg-primary`.
       -->
-      <div class="hidden shrink-0 md:block">
+      <div class="hidden flex-1 justify-end md:flex">
         <BaseCtaButton to="/#contact" text="Hablemos">
           <template #leading>
             <span
