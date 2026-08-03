@@ -152,9 +152,17 @@ onUnmounted(() => {
       <!-- Capa base: fondo claro + logo latiendo + rótulos + barra.
            finish() le aplica una máscara circular creciente para revelar el Hero. -->
       <div ref="baseRef" class="absolute inset-0 bg-background">
-        <!-- Logo protagonista, centrado, con el corazón UV latiendo -->
+        <!--
+          Logo protagonista, centrado, con el corazón UV latiendo.
+          El tamaño va en el WRAPPER, no en BaseLogo: el svg ya trae `h-full
+          w-auto` internamente, así que pasarle clases de alto choca con ese
+          h-full (que gana y lo estira al alto del viewport → inmenso en móvil).
+          Un wrapper con altura fija + responsive lo controla limpiamente.
+        -->
         <div class="flex h-full items-center justify-center px-6">
-          <BaseLogo :beating="beating" aria-label="Cargando" class="h-28 w-auto sm:h-36" />
+          <div class="h-20 sm:h-28 lg:h-36">
+            <BaseLogo :beating="beating" aria-label="Cargando" />
+          </div>
         </div>
 
         <!--
