@@ -19,10 +19,15 @@ interface Props {
   /** Etiqueta accesible del SVG. Sobreescríbela si el logo va dentro de un
    *  link que ya expone su propio nombre accesible. */
   ariaLabel?: string
+  /** Fuerza el latido del corazón de forma continua, sin depender del hover.
+   *  Úsalo cuando el logo es el protagonista de una pantalla (ej. el preloader).
+   *  Respeta `prefers-reduced-motion` igual que el hover. */
+  beating?: boolean
 }
 
 withDefaults(defineProps<Props>(), {
   ariaLabel: 'my Princess',
+  beating: false,
 })
 </script>
 
@@ -33,6 +38,7 @@ withDefaults(defineProps<Props>(), {
     role="img"
     :aria-label="ariaLabel"
     class="logo group h-full w-auto overflow-visible text-foreground"
+    :class="{ 'is-beating': beating }"
   >
     <g transform="translate(-716.12436,-607)">
       <!--
@@ -88,7 +94,8 @@ withDefaults(defineProps<Props>(), {
     transform: rotate(-8deg);
   }
 
-  .logo:hover .logo__heart {
+  .logo:hover .logo__heart,
+  .logo.is-beating .logo__heart {
     animation: heartbeat 0.9s ease-in-out infinite;
   }
 }

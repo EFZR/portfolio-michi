@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { gsap } from 'gsap'
 import { usePreferredReducedMotion } from '@vueuse/core'
 import { useWordReplicate } from '@/composables/useWordReplicate'
+import { useAppReady } from '@/composables/useAppReady'
 
 const heroRef = ref<HTMLElement | null>(null)
 const gradientRef = ref<HTMLElement | null>(null)
@@ -12,6 +13,7 @@ const copyRef = ref<HTMLElement | null>(null)
 const scrollCueRef = ref<HTMLElement | null>(null)
 
 const reducedMotion = usePreferredReducedMotion()
+const { isReady } = useAppReady()
 
 // Palabras del H1 desglosadas por letra (spread preserva codepoints como "í").
 // Definidas una sola vez para no reinstanciar arrays en cada render del template.
@@ -32,6 +34,25 @@ useWordReplicate({
 })
 
 let revealTl: gsap.core.Timeline | null = null
+let stopReadyWatch: (() => void) | null = null
+
+// Construye y lanza la secuencia arriba→abajo: canvas (gradient + retrato) →
+// letras en cascada → copy/scroll cue. Se llama solo cuando la web está lista.
+function playReveal() {
+  const letters = titleRef.value?.querySelectorAll<HTMLElement>('.hero-letter') ?? []
+
+  revealTl = gsap.timeline({ defaults: { ease: 'power3.out' } })
+
+  revealTl
+    .to(gradientRef.value, { opacity: 1, duration: 0.9 }, 0)
+    .to(imageRef.value, { opacity: 1, y: 0, duration: 1.1 }, 0.05)
+    .to(letters, { yPercent: 0, opacity: 1, duration: 0.75, stagger: 0.035 }, 0.25)
+    .to(
+      [copyRef.value, scrollCueRef.value],
+      { opacity: 1, y: 0, duration: 0.6, stagger: 0.15 },
+      '-=0.35',
+    )
+}
 
 onMounted(() => {
   // Accesibilidad: si el usuario pidió reduced-motion, no animamos — todo queda
@@ -46,21 +67,25 @@ onMounted(() => {
   gsap.set([copyRef.value, scrollCueRef.value], { opacity: 0, y: 20 })
   gsap.set(gradientRef.value, { opacity: 0 })
 
-  // Secuencia arriba→abajo: canvas (gradient + retrato) → letras en cascada → copy/scroll cue.
-  revealTl = gsap.timeline({ defaults: { ease: 'power3.out' } })
-
-  revealTl
-    .to(gradientRef.value, { opacity: 1, duration: 0.9 }, 0)
-    .to(imageRef.value, { opacity: 1, y: 0, duration: 1.1 }, 0.05)
-    .to(letters, { yPercent: 0, opacity: 1, duration: 0.75, stagger: 0.035 }, 0.25)
-    .to(
-      [copyRef.value, scrollCueRef.value],
-      { opacity: 1, y: 0, duration: 0.6, stagger: 0.15 },
-      '-=0.35',
-    )
+  // Esperamos a que el AppPreloader marque la web como lista: la entrada corre
+  // fluida DESPUÉS de descargar fuentes + retrato, sin competir con su carga
+  // (lo que causaba el tirón en hard-reload). Si ya está lista (revisita a
+  // Home tras navegar), arranca de inmediato.
+  if (isReady.value) {
+    playReveal()
+  } else {
+    stopReadyWatch = watch(isReady, (ready) => {
+      if (!ready) return
+      playReveal()
+      stopReadyWatch?.()
+      stopReadyWatch = null
+    })
+  }
 })
 
 onUnmounted(() => {
+  stopReadyWatch?.()
+  stopReadyWatch = null
   revealTl?.kill()
   revealTl = null
 })
