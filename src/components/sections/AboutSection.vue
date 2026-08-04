@@ -77,7 +77,12 @@ onUnmounted(() => {
     ref="sectionRef"
     class="relative z-10 rounded-t-md bg-background shadow-[0_-24px_60px_-30px_rgba(10,10,10,0.25)]"
   >
-    <div class="mx-auto w-full max-w-6xl px-6 py-28 sm:px-8 sm:py-36">
+    <!--
+      Solo padding SUPERIOR (sin `pb`): el espacio hacia la siguiente sección lo
+      aporta el padding-top de ServicesSection. Evita el "padding duplicado"
+      (pb de esta + pt de la otra) que dejaba un hueco blanco de más.
+    -->
+    <div class="mx-auto w-full max-w-6xl px-6 pt-28 sm:px-8 sm:pt-36">
       <!-- Kicker editorial -->
       <p
         class="reveal-kicker mb-8 text-xs font-medium uppercase tracking-[0.3em] text-primary sm:mb-10"

@@ -1,16 +1,142 @@
 <script setup lang="ts">
+import { RouterLink } from 'vue-router'
+import BaseCtaButton from '@/components/ui/BaseCtaButton.vue'
+import BaseLogo from '@/components/ui/BaseLogo.vue'
+
 const year = new Date().getFullYear()
+const email = 'hola@myprincess.com'
+
+// Navegación — mismo set que el drawer (superset de la navbar).
+const navLinks = [
+  { label: 'Inicio', to: '/' },
+  { label: 'Portafolio', to: '/#projects' },
+  { label: 'Blog', to: '/blog' },
+  { label: 'Proceso', to: '/#process' },
+  { label: 'Sobre mí', to: '/#about' },
+  { label: 'Contacto', to: '/#contact' },
+]
+
+// Redes — placeholders por ahora (href '#'); se cambian por las reales luego.
+const socials = [
+  { label: 'Instagram', href: '#' },
+  { label: 'Behance', href: '#' },
+  { label: 'LinkedIn', href: '#' },
+]
+
+// Volver arriba — respeta reduced-motion vía la preferencia del navegador
+// (scroll-behavior smooth se anula solo si el usuario pidió reduce en su OS).
+function scrollTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
 </script>
 
 <template>
-  <footer class="border-t border-border text-muted-foreground">
-    <div
-      class="mx-auto flex max-w-5xl flex-col items-center justify-between gap-2 px-6 py-8 text-sm sm:flex-row"
-    >
-      <p>&copy; {{ year }} Princess Portfolio. Hecho con Vue.</p>
-      <p class="text-xs uppercase tracking-[0.2em] text-muted-foreground/70">
-        Fase 1 · maquetación
-      </p>
+  <!--
+    Footer editorial CLARO (bg-background) — cierra la página sin romper la
+    paleta. border-t marca el corte; el UV aparece solo en acentos puntuales.
+  -->
+  <footer class="border-t border-border bg-background">
+    <div class="mx-auto w-full max-w-6xl px-6 py-20 sm:px-8 sm:py-28">
+      <!--
+        Bloque CTA — el email como link protagonista (estilo portfolio) + botón
+        "Hablemos" reutilizando BaseCtaButton. Se apila en móvil, fila en sm+.
+      -->
+      <div
+        class="flex flex-col gap-8 border-b border-border pb-14 sm:flex-row sm:items-end sm:justify-between sm:gap-12"
+      >
+        <div>
+          <p class="mb-5 text-xs font-medium uppercase tracking-[0.3em] text-primary">
+            ¿Trabajamos juntas?
+          </p>
+          <a
+            :href="`mailto:${email}`"
+            data-cursor="grow"
+            class="block font-heading text-[clamp(1.75rem,6.5vw,4.25rem)] font-semibold leading-[0.95] tracking-tight text-foreground transition-colors duration-300 hover:text-primary"
+          >
+            {{ email }}
+          </a>
+        </div>
+
+        <BaseCtaButton
+          :href="`mailto:${email}`"
+          text="Hablemos"
+          size="lg"
+          class="shrink-0 self-start sm:self-auto"
+        />
+      </div>
+
+      <!-- Columnas de links -->
+      <div class="mt-14 grid grid-cols-2 gap-10 sm:grid-cols-4 sm:gap-8">
+        <!-- Navegación (ocupa 2 columnas en sm+ para respirar) -->
+        <nav aria-label="Navegación del pie" class="col-span-2">
+          <p class="mb-4 text-xs uppercase tracking-[0.2em] text-muted-foreground">Navegación</p>
+          <ul class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+            <li v-for="link in navLinks" :key="link.to">
+              <RouterLink
+                :to="link.to"
+                data-cursor="grow"
+                class="text-foreground transition-colors duration-200 hover:text-primary"
+              >
+                {{ link.label }}
+              </RouterLink>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Redes -->
+        <div>
+          <p class="mb-4 text-xs uppercase tracking-[0.2em] text-muted-foreground">Redes</p>
+          <ul class="space-y-2 text-sm">
+            <li v-for="social in socials" :key="social.label">
+              <a
+                :href="social.href"
+                target="_blank"
+                rel="noopener noreferrer"
+                data-cursor="grow"
+                class="text-foreground transition-colors duration-200 hover:text-primary"
+              >
+                {{ social.label }}
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Disponibilidad -->
+        <div>
+          <p class="mb-4 text-xs uppercase tracking-[0.2em] text-muted-foreground">Estudio</p>
+          <p class="text-sm leading-relaxed text-muted-foreground">
+            Disponible para proyectos
+            <span class="text-foreground">freelance</span> y colaboraciones.
+          </p>
+        </div>
+      </div>
+
+      <!-- Barra inferior: logo · copyright · volver arriba -->
+      <div
+        class="mt-16 flex flex-col items-center gap-6 border-t border-border pt-8 sm:flex-row sm:justify-between sm:gap-4"
+      >
+        <RouterLink to="/" aria-label="Inicio" data-cursor="grow" class="h-8">
+          <BaseLogo />
+        </RouterLink>
+
+        <p class="text-xs text-muted-foreground">
+          &copy; {{ year }} Emerson Zapata. Todos los derechos reservados.
+        </p>
+
+        <button
+          type="button"
+          data-cursor="grow"
+          class="group inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-foreground transition-colors duration-200 hover:text-primary"
+          @click="scrollTop"
+        >
+          Volver arriba
+          <span
+            aria-hidden="true"
+            class="inline-block transition-transform duration-300 group-hover:-translate-y-0.5"
+            >↑</span
+          >
+        </button>
+      </div>
     </div>
   </footer>
 </template>

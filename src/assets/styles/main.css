@@ -77,6 +77,59 @@
   }
 
   /**
+   * Scrollbar con la paleta del proyecto: pista en `surface` (gris muy claro) y
+   * thumb en Ultraviolet con forma de píldora. El `border` del mismo color de la
+   * pista deja un aire alrededor del thumb (look "inset") sin usar padding.
+   *
+   * Firefox usa las props estándar `scrollbar-color` / `scrollbar-width`;
+   * Blink/WebKit los pseudo-elementos `::-webkit-scrollbar-*`.
+   */
+  html {
+    scrollbar-color: var(--color-primary) var(--color-surface);
+    scrollbar-width: thin;
+  }
+
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-surface);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border: 3px solid var(--color-surface);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in srgb, var(--color-primary) 82%, black);
+  }
+
+  /* Esquina donde se cruzan scrollbar vertical y horizontal */
+  ::-webkit-scrollbar-corner {
+    background: var(--color-surface);
+  }
+
+  /**
+   * Desde tablet hacia abajo (< lg, 1024px) ocultamos la scrollbar por completo:
+   * en pantallas táctiles sobra la barra visible y el scroll es por gesto. En
+   * desktop (≥ 1024px) sí se muestra la versión Ultraviolet de arriba.
+   */
+  @media (max-width: 1023px) {
+    html {
+      scrollbar-width: none; /* Firefox */
+    }
+
+    ::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+  }
+
+  /**
    * Cursor custom: la clase `.cursor-hidden` la añade el composable
    * `useCustomCursor` al <html> SOLO cuando el dispositivo tiene mouse
    * (@media pointer: fine). En touch el cursor del sistema se mantiene.

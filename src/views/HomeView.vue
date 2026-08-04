@@ -2,6 +2,7 @@
 import { onMounted } from 'vue'
 import HeroSection from '@/components/sections/HeroSection.vue'
 import AboutSection from '@/components/sections/AboutSection.vue'
+import ServicesSection from '@/components/sections/ServicesSection.vue'
 
 // Al recargar la página (o entrar directo) sin hash, forzamos el arranque en el
 // Hero. Evita que el navegador/ScrollTrigger restaure una posición previa y abra
@@ -31,5 +32,6 @@ onMounted(() => {
     </div>
 
     <AboutSection />
+    <ServicesSection />
   </div>
 </template>

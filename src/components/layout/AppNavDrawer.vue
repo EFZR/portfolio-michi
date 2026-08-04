@@ -88,12 +88,18 @@ watch(
         aria-label="Menú de navegación"
         class="fixed inset-0 z-40 flex flex-col bg-primary"
       >
-        <!-- Lista de items: centrada vertical y horizontalmente -->
-        <nav
-          aria-label="Navegación principal"
-          class="flex flex-1 flex-col items-center justify-center gap-3 px-6"
-        >
-          <RouterLink
+        <!-- Lista de items: centrada, con scroll de rescate en pantallas bajas -->
+        <nav aria-label="Navegación principal" class="flex-1 overflow-y-auto">
+          <!--
+            Wrapper con min-h-full: centra los items cuando hay espacio y, cuando
+            NO caben (monitores bajos tipo 1600×900), crece y deja hacer scroll
+            sin recortar por arriba. pt-28 reserva la altura del navbar fijo
+            (h-24 = 96px) para que el primer item no choque con el botón CERRAR.
+          -->
+          <div
+            class="flex min-h-full flex-col items-center justify-center gap-2 px-6 pb-10 pt-28 sm:gap-3"
+          >
+            <RouterLink
             v-for="item in items"
             :key="item.to"
             :to="item.to"
@@ -121,7 +127,7 @@ watch(
               El `--i` por letra genera el stagger vía transition-delay (ver CSS).
             -->
             <span
-              class="relative inline-block overflow-hidden font-hero text-5xl uppercase leading-none text-foreground sm:text-6xl md:text-7xl lg:text-8xl"
+              class="drawer-label relative inline-block overflow-hidden font-hero text-5xl uppercase leading-none text-foreground sm:text-6xl md:text-7xl lg:text-8xl"
             >
               <span class="swap-a block whitespace-nowrap" :aria-label="item.label">
                 <span
@@ -146,32 +152,35 @@ watch(
                 >
               </span>
             </span>
-          </RouterLink>
+            </RouterLink>
+          </div>
         </nav>
-
-        <!--
-          Footer: copyright izquierda + email derecha.
-          border-t con foreground/20 = línea negra muy sutil sobre UV —
-          separa visualmente el footer sin ser invasiva.
-        -->
-        <footer
-          class="flex items-center justify-between border-t border-foreground/20 px-6 py-6 text-sm text-foreground sm:px-8 lg:px-12"
-        >
-          <span>©2026 my Princess.</span>
-          <a
-            href="mailto:hola@myprincess.com"
-            data-cursor="grow"
-            class="transition-opacity hover:opacity-70"
-          >
-            hola@myprincess.com
-          </a>
-        </footer>
       </div>
     </Transition>
   </Teleport>
 </template>
 
 <style scoped>
+/*
+  ── Ajuste por ALTURA (solo pantallas bajas) ───────────────────────────────
+  En monitores altos la letra conserva su tamaño original (clases Tailwind del
+  span). Cuando el viewport es BAJO (ej. monitor 1600×900, cuyo alto útil ronda
+  ~770px tras la barra del navegador), los 6 items de 6rem no caben junto a la
+  reserva del navbar y aparecía scroll. Aquí encogemos la letra lo justo para
+  que quepan sin scroll. `!important` asegura ganarle a las clases del span sin
+  depender del orden de la hoja de estilos.
+*/
+@media (max-height: 800px) {
+  .drawer-label {
+    font-size: 4.5rem !important; /* ~text-7xl */
+  }
+}
+@media (max-height: 650px) {
+  .drawer-label {
+    font-size: 3.25rem !important;
+  }
+}
+
 /*
   ── Letter-swap (100% CSS) ──────────────────────────────────────────────────
   Réplica del efecto de <BaseCtaButton>: la copia A (swap-a) cae y la copia B
