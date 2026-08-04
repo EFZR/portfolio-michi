@@ -154,7 +154,7 @@ onUnmounted(() => {
       -->
       <h2
         aria-label="Tu próxima gran historia comienza aquí"
-        class="font-heading text-[clamp(2rem,10.5vw,13rem)] font-semibold leading-[1.02] tracking-tight text-foreground"
+        class="font-heading text-[clamp(1.75rem,9.5vw,13rem)] font-semibold leading-[1.02] tracking-tight text-foreground"
       >
         <span aria-hidden="true">
           <!-- Línea 1 -->
@@ -167,7 +167,7 @@ onUnmounted(() => {
             </span>
           </span>
           <!-- Línea 2 — sangría media -->
-          <span class="flex flex-wrap gap-x-[0.28em] ps-[8vw]">
+          <span class="flex flex-wrap gap-x-[0.28em] ps-[6vw] sm:ps-[8vw]">
             <span class="mt-[-0.6em] inline-block overflow-hidden pt-[0.6em] pb-[0.12em]">
               <span class="intro-word inline-block">gran</span>
             </span>
@@ -176,7 +176,7 @@ onUnmounted(() => {
             </span>
           </span>
           <!-- Línea 3 — sangría mayor, remata en "aquí" -->
-          <span class="flex flex-wrap gap-x-[0.28em] ps-[16vw]">
+          <span class="flex flex-wrap gap-x-[0.28em] ps-[12vw] sm:ps-[16vw]">
             <span class="mt-[-0.6em] inline-block overflow-hidden pt-[0.6em] pb-[0.12em]">
               <span class="intro-word inline-block">comienza</span>
             </span>
