@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import BaseContainer from '@/components/ui/BaseContainer.vue'
 import BaseCtaButton from '@/components/ui/BaseCtaButton.vue'
 import BaseLogo from '@/components/ui/BaseLogo.vue'
 
 const year = new Date().getFullYear()
-const email = 'hola@myprincess.com'
+const email = 'karolmpalmam@gmail.com'
 
 // Navegación — mismo set que el drawer (superset de la navbar).
 const navLinks = [
@@ -36,7 +37,13 @@ function scrollTop() {
     paleta. border-t marca el corte; el UV aparece solo en acentos puntuales.
   -->
   <footer class="border-t border-border bg-background">
-    <div class="mx-auto w-full max-w-6xl px-6 py-20 sm:px-8 sm:py-28">
+    <!--
+      El footer va CONTENIDO (size="wide", tope ~1280px centrado), no full-bleed:
+      su contenido (CTA + columnas + barra inferior) se dispersaba con huecos
+      enormes en desktop al ir edge-to-edge. Sigue usando el mismo gutter, así que
+      en móvil respeta los márgenes del contenedor estándar.
+    -->
+    <BaseContainer size="wide" class="py-20 sm:py-28">
       <!--
         Bloque CTA — el email como link protagonista (estilo portfolio) + botón
         "Hablemos" reutilizando BaseCtaButton. Se apila en móvil, fila en sm+.
@@ -46,7 +53,7 @@ function scrollTop() {
       >
         <div>
           <p class="mb-5 text-xs font-medium uppercase tracking-[0.3em] text-primary">
-            ¿Trabajamos juntas?
+            ¿Trabajamos juntos?
           </p>
           <a
             :href="`mailto:${email}`"
@@ -137,6 +144,6 @@ function scrollTop() {
           >
         </button>
       </div>
-    </div>
+    </BaseContainer>
   </footer>
 </template>

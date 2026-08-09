@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import BaseContainer from './BaseContainer.vue'
 
-type SectionSize = 'narrow' | 'default' | 'wide'
+type SectionSize = 'bleed' | 'wide' | 'default' | 'narrow'
 
 interface Props {
   /** id semántico para anclas — la navbar enlaza a /#about, /#projects, etc. */
@@ -10,11 +10,11 @@ interface Props {
   eyebrow?: string
   /** H2 de la sección (solo el Hero usa H1) */
   title?: string
-  /** se pasa al BaseContainer interno */
+  /** se pasa al BaseContainer interno — full-bleed por defecto */
   size?: SectionSize
 }
 
-const { id, eyebrow, title, size = 'default' } = defineProps<Props>()
+const { id, eyebrow, title, size = 'bleed' } = defineProps<Props>()
 </script>
 
 <template>

@@ -3,6 +3,7 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { usePreferredReducedMotion } from '@vueuse/core'
+import BaseContainer from '@/components/ui/BaseContainer.vue'
 
 // ScrollTrigger vive dentro del paquete `gsap`. Registro idempotente a nivel módulo.
 gsap.registerPlugin(ScrollTrigger)
@@ -43,6 +44,37 @@ const services = [
   },
 ] as const
 
+/**
+ * Geometría del apilado (sticky stacking). Se usa TANTO en el template (posición
+ * `top` de cada card) COMO en el script (punto de anclaje donde termina el
+ * encogido) → constantes compartidas para que nunca se desincronicen.
+ *   STACK_TOP_REM  → anclaje de la 1ª card (libra la navbar fija de 6rem)
+ *   STACK_STEP_REM → cuánto baja el anclaje por índice = "asomo" entre cards
+ *   STACK_DEPTH    → cuánto encoge cada card por nivel de profundidad (falso 3D)
+ */
+const STACK_TOP_REM = 6.5
+const STACK_STEP_REM = 2.75
+const STACK_DEPTH = 0.06
+
+/**
+ * Estilo sticky de cada card:
+ *  · `top` escalonado por índice → asomo del mazo durante el apilado.
+ *  · `margin-bottom` escalonado INVERSO al índice → al llegar al fondo del
+ *    contenedor, el sticky deja de clavar las cards en su `top` y las empuja
+ *    hacia arriba. Con este margen, `top + margin-bottom` es CONSTANTE para
+ *    todas, así que se "despegan" a la vez y el mazo sube RÍGIDO manteniendo el
+ *    fan — las de atrás nunca quedan tapadas por la del frente al salir. Sin el
+ *    margen, todas colapsaban contra el fondo del contenedor y la del frente
+ *    ocultaba a las demás.
+ */
+function cardStyle(i: number) {
+  const depthFromFront = services.length - 1 - i
+  return {
+    top: `${STACK_TOP_REM + i * STACK_STEP_REM}rem`,
+    marginBottom: `${depthFromFront * STACK_STEP_REM}rem`,
+  }
+}
+
 onMounted(() => {
   const section = sectionRef.value
   if (!section) return
@@ -51,57 +83,10 @@ onMounted(() => {
   // texto visible — el markup ya está en su estado final, no ocultamos nada.
   if (reducedMotion.value === 'reduce') return
 
-  // 0. INTRO — la frase "…nace aquí" entra en cascada palabra por palabra desde
-  //    su máscara. El "aquí" (callback del Hero) remata con un pop sutil.
-  const introWords = section.querySelectorAll<HTMLElement>('.intro-word')
-  if (introWords.length) {
-    const introTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: section,
-        start: 'top 72%',
-        toggleActions: 'play none none reverse',
-      },
-    })
-    introTl.from(introWords, {
-      yPercent: 120,
-      duration: 0.85,
-      stagger: 0.09,
-      ease: 'power4.out',
-    })
-    const accent = section.querySelector<HTMLElement>('.intro-accent')
-    if (accent) {
-      introTl.to(
-        accent,
-        { scale: 1.08, duration: 0.18, yoyo: true, repeat: 1, ease: 'power1.inOut' },
-        '>-0.1',
-      )
-    }
-    timelines.push(introTl)
-    if (introTl.scrollTrigger) triggers.push(introTl.scrollTrigger)
-  }
-
   const cards = section.querySelectorAll<HTMLElement>('.service-card')
 
-  cards.forEach((card) => {
-    // 1. SCALE ON SCROLL — la tarjeta entra al 88% y escala a 100% ligada al
-    //    scroll (`scrub`): crece a medida que sube por el viewport.
-    const scaleTween = gsap.fromTo(
-      card,
-      { scale: 0.94 },
-      {
-        scale: 1,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: card,
-          start: 'top 92%',
-          end: 'top 45%',
-          scrub: true,
-        },
-      },
-    )
-    if (scaleTween.scrollTrigger) triggers.push(scaleTween.scrollTrigger)
-
-    // 2. REVEAL del pie — las tres leyendas suben con un stagger ligero al
+  cards.forEach((card, i) => {
+    // 1. REVEAL del pie — las tres leyendas suben con un stagger ligero al
     //    entrar la tarjeta. Aparición suave del contenido.
     const lines = card.querySelectorAll<HTMLElement>('.service-line')
     if (lines.length) {
@@ -122,6 +107,35 @@ onMounted(() => {
       timelines.push(tl)
       if (tl.scrollTrigger) triggers.push(tl.scrollTrigger)
     }
+
+    // 2. APILADO "FALSO 3D" — cada tarjeta es `sticky` (ver template) y se ancla
+    //    cerca del top; la SIGUIENTE sube y la cubre. Al ser cubierta, la de
+    //    atrás se ENCOGE desde su borde superior (origin-top) ligado al scroll.
+    //
+    //    Escala GRADUADA por profundidad: la más honda (más cards encima) queda
+    //    la más pequeña y cada nivel hacia el frente un poco más grande → falso
+    //    3D real (antes todas iban a 0.9 y se veían del mismo tamaño). La última
+    //    no se encoge (scale 1, al frente).
+    //
+    //    El encogido TERMINA justo cuando la card que la cubre llega a su anclaje
+    //    (`end` = top de esa card), no arrastrado hasta el spacer → el mazo
+    //    "termina de apilarse" en el momento en que se cubre.
+    if (i < cards.length - 1) {
+      const depth = cards.length - 1 - i // cuántas cards se apilarán encima
+      const finalScale = 1 - depth * STACK_DEPTH
+      const coverTopPx = (STACK_TOP_REM + (i + 1) * STACK_STEP_REM) * 16
+      const shrink = gsap.to(card, {
+        scale: finalScale,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: cards[i + 1],
+          start: 'top bottom',
+          end: `top ${coverTopPx}px`,
+          scrub: true,
+        },
+      })
+      if (shrink.scrollTrigger) triggers.push(shrink.scrollTrigger)
+    }
   })
 
   // El retrato del Hero carga async y desplaza el layout → recalculamos triggers.
@@ -138,89 +152,58 @@ onUnmounted(() => {
 
 <template>
   <!--
-    Panel "Servicios" FULL-WIDTH — rompe el contenedor centrado de las demás
-    secciones y va casi pegado a los bordes (px mínimo). Continúa la "hoja" clara
-    por encima del Hero sticky (relative z-10 + bg-background).
+    Panel "Servicios" FULL-BLEED — usa el BaseContainer estándar en modo `bleed`:
+    edge-to-edge con el gutter mínimo (px-2 sm:px-4) compartido por todo el
+    proyecto. Continúa la "hoja" clara por encima del Hero sticky
+    (relative z-10 + bg-background).
+
+    `pt` mínimo (no py grande): esta sección FLUYE directamente desde About
+    (mismo bg-background, sin costura visible) — el aire superior lo da el cue
+    "desliza" de About. La primera tarjeta "asoma desde abajo" (ver script) para
+    tirar del scroll hacia el catálogo. `pb` normal cierra hacia el footer.
   -->
-  <section id="services" ref="sectionRef" class="relative z-10 bg-background py-24 sm:py-32">
-    <!-- Cabecera editorial full-bleed: px mínimo como las tarjetas -->
-    <div class="mb-14 px-2 sm:mb-20 sm:px-4">
+  <section
+    id="services"
+    ref="sectionRef"
+    class="relative z-10 bg-background pt-6 pb-24 sm:pt-8 sm:pb-32"
+  >
+    <BaseContainer size="bleed">
       <!--
-        Frase de intro escalonada en tres líneas con sangría creciente, cerrando
-        en "aquí" como callback del Hero (mismo font-heading italic text-primary).
-        Cada palabra vive en una máscara overflow-hidden y sube en cascada al
-        entrar la sección (.intro-word). aria-label da la frase completa; las
-        líneas van aria-hidden.
+        Tarjetas edge-to-edge que se APILAN (sticky stacking). Contenedor en
+        flujo normal (sin gap): cada card se ancla cerca del top y la siguiente
+        sube y la cubre. El `top` se escalona por índice (i * 1.5rem) desde una
+        base que libra la navbar fija (6rem) → las cards previas asoman por
+        arriba. `origin-top` hace que al encogerse (script) el borde superior
+        quede fijo y se conserve ese asomo. z-order natural (DOM) pone la última
+        al frente.
       -->
-      <h2
-        aria-label="Tu próxima gran historia comienza aquí"
-        class="font-heading text-[clamp(1.75rem,9.5vw,13rem)] font-semibold leading-[1.02] tracking-tight text-foreground"
-      >
-        <span aria-hidden="true">
-          <!-- Línea 1 -->
-          <span class="flex flex-wrap gap-x-[0.28em]">
-            <span class="mt-[-0.6em] inline-block overflow-hidden pt-[0.6em] pb-[0.12em]">
-              <span class="intro-word inline-block">Tu</span>
-            </span>
-            <span class="mt-[-0.6em] inline-block overflow-hidden pt-[0.6em] pb-[0.12em]">
-              <span class="intro-word inline-block">próxima</span>
-            </span>
-          </span>
-          <!-- Línea 2 — sangría media -->
-          <span class="flex flex-wrap gap-x-[0.28em] ps-[6vw] sm:ps-[8vw]">
-            <span class="mt-[-0.6em] inline-block overflow-hidden pt-[0.6em] pb-[0.12em]">
-              <span class="intro-word inline-block">gran</span>
-            </span>
-            <span class="mt-[-0.6em] inline-block overflow-hidden pt-[0.6em] pb-[0.12em]">
-              <span class="intro-word inline-block">historia</span>
-            </span>
-          </span>
-          <!-- Línea 3 — sangría mayor, remata en "aquí" -->
-          <span class="flex flex-wrap gap-x-[0.28em] ps-[12vw] sm:ps-[16vw]">
-            <span class="mt-[-0.6em] inline-block overflow-hidden pt-[0.6em] pb-[0.12em]">
-              <span class="intro-word inline-block">comienza</span>
-            </span>
-            <!--
-              "aquí" va en itálica: la inclinación desborda por la DERECHA (la
-              tilde de la Í mayúscula), así que la máscara le añade pe (padding
-              inline-end) extra para no recortarla. Al ser la última palabra de
-              la línea, el padding se extiende en espacio vacío sin mover nada.
-            -->
-            <span class="mt-[-0.6em] inline-block overflow-hidden pt-[0.6em] pb-[0.12em] pe-[0.6em]">
-              <span class="intro-word intro-accent inline-block italic text-primary uppercase">aquí</span>
-            </span>
-          </span>
-        </span>
-      </h2>
-    </div>
+      <div class="relative">
+        <article
+          v-for="(service, i) in services"
+          :key="service.id"
+          data-cursor="grow"
+          :style="cardStyle(i)"
+          class="service-card group sticky min-h-[48vh] w-full origin-top overflow-hidden rounded-md bg-surface shadow-[0_-14px_44px_-18px_rgba(10,10,10,0.5)] sm:min-h-[58vh]"
+        >
+          <!-- Imagen de fondo (mockup placeholder) cubriendo toda la tarjeta -->
+          <img
+            :src="service.image"
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          />
 
-    <!-- Tarjetas edge-to-edge (px mínimo), apiladas al 100% del ancho -->
-    <div class="flex flex-col gap-3 px-2 sm:gap-4 sm:px-4">
-      <article
-        v-for="service in services"
-        :key="service.id"
-        data-cursor="grow"
-        class="service-card group relative min-h-[48vh] w-full origin-center overflow-hidden rounded-md bg-surface sm:min-h-[58vh]"
-      >
-        <!-- Imagen de fondo (mockup placeholder) cubriendo toda la tarjeta -->
-        <img
-          :src="service.image"
-          alt=""
-          aria-hidden="true"
-          loading="lazy"
-          class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-        />
-
-        <!--
+          <!--
           Scrim inferior permanente: garantiza legibilidad del pie sobre
           cualquier imagen, exista o no el hover. from-foreground/85 (off-black).
         -->
-        <div
-          aria-hidden="true"
-          class="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-foreground/85 via-foreground/40 to-transparent"
-        />
+          <div
+            aria-hidden="true"
+            class="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-foreground/85 via-foreground/40 to-transparent"
+          />
 
-        <!--
+          <!--
           Pie de la tarjeta. Comportamiento hover distinto por dispositivo:
           · Con cursor (@media hover:hover, lo que Tailwind usa en `group-hover`):
             la descripción está oculta y se revela al hover; el overlay UV sube.
@@ -228,54 +211,64 @@ onUnmounted(() => {
             muestra siempre; la caja del título se resalta al tap (:active).
           z-20 sobre la imagen; el bloque gana un drop-shadow sutil al hover.
         -->
-        <div
-          class="absolute inset-x-0 bottom-0 z-20 overflow-hidden p-6 transition-[filter] duration-500 group-hover:filter-[drop-shadow(0_2px_16px_rgba(10,10,10,0.35))] sm:p-8"
-        >
-          <!--
+          <div
+            class="absolute inset-x-0 bottom-0 z-20 overflow-hidden p-6 transition-[filter] duration-500 group-hover:filter-[drop-shadow(0_2px_16px_rgba(10,10,10,0.35))] sm:p-8"
+          >
+            <!--
             Overlay UV — como fondo del propio pie: cubre TODO el bloque de
             leyendas. Sube en hover (solo cursor, `group-hover` ya va gateado por
             @media hover:hover) y queda por debajo del texto (z-0), resaltándolo.
           -->
-          <div
-            aria-hidden="true"
-            class="absolute inset-0 z-0 translate-y-full bg-primary transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-0"
-          />
+            <div
+              aria-hidden="true"
+              class="absolute inset-0 z-0 translate-y-full bg-primary transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-0"
+            />
 
-          <div class="relative z-10">
-            <!--
+            <div class="relative z-10">
+              <!--
               Título con CAJA de resaltado: aparece al hover (cursor) o al tap
               (:active, para táctil). -mx-2 px-2 alinea el texto con las leyendas
               cuando la caja está oculta.
             -->
-            <h3
-              class="service-line font-heading text-4xl font-semibold leading-none tracking-tight sm:text-6xl"
-            >
-              <span
-                class="-mx-2 inline-block rounded-md px-2 py-0.5 text-background transition-colors duration-500 group-hover:bg-background/20 group-active:bg-background/20"
-                >{{ service.title }}</span
+              <h3
+                class="service-line font-heading text-4xl font-semibold leading-none tracking-tight sm:text-6xl"
               >
-            </h3>
+                <span
+                  class="-mx-2 inline-block rounded-md px-2 py-0.5 text-background transition-colors duration-500 group-hover:bg-background/20 group-active:bg-background/20"
+                  >{{ service.title }}</span
+                >
+              </h3>
 
-            <!-- Leyenda secundaria 1 — siempre visible (eco del "pill") -->
-            <p
-              class="service-line mt-3 text-sm font-medium uppercase tracking-[0.15em] text-background/90 sm:text-base"
-            >
-              {{ service.tagline }}
-            </p>
+              <!-- Leyenda secundaria 1 — siempre visible (eco del "pill") -->
+              <p
+                class="service-line mt-3 text-sm font-medium uppercase tracking-[0.15em] text-background/90 sm:text-base"
+              >
+                {{ service.tagline }}
+              </p>
 
-            <!--
+              <!--
               Leyenda secundaria 2 — oculta por defecto; se revela al hover con
               cursor. En táctil (@media hover:none) se muestra siempre, porque
               ahí no hay hover que la revele.
             -->
-            <p
-              class="mt-1.5 max-w-md translate-y-2 text-sm leading-relaxed text-background/80 opacity-0 transition duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100 sm:text-base"
-            >
-              {{ service.detail }}
-            </p>
+              <p
+                class="mt-1.5 max-w-md translate-y-2 text-sm leading-relaxed text-background/80 opacity-0 transition duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100 sm:text-base"
+              >
+                {{ service.detail }}
+              </p>
+            </div>
           </div>
-        </div>
-      </article>
-    </div>
+        </article>
+
+        <!--
+          Spacer: recorrido extra DENTRO del contenedor sticky para que la ÚLTIMA
+          card también alcance a anclarse y cubrir a las demás, y para que el mazo
+          completo se sostenga a la vista un momento antes de soltarse hacia el
+          footer. Sin él, la última no tiene espacio para apilarse. Ajusta la
+          altura para alargar/acortar ese "hold". Decorativo → aria-hidden.
+        -->
+        <div class="h-[45vh] sm:h-[55vh]" aria-hidden="true"></div>
+      </div>
+    </BaseContainer>
   </section>
 </template>
