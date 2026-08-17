@@ -55,6 +55,22 @@
     text-rendering: optimizeLegibility;
   }
 
+  /**
+   * Guardia global anti scroll horizontal: en pantallas chicas/tablet alguna
+   * capa parallax/tipográfica edge-to-edge desbordaba unos px y aparecía scroll
+   * horizontal → al poder scrollear a la derecha se veía una franja blanca fea
+   * al costado del Hero. El scroll horizontal vive en `html` (el root scroller),
+   * por eso el clip DEBE ir también aquí, no solo en `body`.
+   *
+   * `overflow-x: clip` recorta ese desborde SIN crear un contenedor de scroll →
+   * a diferencia de `hidden`, NO rompe el `position: sticky` del Hero (HomeView)
+   * ni el scroll vertical (overflow-y sigue visible).
+   */
+  html,
+  body {
+    overflow-x: clip;
+  }
+
   h1,
   h2,
   h3,
@@ -138,12 +154,12 @@
    * (que tienen `cursor: pointer` por defecto del browser) también
    * oculten el cursor del sistema y vean solo el puntito UV.
    */
-  @media (pointer: fine) {
-    html.cursor-hidden,
-    html.cursor-hidden *,
-    html.cursor-hidden *::before,
-    html.cursor-hidden *::after {
-      cursor: none;
-    }
-  }
+  /* @media (pointer: fine) { */
+  /*   html.cursor-hidden, */
+  /*   html.cursor-hidden *, */
+  /*   html.cursor-hidden *::before, */
+  /*   html.cursor-hidden *::after { */
+  /*     cursor: none; */
+  /*   } */
+  /* } */
 }

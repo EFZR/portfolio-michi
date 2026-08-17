@@ -7,6 +7,11 @@ export interface UseCustomCursorReturn {
   y: Ref<number>
   /** Escala del cursor — 1 normal, ~2.5 sobre elementos con data-cursor="grow" */
   scale: Ref<number>
+  /**
+   * true mientras el puntero está sobre un elemento interactivo
+   * (`data-cursor="grow"`). Dispara el morph círculo → corazón + latido.
+   */
+  isHovering: Ref<boolean>
   /** Solo true en dispositivos con mouse (pointer: fine). En touch queda false. */
   isEnabled: Ref<boolean>
 }
@@ -28,6 +33,7 @@ export function useCustomCursor(): UseCustomCursorReturn {
   const x = ref(0)
   const y = ref(0)
   const scale = ref(1)
+  const isHovering = ref(false)
   const isEnabled = ref(false)
 
   let rafId: number | null = null
@@ -56,6 +62,7 @@ export function useCustomCursor(): UseCustomCursorReturn {
     const target = e.target as HTMLElement | null
     if (target?.closest?.('[data-cursor="grow"]')) {
       scale.value = 2.5
+      isHovering.value = true
     }
   })
 
@@ -63,6 +70,7 @@ export function useCustomCursor(): UseCustomCursorReturn {
     const target = e.target as HTMLElement | null
     if (target?.closest?.('[data-cursor="grow"]')) {
       scale.value = 1
+      isHovering.value = false
     }
   })
 
@@ -81,5 +89,5 @@ export function useCustomCursor(): UseCustomCursorReturn {
     document.documentElement.classList.remove('cursor-hidden')
   })
 
-  return { x, y, scale, isEnabled }
+  return { x, y, scale, isHovering, isEnabled }
 }

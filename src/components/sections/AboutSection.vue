@@ -21,6 +21,9 @@ const reducedMotion = usePreferredReducedMotion()
 const triggers: ScrollTrigger[] = []
 const timelines: gsap.core.Timeline[] = []
 const tweens: gsap.core.Tween[] = []
+// Tween "vivo" del cue: se recrea en cada pico de velocidad de scroll (devuelve
+// el timeScale del giro del badge a 1) y se guarda aparte para matarlo en cleanup.
+let cueLiveTween: gsap.core.Tween | null = null
 
 onMounted(() => {
   const section = sectionRef.value
@@ -108,26 +111,69 @@ onMounted(() => {
     })
   }
 
-  // 5. CUE DE SCROLL — puente hacia los servicios. La línea UV se DIBUJA al
-  //    entrar (scaleY 0→1) y la flecha hace un bob infinito: invitación a bajar.
-  //    Todo el bloque se desvanece al scrollear más allá (autoAlpha ligado al
-  //    scroll) para no quedar flotando sobre las tarjetas.
+  // 5. CUE DE SCROLL — puente hacia los servicios, resuelto como BADGE GIRATORIO:
+  //    la línea UV se DIBUJA al entrar; el badge (aro concéntrico + texto circular
+  //    "DESLIZA · SCROLL") gira en bucle y su velocidad REACCIONA al scroll
+  //    (timeScale ligado a la velocidad, easado de vuelta a 1). La flecha central
+  //    late/bob con glow neón. Con el cursor, el badge se inclina en 3D
+  //    (rotationX/Y sobre la perspectiva del wrapper). Se desvanece al pasar.
   const cue = section.querySelector<HTMLElement>('.scroll-cue')
-  const cueLine = section.querySelector<HTMLElement>('.cue-line')
+  const badge = section.querySelector<HTMLElement>('.cue-badge')
   const cueArrow = section.querySelector<HTMLElement>('.cue-arrow')
-  if (cueLine) {
-    const draw = gsap.from(cueLine, {
-      scaleY: 0,
-      ease: 'none',
-      scrollTrigger: { trigger: cueLine, start: 'top 92%', end: 'top 62%', scrub: 0.5 },
+
+  // Giro continuo del badge + reacción al scroll. Recorremos rotation Z en bucle
+  // lineal; la velocidad de scroll modula el `timeScale` del tween (más rápido, o
+  // negativo = invierte). Cada pico supera al anterior y se easea de vuelta a 1 →
+  // el badge "acelera" al scrollear y desacelera suave al frenar.
+  if (badge) {
+    const spin = gsap.to(badge, { rotation: 360, duration: 16, ease: 'none', repeat: -1 })
+    tweens.push(spin)
+
+    const proxy = { ts: 1 }
+    const clampBoost = gsap.utils.clamp(-5, 9)
+    const react = ScrollTrigger.create({
+      trigger: section,
+      start: 'top bottom',
+      end: 'bottom top',
+      onUpdate: (self) => {
+        const target = 1 + clampBoost(self.getVelocity() / 180)
+        if (Math.abs(target - 1) > Math.abs(proxy.ts - 1)) {
+          proxy.ts = target
+          spin.timeScale(target)
+          cueLiveTween?.kill()
+          cueLiveTween = gsap.to(proxy, {
+            ts: 1,
+            duration: 1,
+            ease: 'power3',
+            onUpdate: () => spin.timeScale(proxy.ts),
+          })
+        }
+      },
     })
-    if (draw.scrollTrigger) triggers.push(draw.scrollTrigger)
+    triggers.push(react)
+
+    // Tilt 3D con el cursor. rotationX/Y son ejes distintos al giro Z → coexisten
+    // sin pelea. La perspectiva la aporta el wrapper (clase [perspective:...]).
+    if (matchMedia('(pointer: fine)').matches) {
+      const rotY = gsap.quickTo(badge, 'rotationY', { duration: 0.6, ease: 'power3' })
+      const rotX = gsap.quickTo(badge, 'rotationX', { duration: 0.6, ease: 'power3' })
+      useEventListener(section, 'mousemove', (ev: MouseEvent) => {
+        const r = section.getBoundingClientRect()
+        const nx = (ev.clientX - r.left) / r.width - 0.5 // -0.5..0.5
+        const ny = (ev.clientY - r.top) / r.height - 0.5
+        rotY(nx * 28)
+        rotX(ny * -28)
+      })
+    }
   }
+
+  // Flecha central: bob infinito (invita a bajar). Glow neón vive en la clase.
   if (cueArrow) {
     tweens.push(
-      gsap.to(cueArrow, { y: 6, repeat: -1, yoyo: true, duration: 0.9, ease: 'sine.inOut' }),
+      gsap.to(cueArrow, { y: 6, repeat: -1, yoyo: true, duration: 1.1, ease: 'sine.inOut' }),
     )
   }
+
   if (cue) {
     const fade = gsap.to(cue, {
       autoAlpha: 0,
@@ -146,6 +192,8 @@ onUnmounted(() => {
   triggers.forEach((t) => t.kill())
   timelines.forEach((t) => t.kill())
   tweens.forEach((t) => t.kill())
+  cueLiveTween?.kill()
+  cueLiveTween = null
   triggers.length = 0
   timelines.length = 0
   tweens.length = 0
@@ -184,7 +232,7 @@ onUnmounted(() => {
         aloja el acento UV (detrás) y el copy (anclado abajo-derecha). min-h da el
         aire vertical para las capas; el listener de mousemove se engancha aquí.
       -->
-      <div ref="stageRef" class="relative min-h-[62vh] sm:min-h-[74vh]">
+      <div ref="stageRef" class="relative min-h-[44vh] sm:min-h-[74vh]">
         <!--
           Acento UV decorativo — sparkle SVG (no glifo emoji, así el render es
           consistente entre plataformas). Va DETRÁS del texto (DOM antes del h2).
@@ -258,26 +306,69 @@ onUnmounted(() => {
 
       <!--
         CUE DE SCROLL — puente hacia los servicios: "desliza ↓". La línea UV se
-        dibuja al entrar, la flecha hace bob y el bloque se desvanece al pasar de
-        largo (script). Es el enlace que une este panel con las tarjetas.
-        Decorativo → aria-hidden (no aporta significado, solo afordancia).
+        dibuja al entrar y la flecha es un ECO PARALLAX: 3 chevrons apilados que
+        se abren en abanico con la velocidad de scroll (los ecos laguean) y
+        convergen al parar; además derivan con el cursor (ver script). El bloque
+        se desvanece al pasar de largo. Decorativo → aria-hidden (solo afordancia).
       -->
-      <div class="scroll-cue mt-14 flex flex-col items-center gap-3 sm:mt-20" aria-hidden="true">
-        <span class="text-[0.7rem] font-medium uppercase tracking-[0.3em] text-muted-foreground">
-          Desliza
-        </span>
-        <span class="cue-line h-16 w-px origin-top bg-primary sm:h-24"></span>
-        <svg
-          class="cue-arrow h-4 w-4 text-primary"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+      <div class="scroll-cue mt-6 flex flex-col items-center sm:mt-24" aria-hidden="true">
+        <!--
+          BADGE GIRATORIO — el badge (.cue-badge) y la flecha (.cue-arrow) se
+          apilan en la MISMA celda de grid ([grid-area:1/1] + place-items-center):
+          así el badge puede girar SIN arrastrar la flecha (son hermanos, no
+          anidados). El wrapper aporta la perspectiva ([perspective]) para el tilt
+          3D con el cursor y la sombra 3D suave (drop-shadow oscuro que NO gira).
+        -->
+        <div
+          class="relative grid place-items-center [perspective:600px] drop-shadow-[0_12px_22px_rgba(10,10,10,0.18)]"
         >
-          <path d="M6 9l6 6 6-6" />
-        </svg>
+          <svg
+            class="cue-badge h-[clamp(5.25rem,14vw,8rem)] w-[clamp(5.25rem,14vw,8rem)] text-primary [grid-area:1/1] [filter:drop-shadow(0_0_16px_rgba(124,0,255,0.45))]"
+            viewBox="0 0 100 100"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <!--
+                Degradado "metálico" en familia UV: brillo claro → primary →
+                UV profundo. Se mantiene dentro de la paleta (no azul/teal).
+              -->
+              <linearGradient id="cueRing" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#B98CFF" />
+                <stop offset="45%" stop-color="#7C00FF" />
+                <stop offset="100%" stop-color="#4B0099" />
+              </linearGradient>
+              <!-- Camino circular (r=34) para el texto: radio reducido → margen
+                   claro entre el texto y el aro exterior (r=46). -->
+              <path id="cueTextPath" d="M50,50 m-34,0 a34,34 0 1,1 68,0 a34,34 0 1,1 -68,0" />
+            </defs>
+            <!-- Aros concéntricos con el degradado metálico. -->
+            <circle cx="50" cy="50" r="46" stroke="url(#cueRing)" stroke-width="2.5" />
+            <circle cx="50" cy="50" r="24" stroke="url(#cueRing)" stroke-width="1.5" opacity="0.5" />
+            <!-- Texto circular editorial. fill-primary + mono uppercase.
+                 word-spacing separa las palabras del separador (margen). -->
+            <text
+              class="fill-primary font-mono text-[6px] uppercase"
+              style="letter-spacing: 1.8px; word-spacing: 4px"
+            >
+              <textPath href="#cueTextPath" startOffset="0">
+                DESLIZA · SCROLL · DESLIZA · SCROLL ·
+              </textPath>
+            </text>
+          </svg>
+          <!-- Flecha ↓ estática al centro, con glow neón + bob (script). -->
+          <svg
+            class="cue-arrow h-6 w-6 text-primary [grid-area:1/1] [filter:drop-shadow(0_0_10px_rgba(124,0,255,0.65))] sm:h-8 sm:w-8"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </div>
       </div>
     </BaseContainer>
   </section>

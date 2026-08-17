@@ -10,15 +10,17 @@ interface Props {
 const { as = 'div', size = 'bleed' } = defineProps<Props>()
 
 /**
- * Contenedor ÚNICO de todo el proyecto. En CELULAR conserva el margen cómodo del
- * contenedor antiguo (px-6 = 24px) para que el texto no quede pegado al borde en
- * pantallas pequeñas; de sm en adelante pasa a full-bleed ceñido (px-4 = 16px)
- * para que los efectos parallax se aprecien edge-to-edge en pantallas grandes.
+ * Contenedor ÚNICO de todo el proyecto. Su gutter sigue EXACTAMENTE el mismo
+ * ritmo que la navbar (`px-6 sm:px-8 lg:px-12` → 24/32/48px): así todo el
+ * contenido —secciones, paneles, footer— comparte el mismo margen lateral y
+ * queda alineado verticalmente con el logo y el menú en cada breakpoint.
+ * (Antes usaba `sm:px-4`, que ENCOGÍA a 16px en pantallas grandes y dejaba el
+ * contenido pegado al borde y desalineado con la navbar.)
  *
  * `bleed` (default) no impone tope de ancho — es el modo de las secciones/paneles
  * con imágenes y animaciones. Los topes (wide/default/narrow) solo acotan la
- * MEDIDA del texto largo cuando hace falta legibilidad; comparten el MISMO gutter
- * mínimo, así que su borde exterior sigue alineado con las secciones `bleed`.
+ * MEDIDA del texto largo cuando hace falta legibilidad; comparten el MISMO gutter,
+ * así que su borde exterior sigue alineado con las secciones `bleed`.
  */
 const sizeClasses: Record<ContainerSize, string> = {
   bleed: 'max-w-none', // edge-to-edge — parallax, imágenes, paneles tipográficos
@@ -29,7 +31,7 @@ const sizeClasses: Record<ContainerSize, string> = {
 </script>
 
 <template>
-  <component :is="as" :class="['mx-auto w-full px-6 sm:px-4', sizeClasses[size]]">
+  <component :is="as" :class="['mx-auto w-full px-6 sm:px-8 lg:px-12', sizeClasses[size]]">
     <slot />
   </component>
 </template>

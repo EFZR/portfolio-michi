@@ -46,19 +46,29 @@ function scrollTop() {
     <BaseContainer size="wide" class="py-20 sm:py-28">
       <!--
         Bloque CTA — el email como link protagonista (estilo portfolio) + botón
-        "Hablemos" reutilizando BaseCtaButton. Se apila en móvil, fila en sm+.
+        "Hablemos" reutilizando BaseCtaButton. Se apila hasta `xl` y solo pasa a
+        fila en ≥1280px: el email es un token largo sin espacios para envolver y
+        tope a 4.25rem mide ~800px, así que en tablet/laptop chico la fila dejaba
+        al botón sin aire y se amontonaba. Apilado respira y se lee editorial.
       -->
       <div
-        class="flex flex-col gap-8 border-b border-border pb-14 sm:flex-row sm:items-end sm:justify-between sm:gap-12"
+        class="flex flex-col gap-8 border-b border-border pb-14 xl:flex-row xl:items-end xl:justify-between xl:gap-12"
       >
         <div>
           <p class="mb-5 text-xs font-medium uppercase tracking-[0.3em] text-primary">
             ¿Trabajamos juntos?
           </p>
+          <!--
+            `break-words` (overflow-wrap) es la red de seguridad: el email es un
+            token largo SIN espacios, así que en pantallas muy chicas (<~340px) no
+            cabe en una línea y, sin esto, desbordaba/se amontonaba. El mínimo del
+            clamp se bajó a 1.4rem para que quepa en una línea hasta ~320px; por
+            debajo, break-words lo parte en dos en vez de desbordar.
+          -->
           <a
             :href="`mailto:${email}`"
             data-cursor="grow"
-            class="block font-heading text-[clamp(1.75rem,6.5vw,4.25rem)] font-semibold leading-[0.95] tracking-tight text-foreground transition-colors duration-300 hover:text-primary"
+            class="block break-words font-heading text-[clamp(1.4rem,6.5vw,4.25rem)] font-semibold leading-[0.95] tracking-tight text-foreground transition-colors duration-300 hover:text-primary"
           >
             {{ email }}
           </a>
@@ -68,7 +78,7 @@ function scrollTop() {
           :href="`mailto:${email}`"
           text="Hablemos"
           size="lg"
-          class="shrink-0 self-start sm:self-auto"
+          class="shrink-0 self-start xl:self-auto"
         />
       </div>
 
