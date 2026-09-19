@@ -257,7 +257,9 @@ onUnmounted(() => {
         </div>
 
         <!--
-          Statement tipográfico masivo (Fraunces). Cada línea es una máscara
+          Statement tipográfico masivo (Fraunces). El orden de los tres oficios
+          es JERÁRQUICO (mercadóloga → fotógrafa → modelo) y debe coincidir con
+          el de `services` en ServicesSection. Cada línea es una máscara
           overflow-hidden (.parallax-line) con sangría en zigzag (≠ escalera de la
           intro de Servicios) que reparte las palabras por el ancho. La palabra
           interna (.reveal-word) sube desde la máscara al entrar; la línea deriva
@@ -265,7 +267,7 @@ onUnmounted(() => {
         -->
         <h2
           ref="statementRef"
-          aria-label="Soy fotógrafa, mercadóloga y modelo"
+          aria-label="Soy mercadóloga, fotógrafa y modelo"
           class="relative z-10 font-heading text-[clamp(2.75rem,11vw,9rem)] font-semibold leading-[0.95] tracking-tight text-foreground"
         >
           <span
@@ -273,14 +275,14 @@ onUnmounted(() => {
             data-speed="-7"
             aria-hidden="true"
           >
-            <span class="reveal-word inline-block">Fotógrafa,</span>
+            <span class="reveal-word inline-block">Mercadóloga,</span>
           </span>
           <span
             class="parallax-line block overflow-hidden pb-[0.08em] sm:ps-[16vw]"
             data-speed="5"
             aria-hidden="true"
           >
-            <span class="reveal-word inline-block">mercadóloga</span>
+            <span class="reveal-word inline-block">fotógrafa</span>
           </span>
           <span
             class="parallax-line block overflow-hidden pb-[0.08em] sm:ps-[5vw]"

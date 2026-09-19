@@ -25,16 +25,16 @@ const emit = defineEmits<{
 /**
  * Set de items del drawer. Versión "completa" de la navegación:
  *   - Top inline del navbar tiene 3 (Portafolio, Blog, Sobre mí).
- *   - El drawer es superset: añade Inicio, Proceso, Contacto.
- * La numeración "01..06" agrega vibra editorial estilo Bogdan.
+ *   - El drawer es superset: añade Inicio y Contacto.
+ * La numeración "01..05" agrega vibra editorial estilo Bogdan — es correlativa,
+ * así que al añadir o quitar un item hay que renumerar los de abajo.
  */
 const items: DrawerItem[] = [
   { index: '01', label: 'Inicio', to: '/' },
   { index: '02', label: 'Portafolio', to: '/#projects' },
   { index: '03', label: 'Blog', to: '/blog' },
-  { index: '04', label: 'Proceso', to: '/#process' },
-  { index: '05', label: 'Sobre mí', to: '/#about' },
-  { index: '06', label: 'Contacto', to: '/#contact' },
+  { index: '04', label: 'Sobre mí', to: '/#about' },
+  { index: '05', label: 'Contacto', to: '/#contact' },
 ]
 
 /**
@@ -69,6 +69,11 @@ watch(
   -->
   <Teleport to="body">
     <!--
+      Fondo: `primary-soft`, el tinte pastel del Ultraviolet (ver token en
+      main.css). A pantalla completa el UV puro saturaba y cansaba la vista; el
+      pastel mantiene la firma cromática y deja que el off-black de los labels
+      sea el que manda. El acento puro sigue reservado a CTAs y highlights.
+
       Vue Transition para el slide-up del overlay completo.
       - Enter: viene desde translate-y-full (fuera de pantalla abajo) a 0.
       - Leave: regresa a translate-y-full.
@@ -86,7 +91,7 @@ watch(
         role="dialog"
         aria-modal="true"
         aria-label="Menú de navegación"
-        class="fixed inset-0 z-40 flex flex-col bg-primary"
+        class="fixed inset-0 z-40 flex flex-col bg-primary-soft"
       >
         <!-- Lista de items: centrada, con scroll de rescate en pantallas bajas -->
         <nav aria-label="Navegación principal" class="flex-1 overflow-y-auto">
@@ -100,24 +105,24 @@ watch(
             class="flex min-h-full flex-col items-center justify-center gap-2 px-6 py-24 sm:gap-3"
           >
             <RouterLink
-            v-for="item in items"
-            :key="item.to"
-            :to="item.to"
-            data-cursor="grow"
-            class="group flex items-baseline gap-3 transition-opacity duration-300 sm:gap-4"
-            @click="emit('close')"
-          >
-            <!--
+              v-for="item in items"
+              :key="item.to"
+              :to="item.to"
+              data-cursor="grow"
+              class="group flex items-baseline gap-3 transition-opacity duration-300 sm:gap-4"
+              @click="emit('close')"
+            >
+              <!--
               Número editorial: Fraunces italic, chico y semi-translúcido.
               Aporta jerarquía y el "sello de editorial" que vibra Bogdan.
             -->
-            <span
-              class="font-heading text-base italic text-foreground/60 sm:text-lg"
-              aria-hidden="true"
-            >
-              {{ item.index }}
-            </span>
-            <!--
+              <span
+                class="font-heading text-base italic text-foreground/60 sm:text-lg"
+                aria-hidden="true"
+              >
+                {{ item.index }}
+              </span>
+              <!--
               Label MASIVO con letter-swap 100% CSS (mismo efecto que el CTA
               "Hablemos", pero sin GSAP para que sea infalible en hover):
               mask overflow-hidden con dos copias del texto splitteado en letras.
@@ -126,32 +131,32 @@ watch(
               - swap-b: copia absolute superpuesta, oculta arriba del mask.
               El `--i` por letra genera el stagger vía transition-delay (ver CSS).
             -->
-            <span
-              class="relative inline-block overflow-hidden font-hero text-5xl uppercase leading-none text-foreground sm:text-6xl md:text-7xl lg:text-8xl"
-            >
-              <span class="swap-a block whitespace-nowrap" :aria-label="item.label">
-                <span
-                  v-for="(char, i) in [...item.label]"
-                  :key="`a-${i}`"
-                  aria-hidden="true"
-                  class="swap-letter inline-block"
-                  :style="{ '--i': i }"
-                  >{{ char === ' ' ? ' ' : char }}</span
-                >
-              </span>
               <span
-                aria-hidden="true"
-                class="swap-b absolute left-0 top-0 block whitespace-nowrap"
+                class="relative inline-block overflow-hidden font-hero text-5xl uppercase leading-none text-foreground sm:text-6xl md:text-7xl lg:text-8xl"
               >
+                <span class="swap-a block whitespace-nowrap" :aria-label="item.label">
+                  <span
+                    v-for="(char, i) in [...item.label]"
+                    :key="`a-${i}`"
+                    aria-hidden="true"
+                    class="swap-letter inline-block"
+                    :style="{ '--i': i }"
+                    >{{ char === ' ' ? ' ' : char }}</span
+                  >
+                </span>
                 <span
-                  v-for="(char, i) in [...item.label]"
-                  :key="`b-${i}`"
-                  class="swap-letter inline-block"
-                  :style="{ '--i': i }"
-                  >{{ char === ' ' ? ' ' : char }}</span
+                  aria-hidden="true"
+                  class="swap-b absolute left-0 top-0 block whitespace-nowrap"
                 >
+                  <span
+                    v-for="(char, i) in [...item.label]"
+                    :key="`b-${i}`"
+                    class="swap-letter inline-block"
+                    :style="{ '--i': i }"
+                    >{{ char === ' ' ? ' ' : char }}</span
+                  >
+                </span>
               </span>
-            </span>
             </RouterLink>
           </div>
         </nav>

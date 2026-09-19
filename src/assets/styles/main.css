@@ -34,6 +34,14 @@
   --color-foreground: #0a0a0a; /* off-black con leve gris — NO es #000 puro */
   --color-muted-foreground: #6b6b6b; /* texto secundario / placeholders */
   --color-primary: #7c00ff; /* Ultraviolet — acento único */
+  /*
+   * Tinte pastel del Ultraviolet. NO es un color nuevo de la paleta: es el
+   * mismo acento rebajado para cuando tiene que cubrir una SUPERFICIE GRANDE
+   * (el drawer de navegación a pantalla completa), donde el UV puro satura y
+   * se vuelve agresivo. En superficies grandes juega el papel del 60% (lienzo),
+   * así que no rompe la regla 60/30/10 — el acento sigue siendo `primary`.
+   */
+  --color-primary-soft: #e7dbff;
   --color-border: #e5e5e5; /* divisores discretos sobre off-white */
 
   /* Typography */
@@ -120,56 +128,32 @@
   }
 
   /**
-   * Scrollbar con la paleta del proyecto: pista en `surface` (gris muy claro) y
-   * thumb en Ultraviolet con forma de píldora. El `border` del mismo color de la
-   * pista deja un aire alrededor del thumb (look "inset") sin usar padding.
+   * Scrollbar INVISIBLE en toda la web — el scroll sigue funcionando (rueda,
+   * gesto, teclado, barra espaciadora), solo desaparece la barra.
    *
-   * Firefox usa las props estándar `scrollbar-color` / `scrollbar-width`;
-   * Blink/WebKit los pseudo-elementos `::-webkit-scrollbar-*`.
+   * Es una decisión de diseño, no un truco: media web está construida sobre
+   * capas que se mueven con el scroll (Hero sticky, secuencia pinneada de
+   * Servicios, parallax de About, arco de Contacto) y la barra —con thumb UV
+   * encima— competía con ellas y partía el borde derecho de las composiciones
+   * edge-to-edge. La afordancia de "aquí se baja" ya la da el badge giratorio
+   * "DESLIZA · SCROLL" de About.
+   *
+   * Firefox usa la prop estándar `scrollbar-width`; Blink/WebKit el
+   * pseudo-elemento `::-webkit-scrollbar` (que con `display: none` se retira
+   * del layout, sin dejar el canal vacío).
+   *
+   * Va en `*` además de en `html` para cubrir también los scrollers internos
+   * (el cuerpo del catálogo en `BaseModal`, la lista del drawer en pantallas
+   * bajas): ahí la barra nativa era lo único que rompía la hoja limpia.
    */
-  html {
-    scrollbar-color: var(--color-primary) var(--color-surface);
-    scrollbar-width: thin;
+  html,
+  * {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Edge legacy */
   }
 
   ::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: var(--color-surface);
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: var(--color-primary);
-    border: 3px solid var(--color-surface);
-    border-radius: 9999px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: color-mix(in srgb, var(--color-primary) 82%, black);
-  }
-
-  /* Esquina donde se cruzan scrollbar vertical y horizontal */
-  ::-webkit-scrollbar-corner {
-    background: var(--color-surface);
-  }
-
-  /**
-   * Desde tablet hacia abajo (< lg, 1024px) ocultamos la scrollbar por completo:
-   * en pantallas táctiles sobra la barra visible y el scroll es por gesto. En
-   * desktop (≥ 1024px) sí se muestra la versión Ultraviolet de arriba.
-   */
-  @media (max-width: 1023px) {
-    html {
-      scrollbar-width: none; /* Firefox */
-    }
-
-    ::-webkit-scrollbar {
-      width: 0;
-      height: 0;
-    }
+    display: none; /* Blink / WebKit */
   }
 
   /**

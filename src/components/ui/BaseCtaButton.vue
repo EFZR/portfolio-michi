@@ -37,6 +37,10 @@ const slots = useSlots()
 const hasLeading = computed(() => !!slots.leading)
 
 // Spread preserva codepoints multi-byte (ej. tildes) sin partirlos en surrogates.
+// OJO: cada letra se pinta en un <span inline-block>, donde un espacio normal
+// COLAPSA y las palabras quedan pegadas ("CATÁLOGOCOMPLETO"). En el template se
+// sustituye por NBSP — mismo truco que el letter-swap de AppNavDrawer. El nombre
+// accesible no se ve afectado: sale del `aria-label` con el texto original.
 const chars = computed(() => [...text])
 
 const aRef = ref<HTMLElement | null>(null)
@@ -195,12 +199,12 @@ const rootBindings = computed<Record<string, unknown>>(() => {
           :key="`a-${i}`"
           aria-hidden="true"
           class="cta-letter inline-block"
-          >{{ char }}</span
+          >{{ char === ' ' ? '\u00A0' : char }}</span
         >
       </span>
       <span ref="bRef" aria-hidden="true" class="absolute left-0 top-0 block whitespace-nowrap">
         <span v-for="(char, i) in chars" :key="`b-${i}`" class="cta-letter inline-block">{{
-          char
+          char === ' ' ? '\u00A0' : char
         }}</span>
       </span>
     </span>
