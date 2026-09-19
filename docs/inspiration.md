@@ -8,6 +8,7 @@
 - <https://sebastian-wittig.design/en#about>: ideas de referencia
 - <https://karolbinkow.ski/>: ideas of footer
 - <https://halston-architecture-template.webflow.io/>: idea para mostrar el perfil de trabajo, y animaciones en cada scroll
+- <https://thestudiobyjuliegranger.com/>: alternativa al acordion que siento que no me gusta
 
 ## mine
 

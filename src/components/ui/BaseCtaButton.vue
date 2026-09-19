@@ -102,8 +102,32 @@ onUnmounted(() => {
 
 const variantClasses: Record<CtaVariant, string> = {
   solid: 'bg-foreground text-background',
-  outline: 'border border-foreground bg-transparent text-foreground',
+  // El borde también se tiñe de UV al pasar el cursor: en `outline` el borde ES
+  // el botón, así que sin esto el resplandor quedaría flotando alrededor de una
+  // caja que no reacciona.
+  outline: 'border border-foreground bg-transparent text-foreground hover:border-primary',
 }
+
+/**
+ * RESPLANDOR ULTRAVIOLET al hover/focus.
+ *
+ * Dos capas de sombra sin color propio + `shadow-primary/70`: Tailwind pinta
+ * ambas con el token, así que el acento sigue saliendo del design system y no de
+ * un hex suelto. La capa corta y contrastada (18px) hace de halo pegado al
+ * borde; la larga y difusa (46px) derrama el color sobre el fondo. Juntas leen
+ * como luz encendida y no como una sombra gris teñida.
+ *
+ * Es la regla 60/30/10 aplicada al detalle: el CTA sigue siendo un bloque negro
+ * —el morado no se convierte en fondo— y el acento aparece solo en el momento
+ * de la interacción.
+ *
+ * Se replica en `focus-visible` para que quien navegue con teclado reciba
+ * exactamente la misma señal que con el ratón.
+ */
+const glowClasses =
+  'transition-[box-shadow,border-color] duration-300 ease-out ' +
+  'hover:shadow-[0_0_18px_-2px,0_0_46px_-10px] hover:shadow-primary/70 ' +
+  'focus-visible:shadow-[0_0_18px_-2px,0_0_46px_-10px] focus-visible:shadow-primary/70'
 
 // Altura FIJA por tamaño (`h-*`) en vez de padding vertical (`py-*`): así todos
 // los botones del mismo `size` miden exactamente igual sin importar el contenido
@@ -124,6 +148,7 @@ const leadingPadding = computed(() => {
 const wrapperClasses = computed(() => [
   'group inline-flex items-center gap-3 rounded-md font-medium uppercase tracking-wider',
   'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+  glowClasses,
   variantClasses[variant],
   sizeClasses[size],
   leadingPadding.value,
@@ -173,17 +198,10 @@ const rootBindings = computed<Record<string, unknown>>(() => {
           >{{ char }}</span
         >
       </span>
-      <span
-        ref="bRef"
-        aria-hidden="true"
-        class="absolute left-0 top-0 block whitespace-nowrap"
-      >
-        <span
-          v-for="(char, i) in chars"
-          :key="`b-${i}`"
-          class="cta-letter inline-block"
-          >{{ char }}</span
-        >
+      <span ref="bRef" aria-hidden="true" class="absolute left-0 top-0 block whitespace-nowrap">
+        <span v-for="(char, i) in chars" :key="`b-${i}`" class="cta-letter inline-block">{{
+          char
+        }}</span>
       </span>
     </span>
 

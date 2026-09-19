@@ -240,7 +240,7 @@ onUnmounted(() => {
           interior recibe la deriva del cursor → transforms separados sin pelea.
         -->
         <div
-          class="accent-scroll pointer-events-none absolute -top-[6%] right-[2%] sm:right-[5%]"
+          class="accent-scroll pointer-events-none absolute top-[-6%] right-[2%] sm:right-[5%]"
           aria-hidden="true"
         >
           <svg
@@ -320,10 +320,10 @@ onUnmounted(() => {
           3D con el cursor y la sombra 3D suave (drop-shadow oscuro que NO gira).
         -->
         <div
-          class="relative grid place-items-center [perspective:600px] drop-shadow-[0_12px_22px_rgba(10,10,10,0.18)]"
+          class="relative grid place-items-center perspective-[600px] drop-shadow-[0_12px_22px_rgba(10,10,10,0.18)] py-6"
         >
           <svg
-            class="cue-badge h-[clamp(5.25rem,14vw,8rem)] w-[clamp(5.25rem,14vw,8rem)] text-primary [grid-area:1/1] [filter:drop-shadow(0_0_16px_rgba(124,0,255,0.45))]"
+            class="cue-badge h-[clamp(5.25rem,14vw,8rem)] w-[clamp(5.25rem,14vw,8rem)] text-primary [grid-area:1/1] filter-[drop-shadow(0_0_16px_rgba(124,0,255,0.45))]"
             viewBox="0 0 100 100"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -344,7 +344,14 @@ onUnmounted(() => {
             </defs>
             <!-- Aros concéntricos con el degradado metálico. -->
             <circle cx="50" cy="50" r="46" stroke="url(#cueRing)" stroke-width="2.5" />
-            <circle cx="50" cy="50" r="24" stroke="url(#cueRing)" stroke-width="1.5" opacity="0.5" />
+            <circle
+              cx="50"
+              cy="50"
+              r="24"
+              stroke="url(#cueRing)"
+              stroke-width="1.5"
+              opacity="0.5"
+            />
             <!-- Texto circular editorial. fill-primary + mono uppercase.
                  word-spacing separa las palabras del separador (margen). -->
             <text
@@ -358,7 +365,7 @@ onUnmounted(() => {
           </svg>
           <!-- Flecha ↓ estática al centro, con glow neón + bob (script). -->
           <svg
-            class="cue-arrow h-6 w-6 text-primary [grid-area:1/1] [filter:drop-shadow(0_0_10px_rgba(124,0,255,0.65))] sm:h-8 sm:w-8"
+            class="cue-arrow h-6 w-6 text-primary [grid-area:1/1] filter-[drop-shadow(0_0_10px_rgba(124,0,255,0.65))] sm:h-8 sm:w-8"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"

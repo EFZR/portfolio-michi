@@ -160,13 +160,10 @@ onUnmounted(() => {
     `pt` mínimo (no py grande): esta sección FLUYE directamente desde About
     (mismo bg-background, sin costura visible) — el aire superior lo da el cue
     "desliza" de About. La primera tarjeta "asoma desde abajo" (ver script) para
-    tirar del scroll hacia el catálogo. `pb` normal cierra hacia el footer.
+    tirar del scroll hacia el catálogo. SIN `pb`: el aire hacia ContactSection lo
+    aporta el `pt` de esa sección (un solo dueño del ritmo vertical).
   -->
-  <section
-    id="services"
-    ref="sectionRef"
-    class="relative z-10 bg-background pt-6 pb-24 sm:pt-8 sm:pb-32"
-  >
+  <section id="services" ref="sectionRef" class="relative z-10 bg-background pt-6 sm:pt-8">
     <BaseContainer size="bleed">
       <!--
         Tarjetas edge-to-edge que se APILAN (sticky stacking). Contenedor en

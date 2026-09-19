@@ -137,7 +137,7 @@ function scrollTop() {
         </RouterLink>
 
         <p class="text-xs text-muted-foreground">
-          &copy; {{ year }} Emerson Zapata. Todos los derechos reservados.
+          &copy; {{ year }} Michi My Princess. Todos los derechos reservados.
         </p>
 
         <button

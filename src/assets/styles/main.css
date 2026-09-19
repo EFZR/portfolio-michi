@@ -71,6 +71,33 @@
     overflow-x: clip;
   }
 
+  /**
+   * Scroll anchoring DESACTIVADO en el scroller raíz.
+   *
+   * Chrome elige un elemento visible como "ancla" y, si detecta que se movió,
+   * corrige la posición del scroll para que no pierdas el punto de lectura. Está
+   * pensado para páginas donde algo se inserta por encima del viewport (un
+   * anuncio, una imagen que carga tarde) y empuja el contenido hacia abajo.
+   *
+   * Aquí es contraproducente: media web está construida sobre capas que se
+   * mueven CON el scroll —Hero en sticky, apilado de Servicios, parallax de
+   * About, el titular de Contacto recorriendo su arco—, así que el navegador
+   * interpretaba ese movimiento como un desplazamiento a compensar y corregía
+   * el scroll. El resultado era que al bajar se trababa y saltaba hacia atrás
+   * (medido: −388px de golpe al entrar en el titular de Contacto, más una serie
+   * de microsaltos de 4-8px que sumaban ~70px).
+   *
+   * No perdemos nada al apagarlo: ninguna sección inserta contenido por encima
+   * del viewport, que es el único caso en que el anchoring ayuda.
+   *
+   * Va en `html` (el scroller) y no en las secciones: el ancla que el navegador
+   * elige puede estar en CUALQUIER parte del documento, así que excluir solo la
+   * sección que se anima no basta — comprobado.
+   */
+  html {
+    overflow-anchor: none;
+  }
+
   h1,
   h2,
   h3,
