@@ -14,10 +14,26 @@ interface NavItem {
 
 // Items "rápidos" del estado A — los 3 destinos prioritarios.
 const topItems: NavItem[] = [
-  { label: 'Portafolio', to: '/#projects' },
+  { label: 'Portafolio', to: '/projects' },
   { label: 'Blog', to: '/blog' },
   { label: 'Sobre mí', to: '/#about' },
 ]
+
+/**
+ * Clase de "estás aquí" para un item de la navbar.
+ *
+ * Los enlaces con hash (`/#about`, `/#contact`) apuntan a una SECCIÓN del Home,
+ * no a una vista. Vue Router los resuelve al registro `/` e ignora el hash al
+ * calcular el estado activo, así que "Sobre mí" se pintaba en UV nada más
+ * entrar al Home —como si ya estuvieras en esa vista— aunque estuvieras arriba
+ * del todo, en el Hero. Solo las rutas de verdad (/projects, /blog) marcan.
+ *
+ * El día que "Sobre mí" tenga su propia vista, basta con cambiar su `to` a
+ * `/about` y esta función la empieza a marcar sola.
+ */
+function claseActiva(to: string): string {
+  return to.includes('#') ? '' : 'text-primary'
+}
 
 const { isAtTop, direction } = useScrollDirection({ topThreshold: 80 })
 const { isOpen: isDrawerOpen, toggle: toggleDrawer, close: closeDrawer } = useDisclosure()
@@ -123,7 +139,7 @@ const showInlineNav = computed(() => !isContracted.value && isDesktop.value)
                 :to="item.to"
                 data-cursor="grow"
                 class="text-lg font-medium uppercase tracking-wider text-foreground transition-colors hover:text-primary"
-                active-class="text-primary"
+                :active-class="claseActiva(item.to)"
               >
                 {{ item.label }}
               </RouterLink>
@@ -190,7 +206,7 @@ const showInlineNav = computed(() => !isContracted.value && isDesktop.value)
         wrapper transicione a UV en hover gracias a `group-hover:bg-primary`.
       -->
       <div class="hidden flex-1 justify-end md:flex">
-        <BaseCtaButton to="/#contact" text="Hablemos">
+        <BaseCtaButton to="/contact" text="Hablemos">
           <template #leading>
             <span
               class="block h-8 w-8 overflow-hidden rounded-md bg-muted-foreground pt-0.5 transition-colors duration-300 group-hover:bg-primary"

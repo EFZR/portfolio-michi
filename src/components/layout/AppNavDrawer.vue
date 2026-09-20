@@ -31,10 +31,10 @@ const emit = defineEmits<{
  */
 const items: DrawerItem[] = [
   { index: '01', label: 'Inicio', to: '/' },
-  { index: '02', label: 'Portafolio', to: '/#projects' },
+  { index: '02', label: 'Portafolio', to: '/projects' },
   { index: '03', label: 'Blog', to: '/blog' },
   { index: '04', label: 'Sobre mí', to: '/#about' },
-  { index: '05', label: 'Contacto', to: '/#contact' },
+  { index: '05', label: 'Contacto', to: '/contact' },
 ]
 
 /**

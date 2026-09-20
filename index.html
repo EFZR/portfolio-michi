@@ -22,6 +22,26 @@
     <title>Princess Portfolio</title>
   </head>
   <body>
+    <!--
+      COPIA ESTÁTICA DEL FORMULARIO DE CONTACTO — no se ve, no se usa.
+
+      Netlify detecta formularios rastreando el HTML PUBLICADO. Como esta web es
+      una SPA y el formulario real lo pinta Vue en tiempo de ejecución, el
+      rastreador no encontraría nada y los envíos se perderían en silencio.
+      Esta copia existe solo para que lo encuentre en el build.
+
+      Los `name` deben coincidir EXACTAMENTE con los del formulario de Vue
+      (`src/components/contact/ContactForm.vue`) y con los que arma
+      `src/lib/contacto.ts`. Si añades un campo allí, añádelo aquí.
+    -->
+    <form name="contacto" netlify netlify-honeypot="bot-field" hidden>
+      <input type="text" name="nombre" />
+      <input type="email" name="email" />
+      <input type="text" name="oficio" />
+      <textarea name="mensaje"></textarea>
+      <input type="text" name="bot-field" />
+    </form>
+
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>

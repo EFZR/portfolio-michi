@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { RouterLink } from 'vue-router'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { usePreferredReducedMotion } from '@vueuse/core'
@@ -33,9 +34,16 @@ const triggers: ScrollTrigger[] = []
 const timelines: gsap.core.Timeline[] = []
 
 /**
- * Servicios / áreas principales. `image` es un mockup placeholder (picsum con
- * seed fijo → imagen estable). Cada entrada es una "doble página" de revista:
+ * Servicios / áreas principales. Cada entrada es una "doble página" de revista:
  * bloque tipográfico a la izquierda, imagen a la derecha.
+ *
+ * `image` apunta a un archivo de `public/` (se sirve desde el propio dominio).
+ * Antes eran URLs de picsum.photos y en producción fallaban con
+ * ERR_ADDRESS_UNREACHABLE en las redes que no llegan a ese host: son peticiones
+ * que hace el navegador del visitante, así que ni Netlify ni el build pueden
+ * hacer nada. Regla: ningún asset crítico se sirve desde un tercero.
+ * Son placeholders 1200×1500 (4:5) — reemplazar por fotos reales manteniendo
+ * esa proporción vertical.
  *
  * EL ORDEN ES JERARQUÍA, no alfabético ni casual: Marketing va primero porque
  * es el servicio principal, luego Fotografía y cierra Modelaje. Es el MISMO
@@ -45,21 +53,21 @@ const timelines: gsap.core.Timeline[] = []
 const services = [
   {
     id: 'marketing',
-    image: 'https://picsum.photos/seed/princess-mkt/1600/2000',
+    image: '/servicio-marketing.jpg',
     title: 'Marketing',
     tagline: 'Estrategia · Contenido de marca',
     detail: 'Convierto la estética en mensajes que conectan y venden.',
   },
   {
     id: 'fotografia',
-    image: 'https://picsum.photos/seed/princess-foto/1600/2000',
+    image: '/servicio-fotografia.jpg',
     title: 'Fotografía',
     tagline: 'Editorial · Producto · Retrato',
     detail: 'Dirijo la luz para que cada imagen cuente tu historia.',
   },
   {
     id: 'modelaje',
-    image: 'https://picsum.photos/seed/princess-model/1600/2000',
+    image: '/servicio-modelaje.jpg',
     title: 'Modelaje',
     tagline: 'Pasarela · Campaña · Lookbook',
     detail: 'Presencia frente a cámara con dirección propia.',
@@ -478,6 +486,7 @@ onUnmounted(() => {
       size="wide"
       eyebrow="Todo lo que hago"
       title="Catálogo de servicios"
+      close-label="Cerrar catálogo"
       @close="closeCatalog"
     >
       <div class="grid gap-12 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
@@ -506,12 +515,12 @@ onUnmounted(() => {
         class="mt-12 border-t border-border pt-6 text-sm leading-relaxed text-muted-foreground sm:text-base"
       >
         ¿Tu proyecto no encaja en ninguna casilla? Suele ser la mejor señal —
-        <a
-          href="#contact"
+        <RouterLink
+          to="/contact"
           data-cursor="grow"
           class="text-foreground underline decoration-primary decoration-2 underline-offset-4 transition-colors duration-300 hover:text-primary"
           @click="closeCatalog"
-          >escríbeme y lo armamos a medida</a
+          >escríbeme y lo armamos a medida</RouterLink
         >.
       </p>
     </BaseModal>

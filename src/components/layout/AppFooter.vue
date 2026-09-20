@@ -10,11 +10,11 @@ const email = 'karolmpalmam@gmail.com'
 // Navegación — mismo set que el drawer (superset de la navbar).
 const navLinks = [
   { label: 'Inicio', to: '/' },
-  { label: 'Portafolio', to: '/#projects' },
+  { label: 'Portafolio', to: '/projects' },
   { label: 'Blog', to: '/blog' },
   { label: 'Proceso', to: '/#process' },
   { label: 'Sobre mí', to: '/#about' },
-  { label: 'Contacto', to: '/#contact' },
+  { label: 'Contacto', to: '/contact' },
 ]
 
 // Redes — placeholders por ahora (href '#'); se cambian por las reales luego.

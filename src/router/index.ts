@@ -19,10 +19,24 @@ const routes: RouteRecordRaw[] = [
     meta: { title: 'Princess Portfolio — Inicio' },
   },
   {
+    // Listado del portafolio. Va ANTES de `/projects/:slug` por legibilidad
+    // (vue-router prioriza la ruta estática sobre la paramétrica igualmente).
+    path: '/projects',
+    name: 'projects',
+    component: () => import('@/views/ProjectsView.vue'),
+    meta: { title: 'Portafolio · Princess Portfolio' },
+  },
+  {
     path: '/projects/:slug',
     name: 'project-detail',
     component: () => import('@/views/ProjectDetailView.vue'),
     meta: { title: 'Proyecto · Princess Portfolio' },
+  },
+  {
+    path: '/contact',
+    name: 'contact',
+    component: () => import('@/views/ContactView.vue'),
+    meta: { title: 'Contacto · Princess Portfolio' },
   },
   {
     path: '/blog',

@@ -9,6 +9,10 @@
 - <https://karolbinkow.ski/>: ideas of footer
 - <https://halston-architecture-template.webflow.io/>: idea para mostrar el perfil de trabajo, y animaciones en cada scroll
 - <https://thestudiobyjuliegranger.com/>: alternativa al acordion que siento que no me gusta
+- <https://ronnsquare.fr/>: referencias, es como un linea de imagenes y cuando hago hover se detienen
+- <https://ronnsquare.fr/>: idea de corazon creciendo
+- <https://danielkiss.hu/>: creativity
+- <https://emotion-agency.com/contact>: contact
 
 ## mine
 

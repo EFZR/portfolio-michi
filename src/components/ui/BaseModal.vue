@@ -13,9 +13,16 @@ interface Props {
   eyebrow?: string
   /** Ancho máximo de la hoja. `wide` para catálogos/grids de varias columnas. */
   size?: ModalSize
+  /**
+   * Nombre accesible del botón de cerrar. Cada diálogo debería pasar el suyo
+   * ("Cerrar catálogo", "Cerrar ficha…"): con varios diálogos en la misma
+   * página, un "Cerrar" genérico obliga a quien navega por lista de botones a
+   * adivinar cuál cierra qué.
+   */
+  closeLabel?: string
 }
 
-const { open, title, eyebrow = '', size = 'default' } = defineProps<Props>()
+const { open, title, eyebrow = '', size = 'default', closeLabel = 'Cerrar' } = defineProps<Props>()
 
 const emit = defineEmits<{
   /** El diálogo pide cerrarse (Esc, click fuera, botón cerrar). */
@@ -188,7 +195,7 @@ const sizeClasses: Record<ModalSize, string> = {
               <button
                 type="button"
                 data-cursor="grow"
-                aria-label="Cerrar catálogo"
+                :aria-label="closeLabel"
                 class="group -mr-1 -mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border text-foreground transition-colors duration-300 hover:border-primary hover:text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                 @click="emit('close')"
               >
