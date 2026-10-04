@@ -58,6 +58,25 @@ interface Referencia {
 
 const esId = (v: unknown): v is string => typeof v === 'string' && /^[0-9a-f]{8,64}$/.test(v)
 
+/**
+ * Resuelve un texto que puede venir bilingüe.
+ *
+ * Firestore guarda `{ es, en }` para todo lo traducible, incluidos los títulos.
+ * La primera versión de este script hacía `String(data.title)` y eso produjo 44
+ * medios titulados «[object Object]» con slug `object-object`. El bug es obvio
+ * leído, y no se vio al escribirlo porque el tipo de Firestore es `unknown`.
+ */
+function textoDe(v: unknown, respaldo: string): string {
+  if (typeof v === 'string' && v.trim()) return v
+  if (v && typeof v === 'object' && !Array.isArray(v)) {
+    const o = v as Record<string, unknown>
+    for (const clave of ['es', 'en']) {
+      if (typeof o[clave] === 'string' && (o[clave] as string).trim()) return o[clave] as string
+    }
+  }
+  return respaldo
+}
+
 function binario(): string {
   for (const c of [CLI, CLI_DEBUG]) if (existsSync(c)) return c
   console.error(
@@ -83,7 +102,7 @@ async function recoger(db: Firestore): Promise<Referencia[]> {
         documento: d.id,
         campo,
         valor,
-        titulo: String(data.title ?? data.name ?? d.id),
+        titulo: textoDe(data.title ?? data.name, d.id),
         // Las de picsum son relleno; las de `/public` son fotos de verdad que
         // ya estaban en el sitio.
         tags: valor.startsWith('/') ? [] : ['provisional'],
@@ -98,7 +117,7 @@ async function recoger(db: Firestore): Promise<Referencia[]> {
   // Las imágenes dentro del cuerpo de un artículo.
   const arts = await getDocs(collection(db, 'articles'))
   for (const d of arts.docs) {
-    const data = d.data() as { content?: unknown; title?: string }
+    const data = d.data() as { content?: unknown; title?: unknown }
     const bloques = Array.isArray(data.content) ? data.content : []
     bloques.forEach((b, i) => {
       if (typeof b !== 'object' || b === null) return
@@ -112,7 +131,7 @@ async function recoger(db: Firestore): Promise<Referencia[]> {
         campo: 'content',
         bloque: i,
         valor,
-        titulo: String(bloque.caption ?? `${data.title ?? d.id} — imagen`).slice(0, 70),
+        titulo: textoDe(bloque.caption, `${textoDe(data.title, d.id)} — imagen`).slice(0, 70),
         tags: valor.startsWith('/') ? [] : ['provisional'],
       })
     })
@@ -198,6 +217,51 @@ const bucket = env.VITE_FIREBASE_STORAGE_BUCKET
 if (!bucket) {
   console.error('Falta VITE_FIREBASE_STORAGE_BUCKET en .env.')
   process.exit(1)
+}
+
+// ── MODO REPARACIÓN ──────────────────────────────────────────────────────────
+//
+// Corrige el `title` de los medios ya importados sin volver a procesar nada.
+// Hace falta porque la primera corrida los tituló «[object Object]».
+//
+// NO toca el `slug`, y por tanto tampoco los nombres de archivo. Es seguro: la
+// URL se construye con `basePath` + el `path` de cada rendition, nunca con el
+// slug. Y reprocesar para arreglar nombres de archivo costaría tres minutos,
+// dejaría los viejos huérfanos en el mismo prefijo, y sería cosmética sobre 42
+// imágenes de relleno que Karol va a reemplazar de todos modos.
+if (process.argv.includes('--retitle')) {
+  const snap = await getDocs(collection(db, 'media'))
+  const titulos = new Map<string, string>()
+
+  // Los títulos se re-resuelven desde los documentos que referencian cada
+  // medio, que es la fuente de verdad.
+  const anotar = async (coleccion: string, campoId: string, campoTitulo: string) => {
+    const docs = await getDocs(collection(db, coleccion))
+    for (const d of docs.docs) {
+      const data = d.data() as Record<string, unknown>
+      const id = data[campoId]
+      if (esId(id)) titulos.set(id, textoDe(data[campoTitulo] ?? data.name, d.id))
+    }
+  }
+  await anotar('projects', 'image', 'title')
+  await anotar('categories', 'image', 'name')
+  await anotar('articles', 'coverImage', 'title')
+
+  let corregidos = 0
+  for (const d of snap.docs) {
+    const nuevo = titulos.get(d.id)
+    const actual = String((d.data() as { title?: unknown }).title ?? '')
+    if (!nuevo || nuevo === actual) continue
+    console.log(`  ${d.id}  ${JSON.stringify(actual)} → ${JSON.stringify(nuevo)}`)
+    if (APLICAR) await updateDoc(doc(db, 'media', d.id), { title: nuevo })
+    corregidos++
+  }
+
+  console.log(
+    `\n${corregidos} título(s) ${APLICAR ? 'corregidos' : 'por corregir (añadí --apply)'}.` +
+      (APLICAR && corregidos ? '\n\nSiguiente: `npm run fetch:content`.\n' : '\n'),
+  )
+  process.exit(0)
 }
 
 const referencias = await recoger(db)

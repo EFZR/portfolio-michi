@@ -98,7 +98,8 @@ describe('un esquema grande con lista y enum', () => {
     category: 'marketing',
     summary: es('Relanzamiento de una casa de perfumería botánica.'),
     description: es('Aurora llevaba seis años vendiendo sin decir quién era.'),
-    image: 'https://picsum.photos/seed/x/1000/1250',
+    // El campo es `media`: el valor es el ID de la biblioteca, no una URL.
+    image: 'a3019c0e70e8a473',
     client: es('Aurora Botánica'),
     year: 2026,
     role: es('Estrategia de marca'),

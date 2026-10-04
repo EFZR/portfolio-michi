@@ -19,7 +19,7 @@ describe('los seis tipos sobreviven la ida y vuelta', () => {
     ['lista', { type: 'list', ordered: false, items: ['uno', 'dos'] }],
     ['lista numerada', { type: 'list', ordered: true, items: ['primero'] }],
     ['código', { type: 'code', code: 'const x = 1', language: 'ts' }],
-    ['imagen', { type: 'image', src: '/foto.jpg', caption: 'Un pie' }],
+    ['imagen', { type: 'image', mediaId: 'a3019c0e70e8a473', caption: 'Un pie' }],
   ]
 
   it.each(casos)('%s', (_n, bloque) => {
@@ -174,8 +174,11 @@ describe('lo que el contenido real tenía y se perdía', () => {
     expect(ida([{ type: 'quote', text: 'Sin autor' }])[0]).not.toHaveProperty('cite')
   })
 
-  it('una imagen conserva src y pie', () => {
-    const bloque: Bloque = { type: 'image', src: '/foto.jpg', caption: 'Un pie que importa' }
+  it('una imagen conserva la referencia y el pie', () => {
+    // Lo que se persiste es el ID de la biblioteca. La URL que el editor
+    // pintaba en `src` se vuelve a resolver al abrir, así que guardarla solo
+    // crearía una copia que envejece.
+    const bloque: Bloque = { type: 'image', mediaId: 'a3019c0e70e8a473', caption: 'Un pie que importa' }
     expect(ida([bloque])[0]).toMatchObject(bloque)
   })
 
@@ -183,7 +186,7 @@ describe('lo que el contenido real tenía y se perdía', () => {
     const articulo: Bloque[] = [
       { type: 'paragraph', text: 'Primer párrafo.' },
       { type: 'heading', text: 'Un apartado' },
-      { type: 'image', src: '/a.jpg', caption: 'Pie' },
+      { type: 'image', mediaId: 'ff5c3159e705bc43', caption: 'Pie' },
       { type: 'quote', text: 'Una cita.', cite: 'Alguien' },
       { type: 'list', ordered: false, items: ['uno', 'dos'] },
       { type: 'code', code: 'const x = 1', language: 'ts' },
