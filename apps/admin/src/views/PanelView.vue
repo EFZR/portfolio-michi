@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import AppShell from '@/components/shell/AppShell.vue'
+import AvisoToolchain from '@/components/shell/AvisoToolchain.vue'
 import type { Seccion } from '@/components/shell/RailNav.vue'
 import SumarioView from './SumarioView.vue'
 import SettingsView from './SettingsView.vue'
@@ -9,6 +10,7 @@ import BlogView from './BlogView.vue'
 import InboxView from './InboxView.vue'
 import { useSession } from '@/composables/useSession'
 import { useUpdater } from '@/composables/useUpdater'
+import { useToolchain } from '@/composables/useToolchain'
 import contenido from '@web/data/content.json'
 
 const { usuario, salir } = useSession()
@@ -60,7 +62,19 @@ const folio = computed(() =>
 )
 
 const actualizacion = useUpdater()
-onMounted(() => actualizacion.buscar())
+const toolchain = useToolchain()
+
+/**
+ * Las dos comprobaciones de arranque. No se esperan la una a la otra: son
+ * independientes y ninguna debe retrasar la pintada del panel.
+ *
+ * El sondeo de ffmpeg es el R1 del pipeline de medios: saber qué se va a poder
+ * generar ANTES de que alguien invierta el tiempo de subir una foto de 30 MB.
+ */
+onMounted(() => {
+  void actualizacion.buscar()
+  void toolchain.sondear()
+})
 </script>
 
 <template>
@@ -79,6 +93,9 @@ onMounted(() => actualizacion.buscar())
       pueda hacer con esa información.
     -->
     <template #aviso>
+      <!-- Primero el toolchain: condiciona si se puede trabajar, no solo si hay versión nueva. -->
+      <AvisoToolchain />
+
       <div
         v-if="['disponible', 'descargando'].includes(actualizacion.estado.value)"
         class="flex items-center justify-between gap-6 border-b border-primary bg-primary-soft/40 px-8 py-3"
