@@ -29,7 +29,9 @@ const pad = (n: number) => String(n).padStart(2, '0')
       scroll quedaría una banda vacía sobre él. Además así siempre se ve en qué
       sección se está.
     -->
-    <header class="sticky top-0 z-40 flex h-16 shrink-0 items-center border-b border-border bg-background">
+    <header
+      class="sticky top-0 z-40 flex h-16 shrink-0 items-center border-b border-border bg-background"
+    >
       <!-- La marca ocupa exactamente el ancho del raíl: la retícula empieza aquí. -->
       <span
         class="grid w-16 shrink-0 place-items-center border-r border-border self-stretch font-heading text-xl font-semibold leading-none"

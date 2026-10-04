@@ -71,7 +71,9 @@ onMounted(() => mensajes.cargar())
     <header class="flex flex-wrap items-end justify-between gap-6 border-b border-border pb-6">
       <div>
         <p class="font-mono text-[0.65rem] uppercase tracking-[0.35em] text-primary">Bandeja</p>
-        <h2 class="mt-3 font-heading text-[clamp(1.75rem,4vw,2.75rem)] font-semibold leading-none tracking-tight">
+        <h2
+          class="mt-3 font-heading text-[clamp(1.75rem,4vw,2.75rem)] font-semibold leading-none tracking-tight"
+        >
           {{ ordenados.length }}
           <span class="text-muted-foreground">
             {{ ordenados.length === 1 ? 'mensaje' : 'mensajes' }}
@@ -84,14 +86,20 @@ onMounted(() => mensajes.cargar())
       </p>
     </header>
 
-    <p v-if="mensajes.cargando.value" class="mt-10 font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">
+    <p
+      v-if="mensajes.cargando.value"
+      class="mt-10 font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground"
+    >
       Cargando…
     </p>
     <p v-else-if="mensajes.error.value" role="alert" class="mt-10 text-sm font-medium text-primary">
       {{ mensajes.error.value }}
     </p>
 
-    <p v-else-if="!ordenados.length" class="mt-14 max-w-prose text-sm leading-relaxed text-muted-foreground">
+    <p
+      v-else-if="!ordenados.length"
+      class="mt-14 max-w-prose text-sm leading-relaxed text-muted-foreground"
+    >
       Todavía no ha escrito nadie. Los mensajes del formulario de
       <span class="text-foreground">/contact</span> aparecen aquí.
     </p>
@@ -113,12 +121,16 @@ onMounted(() => mensajes.cargar())
 
           <button type="button" class="min-w-0 flex-1 text-left" @click="abrir(m)">
             <span class="flex flex-wrap items-baseline gap-x-3">
-              <span class="font-heading text-lg font-semibold tracking-tight transition-colors duration-300 group-hover/m:text-primary">
+              <span
+                class="font-heading text-lg font-semibold tracking-tight transition-colors duration-300 group-hover/m:text-primary"
+              >
                 {{ m.name }}
               </span>
               <span class="font-mono text-[0.65rem] text-muted-foreground">{{ m.email }}</span>
             </span>
-            <span class="mt-1 flex flex-wrap items-center gap-x-3 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">
+            <span
+              class="mt-1 flex flex-wrap items-center gap-x-3 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground"
+            >
               <span>{{ m.discipline }}</span>
               <span aria-hidden="true" class="text-border">·</span>
               <span class="normal-case tracking-normal">{{ fecha(m.receivedAt) }}</span>
@@ -128,7 +140,9 @@ onMounted(() => mensajes.cargar())
             </span>
           </button>
 
-          <span class="flex shrink-0 items-center gap-2 opacity-0 transition-opacity duration-200 group-hover/m:opacity-100 focus-within:opacity-100">
+          <span
+            class="flex shrink-0 items-center gap-2 opacity-0 transition-opacity duration-200 group-hover/m:opacity-100 focus-within:opacity-100"
+          >
             <button
               type="button"
               class="px-2 py-1 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground transition-colors duration-200 hover:text-primary"
@@ -139,7 +153,9 @@ onMounted(() => mensajes.cargar())
             <button
               type="button"
               class="px-2 py-1 font-mono text-[0.65rem] uppercase tracking-[0.2em] transition-colors duration-200"
-              :class="porBorrar === m.id ? 'text-primary' : 'text-muted-foreground hover:text-primary'"
+              :class="
+                porBorrar === m.id ? 'text-primary' : 'text-muted-foreground hover:text-primary'
+              "
               @click="porBorrar === m.id ? borrar(m) : (porBorrar = String(m.id))"
               @blur="porBorrar = ''"
             >
@@ -159,7 +175,11 @@ onMounted(() => mensajes.cargar())
       </li>
     </ul>
 
-    <p v-if="aviso" role="status" class="mt-8 border-l-2 border-primary py-2 ps-4 text-sm text-muted-foreground">
+    <p
+      v-if="aviso"
+      role="status"
+      class="mt-8 border-l-2 border-primary py-2 ps-4 text-sm text-muted-foreground"
+    >
       {{ aviso }}
     </p>
   </div>

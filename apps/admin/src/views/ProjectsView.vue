@@ -126,7 +126,9 @@ async function mover(i: number, delta: number) {
       <p class="font-mono text-[0.65rem] uppercase tracking-[0.3em] text-muted-foreground">
         Portafolio<span class="mx-2 text-border">·</span>{{ esNuevo ? 'Nueva ficha' : 'Ficha' }}
       </p>
-      <h2 class="mt-4 font-heading text-[clamp(1.75rem,4vw,2.75rem)] font-semibold leading-none tracking-tight">
+      <h2
+        class="mt-4 font-heading text-[clamp(1.75rem,4vw,2.75rem)] font-semibold leading-none tracking-tight"
+      >
         {{ esNuevo ? 'Proyecto nuevo' : texto(editando.title) || 'Sin título' }}
       </h2>
     </header>
@@ -140,7 +142,11 @@ async function mover(i: number, delta: number) {
       />
     </div>
 
-    <p v-if="aviso" role="status" class="mt-8 border-l-2 border-primary py-2 ps-4 text-sm text-muted-foreground">
+    <p
+      v-if="aviso"
+      role="status"
+      class="mt-8 border-l-2 border-primary py-2 ps-4 text-sm text-muted-foreground"
+    >
       {{ guardando ? 'Guardando…' : aviso }}
     </p>
   </div>
@@ -150,7 +156,9 @@ async function mover(i: number, delta: number) {
     <header class="flex flex-wrap items-end justify-between gap-6 border-b border-border pb-6">
       <div>
         <p class="font-mono text-[0.65rem] uppercase tracking-[0.35em] text-primary">Portafolio</p>
-        <h2 class="mt-3 font-heading text-[clamp(1.75rem,4vw,2.75rem)] font-semibold leading-none tracking-tight">
+        <h2
+          class="mt-3 font-heading text-[clamp(1.75rem,4vw,2.75rem)] font-semibold leading-none tracking-tight"
+        >
           {{ visibles.length }}
           <span class="text-muted-foreground">
             {{ visibles.length === 1 ? 'ficha' : 'fichas' }}
@@ -164,7 +172,9 @@ async function mover(i: number, delta: number) {
         @click="crear"
       >
         Nuevo proyecto
-        <span aria-hidden="true" class="transition-transform duration-300 group-hover:translate-x-1">+</span>
+        <span aria-hidden="true" class="transition-transform duration-300 group-hover:translate-x-1"
+          >+</span
+        >
       </button>
     </header>
 
@@ -183,10 +193,17 @@ async function mover(i: number, delta: number) {
       </button>
     </div>
 
-    <p v-if="proyectos.cargando.value" class="mt-10 font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">
+    <p
+      v-if="proyectos.cargando.value"
+      class="mt-10 font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground"
+    >
       Cargando…
     </p>
-    <p v-else-if="proyectos.error.value || errorEsquema" role="alert" class="mt-10 text-sm font-medium text-primary">
+    <p
+      v-else-if="proyectos.error.value || errorEsquema"
+      role="alert"
+      class="mt-10 text-sm font-medium text-primary"
+    >
       {{ proyectos.error.value || errorEsquema }}
     </p>
 
@@ -195,13 +212,19 @@ async function mover(i: number, delta: number) {
         <div
           class="group/f grid grid-cols-[2.5rem_1fr_auto] items-baseline gap-4 border-b border-border py-5 transition-colors duration-300"
         >
-          <span class="font-mono text-xs tracking-[0.2em] text-muted-foreground">{{ pad(i + 1) }}</span>
+          <span class="font-mono text-xs tracking-[0.2em] text-muted-foreground">{{
+            pad(i + 1)
+          }}</span>
 
           <button type="button" class="min-w-0 text-left" @click="abrir(p)">
-            <span class="font-heading text-xl font-semibold tracking-tight transition-colors duration-300 group-hover/f:text-primary sm:text-2xl">
+            <span
+              class="font-heading text-xl font-semibold tracking-tight transition-colors duration-300 group-hover/f:text-primary sm:text-2xl"
+            >
               {{ texto(p.title) || 'Sin título' }}
             </span>
-            <span class="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">
+            <span
+              class="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground"
+            >
               <span>{{ nombreRubro(p.category) }}</span>
               <span aria-hidden="true" class="text-border">·</span>
               <span>{{ p.year }}</span>
@@ -212,7 +235,9 @@ async function mover(i: number, delta: number) {
           </button>
 
           <!-- Controles: solo aparecen al acercarse a la fila. -->
-          <span class="flex items-center gap-1 opacity-0 transition-opacity duration-200 group-hover/f:opacity-100 focus-within:opacity-100">
+          <span
+            class="flex items-center gap-1 opacity-0 transition-opacity duration-200 group-hover/f:opacity-100 focus-within:opacity-100"
+          >
             <button
               type="button"
               :disabled="i === 0 || filtro !== 'todos'"
@@ -240,7 +265,9 @@ async function mover(i: number, delta: number) {
             <button
               type="button"
               class="ms-2 px-2 py-1 font-mono text-[0.65rem] uppercase tracking-[0.2em] transition-colors duration-200"
-              :class="porBorrar === p.id ? 'text-primary' : 'text-muted-foreground hover:text-primary'"
+              :class="
+                porBorrar === p.id ? 'text-primary' : 'text-muted-foreground hover:text-primary'
+              "
               @click="porBorrar === p.id ? borrar(p) : (porBorrar = String(p.id))"
               @blur="porBorrar = ''"
             >
@@ -251,11 +278,18 @@ async function mover(i: number, delta: number) {
       </li>
     </ul>
 
-    <p v-if="filtro !== 'todos'" class="mt-6 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">
+    <p
+      v-if="filtro !== 'todos'"
+      class="mt-6 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground"
+    >
       El orden solo se puede cambiar sin filtro
     </p>
 
-    <p v-if="aviso" role="status" class="mt-8 border-l-2 border-primary py-2 ps-4 text-sm text-muted-foreground">
+    <p
+      v-if="aviso"
+      role="status"
+      class="mt-8 border-l-2 border-primary py-2 ps-4 text-sm text-muted-foreground"
+    >
       {{ aviso }}
     </p>
   </div>

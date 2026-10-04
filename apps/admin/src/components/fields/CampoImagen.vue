@@ -11,7 +11,9 @@ const { subir, subiendo, progreso, error: errorSubida } = useUpload()
 const input = ref<HTMLInputElement | null>(null)
 
 const ratio = computed(() => props.campo.constraints?.aspectRatio as AspectRatio | undefined)
-const ratioCss = computed(() => (ratio.value ? `${ratio.value.width} / ${ratio.value.height}` : undefined))
+const ratioCss = computed(() =>
+  ratio.value ? `${ratio.value.width} / ${ratio.value.height}` : undefined,
+)
 const url = computed(() => String(props.valor ?? ''))
 
 /**
@@ -24,7 +26,12 @@ async function alElegir(e: Event) {
   const file = (e.target as HTMLInputElement).files?.[0]
   if (!file) return
 
-  const r = await subir(file, destino.value, { campo: props.campo.key, ruta: props.ruta }, ratio.value)
+  const r = await subir(
+    file,
+    destino.value,
+    { campo: props.campo.key, ruta: props.ruta },
+    ratio.value,
+  )
   if (r) emit('cambiar', r.url)
 
   // Se limpia el input o elegir el MISMO archivo otra vez no dispararía `change`.
@@ -73,7 +80,10 @@ async function alElegir(e: Event) {
               {{ subiendo ? progreso : 'Subir imagen' }}
             </button>
 
-            <span v-if="ratioCss" class="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground/70">
+            <span
+              v-if="ratioCss"
+              class="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground/70"
+            >
               {{ ratioCss.replace(' / ', ':') }}
             </span>
 

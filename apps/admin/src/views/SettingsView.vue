@@ -102,7 +102,11 @@ onMounted(() => abrir(activo.value))
             type="button"
             :aria-current="activo === grupo.id ? 'true' : undefined"
             class="group/g flex w-full items-baseline gap-3 border-b border-border py-2.5 text-left transition-colors duration-200"
-            :class="activo === grupo.id ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'"
+            :class="
+              activo === grupo.id
+                ? 'text-foreground'
+                : 'text-muted-foreground hover:text-foreground'
+            "
             @click="abrir(grupo.id)"
           >
             <span

@@ -15,6 +15,8 @@ export const ICONOS: Record<string, string> = {
   projects: 'M4 4h11v11H4zM9 9h11v11H9',
   // Blog — página con renglones y un pliegue.
   blog: 'M6 3h8l4 4v14H6zM14 3v4h4M9 12h6M9 16h6',
+  // Biblioteca — encuadres apilados, como una pila de copias, con un visto.
+  media: 'M7 4h13v13H7zM4 7v13h13M11 9.5l2.5 2.5 3.5-3.5',
   // Bandeja — el cajón de entrada.
   inbox: 'M3 13h5l1 3h6l1-3h5M5 5h14l2 8v6H3v-6z',
 }

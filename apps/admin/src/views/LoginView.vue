@@ -53,8 +53,8 @@ const CONTROL =
       </h1>
 
       <p class="max-w-xs text-sm leading-relaxed text-muted-foreground">
-        Desde aquí se edita todo lo que se lee en la web. Nada se publica solo:
-        los cambios salen en el siguiente despliegue.
+        Desde aquí se edita todo lo que se lee en la web. Nada se publica solo: los cambios salen en
+        el siguiente despliegue.
       </p>
     </section>
 

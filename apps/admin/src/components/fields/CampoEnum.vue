@@ -30,7 +30,12 @@ const radios = computed(() => props.campo.ui?.control === 'radios')
         Cargando opciones…
       </p>
 
-      <div v-else-if="radios" class="flex flex-wrap gap-2" role="radiogroup" :aria-label="campo.label">
+      <div
+        v-else-if="radios"
+        class="flex flex-wrap gap-2"
+        role="radiogroup"
+        :aria-label="campo.label"
+      >
         <button
           v-for="op in options"
           :key="op.value"

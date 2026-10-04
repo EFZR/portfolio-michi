@@ -65,10 +65,7 @@ const verMenores = ref(false)
     ffmpeg está, pero algún formato de salida no se va a poder generar. Se
     puede trabajar; conviene saberlo.
   -->
-  <div
-    v-else-if="importantes.length"
-    class="border-b border-primary bg-primary-soft/40 px-8 py-4"
-  >
+  <div v-else-if="importantes.length" class="border-b border-primary bg-primary-soft/40 px-8 py-4">
     <p class="font-mono text-[0.65rem] uppercase tracking-[0.25em] text-primary">
       ffmpeg incompleto · {{ importantes.length }}
       {{ importantes.length === 1 ? 'formato afectado' : 'formatos afectados' }}

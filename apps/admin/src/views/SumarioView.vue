@@ -21,7 +21,9 @@ const pad = (n: number) => String(n).padStart(2, '0')
   <div class="mx-auto grid max-w-6xl gap-x-12 gap-y-14 lg:grid-cols-12">
     <section class="lg:col-span-7">
       <p class="font-mono text-[0.65rem] uppercase tracking-[0.35em] text-primary">Sumario</p>
-      <h2 class="mt-4 font-heading text-[clamp(2.25rem,5vw,3.5rem)] font-semibold leading-[0.95] tracking-tight">
+      <h2
+        class="mt-4 font-heading text-[clamp(2.25rem,5vw,3.5rem)] font-semibold leading-[0.95] tracking-tight"
+      >
         Todo lo que se<br />
         <span class="italic text-primary">edita</span> desde aquí
       </h2>
@@ -32,7 +34,6 @@ const pad = (n: number) => String(n).padStart(2, '0')
             type="button"
             :disabled="!seccion.listo"
             class="group/item grid w-full grid-cols-[2.5rem_1fr_auto] items-baseline gap-4 border-b border-border py-6 text-left transition-colors duration-300 enabled:hover:text-primary disabled:opacity-40"
-          
             @click="emit('ir', seccion.id)"
           >
             <span class="font-mono text-xs tracking-[0.2em] text-muted-foreground">
@@ -81,8 +82,7 @@ const pad = (n: number) => String(n).padStart(2, '0')
       </dl>
 
       <p class="mt-8 text-sm leading-relaxed text-muted-foreground">
-        Lo que se guarda aquí llega a la web en el siguiente despliegue. Nada se
-        publica solo.
+        Lo que se guarda aquí llega a la web en el siguiente despliegue. Nada se publica solo.
       </p>
     </aside>
   </div>

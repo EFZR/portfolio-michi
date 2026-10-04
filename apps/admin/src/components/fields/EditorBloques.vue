@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { t } from '@princess/content'
 import CampoDinamico from './CampoDinamico.vue'
 import { BLOQUES, ORDEN_BLOQUES, normalizar, nuevoBloque } from './bloques'
 import type { FieldProps } from './tipos'
 import ArticleContent from '@web/components/blog/ArticleContent.vue'
+import { useMediaLibrary } from '@/composables/useMediaLibrary'
 
 /**
  * EDITOR DE BLOQUES — el widget `custom` del contenido del blog.
@@ -96,6 +97,17 @@ function resolver(valor: unknown): unknown {
   if (Array.isArray(valor)) return valor.map(resolver)
   return valor
 }
+
+/**
+ * Resolutor de medios para la vista previa: la biblioteca VIVA.
+ *
+ * `ArticleContent` es el MISMO componente que pinta el artículo publicado, y
+ * por defecto resuelve contra el contenido ya desplegado. Acá hace falta lo
+ * contrario: ver la foto que se acaba de subir.
+ */
+const biblioteca = useMediaLibrary()
+const resolverMedio = (id: string) => biblioteca.porId(id)
+onMounted(() => biblioteca.cargar())
 </script>
 
 <template>
@@ -120,7 +132,16 @@ function resolver(valor: unknown): unknown {
 
     <!-- ───────────────────── VISTA PREVIA ───────────────────── -->
     <div v-if="previa" class="mt-8 border-s border-border ps-6">
-      <ArticleContent v-if="lista.length" :blocks="bloquesResueltos" />
+      <!--
+        El resolutor apunta a la biblioteca VIVA, no al `content.json`
+        publicado: en la vista previa hace falta ver la foto que se acaba de
+        subir, y esa todavía no está en el snapshot del último despliegue.
+      -->
+      <ArticleContent
+        v-if="lista.length"
+        :blocks="bloquesResueltos"
+        :resolver-medio="resolverMedio"
+      />
       <p v-else class="text-sm text-muted-foreground">Todavía no hay nada que previsualizar.</p>
     </div>
 

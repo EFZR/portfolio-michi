@@ -1,5 +1,5 @@
 import { computed, ref, shallowRef, type ComputedRef, type Ref } from 'vue'
-import { collection, doc, getDocs, setDoc } from 'firebase/firestore'
+import { collection, doc, getDocs, setDoc, updateDoc } from 'firebase/firestore'
 import { getFirebaseAuth, getFirestoreDb } from '@princess/content'
 import type { MediaAsset, MediaKind } from '@princess/content/media'
 
@@ -84,6 +84,23 @@ export interface UseMediaLibraryReturn {
   porId: (id: string | undefined) => MediaAsset | undefined
   filtrar: (kind?: MediaKind, texto?: string) => MediaAsset[]
   importar: (opciones?: { kind?: MediaKind }) => Promise<MediaAsset | null>
+  guardar: (id: string, cambios: EditableMedia) => Promise<boolean>
+  /** Cuántos medios no se pueden publicar porque les falta el `alt` (R12). */
+  sinAlt: ComputedRef<number>
+}
+
+/** Lo que se puede editar de un medio desde la biblioteca. */
+export interface EditableMedia {
+  title?: string
+  /**
+   * `undefined` deja el campo como está. Para marcar una imagen como
+   * decorativa hay que pasar la cadena VACÍA, que es un estado declarado y
+   * distinto de «nadie lo escribió» (R12).
+   */
+  alt?: string
+  caption?: string
+  credit?: string
+  tags?: string[]
 }
 
 export function useMediaLibrary(): UseMediaLibraryReturn {
@@ -245,13 +262,41 @@ export function useMediaLibrary(): UseMediaLibraryReturn {
     }
   }
 
+  /**
+   * Guarda los metadatos editables de un medio.
+   *
+   * Solo esos campos, nunca el registro completo: las renditions, el
+   * `pipeline` y el `source` los escribe el pipeline y no hay razón para que
+   * el panel pueda tocarlos. Un `setDoc` desde aquí podría perder una
+   * rendition por un error de tipado; un `updateDoc` con cuatro claves, no.
+   */
+  async function guardar(id: string, cambios: EditableMedia): Promise<boolean> {
+    error.value = ''
+    const parche: Record<string, unknown> = { updatedAt: new Date().toISOString() }
+    for (const [k, v] of Object.entries(cambios)) {
+      if (v !== undefined) parche[k] = v
+    }
+
+    try {
+      await updateDoc(doc(db(), 'media', id), parche)
+      assets.value = assets.value.map((a) => (a.id === id ? { ...a, ...parche } as MediaAsset : a))
+      return true
+    } catch (e) {
+      error.value = 'No se pudo guardar. Revisá la conexión.'
+      console.warn('[media]', e)
+      return false
+    }
+  }
+
   return {
     assets: assets as Readonly<Ref<MediaAsset[]>>,
     estado,
     error,
     progreso,
     ocupado: computed(() => progreso.value !== null),
+    sinAlt: computed(() => assets.value.filter((a) => a.alt === undefined).length),
     cargar,
+    guardar,
     porId,
     filtrar,
     importar,

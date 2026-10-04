@@ -69,11 +69,7 @@ function mover(i: number, delta: number) {
     <p v-if="campo.help" class="text-sm leading-relaxed text-muted-foreground">{{ campo.help }}</p>
     <p v-if="error" role="alert" class="text-sm font-medium text-primary">{{ error }}</p>
 
-    <div
-      v-for="(_, i) in lista()"
-      :key="i"
-      class="border-s border-border ps-4"
-    >
+    <div v-for="(_, i) in lista()" :key="i" class="border-s border-border ps-4">
       <div class="mb-3 flex items-center justify-between gap-3">
         <span class="font-mono text-xs tracking-[0.25em] text-muted-foreground">
           {{ String(i + 1).padStart(2, '0') }}

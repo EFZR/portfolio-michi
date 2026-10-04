@@ -8,6 +8,7 @@ import SettingsView from './SettingsView.vue'
 import ProjectsView from './ProjectsView.vue'
 import BlogView from './BlogView.vue'
 import InboxView from './InboxView.vue'
+import MediaView from './MediaView.vue'
 import { useSession } from '@/composables/useSession'
 import { useUpdater } from '@/composables/useUpdater'
 import { useToolchain } from '@/composables/useToolchain'
@@ -20,6 +21,7 @@ const SECCIONES: readonly Seccion[] = [
   { id: 'settings', label: 'Configuración global', icono: 'settings', listo: true },
   { id: 'projects', label: 'Portafolio', icono: 'projects', listo: true },
   { id: 'blog', label: 'Blog', icono: 'blog', listo: true },
+  { id: 'media', label: 'Biblioteca', icono: 'media', listo: true },
   { id: 'inbox', label: 'Bandeja', icono: 'inbox', listo: true },
 ]
 
@@ -126,6 +128,7 @@ onMounted(() => {
     <SettingsView v-else-if="activa === 'settings'" />
     <ProjectsView v-else-if="activa === 'projects'" />
     <BlogView v-else-if="activa === 'blog'" />
+    <MediaView v-else-if="activa === 'media'" />
     <InboxView v-else-if="activa === 'inbox'" />
   </AppShell>
 </template>

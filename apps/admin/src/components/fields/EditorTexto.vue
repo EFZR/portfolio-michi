@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch, onMounted } from 'vue'
 import { Editor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
@@ -10,6 +10,39 @@ import { useUpload } from '@/composables/useUpload'
 import { bloquesADocumento, documentoABloques, type Bloque } from './cast'
 import type { FieldProps } from './tipos'
 import ArticleContent from '@web/components/blog/ArticleContent.vue'
+import { useMediaLibrary } from '@/composables/useMediaLibrary'
+import { mediaUrl } from '@princess/content/media'
+
+const BUCKET_MEDIA = import.meta.env.VITE_FIREBASE_STORAGE_BUCKET as string
+
+/**
+ * Resolutor de medios para la vista previa: la biblioteca VIVA.
+ *
+ * `ArticleContent` es el MISMO componente que pinta el artículo publicado, y
+ * por defecto resuelve contra el contenido ya desplegado. Acá hace falta lo
+ * contrario: ver la foto que se acaba de subir.
+ */
+const biblioteca = useMediaLibrary()
+const resolverMedio = (id: string) => biblioteca.porId(id)
+
+/**
+ * La misma resolución, pero devolviendo una URL: es lo que ProseMirror
+ * necesita para pintar la imagen DENTRO del editor.
+ *
+ * Usa el ancho de 960 y no el mayor disponible: el editor mide unos 700 px y
+ * bajar el de 1920 para un hueco de 700 es el mismo error que ya costó 6.21 MB
+ * en la cuadrícula del selector.
+ */
+const resolverUrl = (id: string): string | undefined => {
+  const a = biblioteca.porId(id)
+  if (!a?.basePath) return undefined
+  const ims = [...a.renditions.images, ...(a.poster?.formats ?? [])]
+    .filter((r) => r.format === 'jpeg' || r.format === 'png')
+    .sort((x, y) => x.width - y.width)
+  const elegida = ims.find((r) => r.width >= 960) ?? ims[ims.length - 1]
+  return elegida ? mediaUrl(BUCKET_MEDIA, a.basePath, elegida.path) : undefined
+}
+onMounted(() => biblioteca.cargar())
 
 /**
  * EDITOR DEL ARTÍCULO — se escribe de corrido, no rellenando campos.
@@ -75,7 +108,7 @@ const editor = new Editor({
       `Este artículo tiene contenido que el editor no sabe representar ` +
       `(${e.message}). NO se ha cargado, para no perderlo al guardar.`
   },
-  content: bloquesADocumento(porIdioma.value.es),
+  content: bloquesADocumento(porIdioma.value.es, resolverUrl),
   onUpdate: ({ editor: e }) => {
     emit('cambiar', {
       ...porIdioma.value,
@@ -94,7 +127,9 @@ const editor = new Editor({
 // Al cambiar de idioma se carga el documento de ESE idioma sin emitir: si
 // emitiera, el `onUpdate` del editor recién cargado pisaría el otro idioma.
 watch(idioma, (nuevo) => {
-  editor.commands.setContent(bloquesADocumento(porIdioma.value[nuevo]), { emitUpdate: false })
+  editor.commands.setContent(bloquesADocumento(porIdioma.value[nuevo], resolverUrl), {
+    emitUpdate: false,
+  })
 })
 
 onBeforeUnmount(() => editor.destroy())
@@ -190,7 +225,16 @@ const BOTON =
 
     <!-- ───────────────────── VISTA PREVIA ───────────────────── -->
     <div v-if="previa" class="mt-8 border-s border-border ps-6">
-      <ArticleContent v-if="bloques.length" :blocks="(bloques as never[])" />
+      <!--
+        El resolutor apunta a la biblioteca VIVA, no al `content.json`
+        publicado: en la vista previa hace falta ver la foto que se acaba de
+        subir, y esa todavía no está en el snapshot del último despliegue.
+      -->
+      <ArticleContent
+        v-if="bloques.length"
+        :blocks="bloques as never[]"
+        :resolver-medio="resolverMedio"
+      />
       <p v-else class="text-sm text-muted-foreground">Todavía no hay nada que previsualizar.</p>
     </div>
 
@@ -202,13 +246,28 @@ const BOTON =
       <div
         class="sticky top-16 z-10 mt-5 flex flex-wrap items-center gap-x-1 gap-y-2 border-y border-border bg-background/95 py-2 backdrop-blur-sm"
       >
-        <button type="button" :class="[BOTON, activo('bold')]" title="Negrita · Ctrl+B" @click="editor.chain().focus().toggleBold().run()">
+        <button
+          type="button"
+          :class="[BOTON, activo('bold')]"
+          title="Negrita · Ctrl+B"
+          @click="editor.chain().focus().toggleBold().run()"
+        >
           <strong>B</strong>
         </button>
-        <button type="button" :class="[BOTON, activo('italic')]" title="Cursiva · Ctrl+I" @click="editor.chain().focus().toggleItalic().run()">
+        <button
+          type="button"
+          :class="[BOTON, activo('italic')]"
+          title="Cursiva · Ctrl+I"
+          @click="editor.chain().focus().toggleItalic().run()"
+        >
           <em>I</em>
         </button>
-        <button type="button" :class="[BOTON, activo('code')]" title="Código en línea" @click="editor.chain().focus().toggleCode().run()">
+        <button
+          type="button"
+          :class="[BOTON, activo('code')]"
+          title="Código en línea"
+          @click="editor.chain().focus().toggleCode().run()"
+        >
           &lt;/&gt;
         </button>
         <button type="button" :class="[BOTON, activo('link')]" title="Enlace" @click="enlazar">
@@ -217,26 +276,58 @@ const BOTON =
 
         <span aria-hidden="true" class="mx-2 h-4 w-px bg-border" />
 
-        <button type="button" :class="[BOTON, activo('heading', { level: 2 })]" title="Subtítulo · ##" @click="editor.chain().focus().toggleHeading({ level: 2 }).run()">
+        <button
+          type="button"
+          :class="[BOTON, activo('heading', { level: 2 })]"
+          title="Subtítulo · ##"
+          @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
+        >
           Subtítulo
         </button>
-        <button type="button" :class="[BOTON, activo('blockquote')]" title="Cita · &gt;" @click="editor.chain().focus().toggleBlockquote().run()">
+        <button
+          type="button"
+          :class="[BOTON, activo('blockquote')]"
+          title="Cita · &gt;"
+          @click="editor.chain().focus().toggleBlockquote().run()"
+        >
           Cita
         </button>
-        <button type="button" :class="[BOTON, activo('bulletList')]" title="Lista · -" @click="editor.chain().focus().toggleBulletList().run()">
+        <button
+          type="button"
+          :class="[BOTON, activo('bulletList')]"
+          title="Lista · -"
+          @click="editor.chain().focus().toggleBulletList().run()"
+        >
           Lista
         </button>
-        <button type="button" :class="[BOTON, activo('orderedList')]" title="Numerada · 1." @click="editor.chain().focus().toggleOrderedList().run()">
+        <button
+          type="button"
+          :class="[BOTON, activo('orderedList')]"
+          title="Numerada · 1."
+          @click="editor.chain().focus().toggleOrderedList().run()"
+        >
           1. 2. 3.
         </button>
-        <button type="button" :class="[BOTON, activo('codeBlock')]" title="Código · ```" @click="editor.chain().focus().toggleCodeBlock().run()">
+        <button
+          type="button"
+          :class="[BOTON, activo('codeBlock')]"
+          title="Código · ```"
+          @click="editor.chain().focus().toggleCodeBlock().run()"
+        >
           Código
         </button>
-        <button type="button" :class="[BOTON, activo('image')]" title="Insertar imagen" @click="pidiendoImagen = true">
+        <button
+          type="button"
+          :class="[BOTON, activo('image')]"
+          title="Insertar imagen"
+          @click="pidiendoImagen = true"
+        >
           Imagen
         </button>
 
-        <span class="ms-auto hidden font-mono text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground/70 lg:inline">
+        <span
+          class="ms-auto hidden font-mono text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground/70 lg:inline"
+        >
           ## subtítulo · &gt; cita · - lista
         </span>
       </div>
@@ -279,7 +370,9 @@ const BOTON =
         >
           {{ subiendo ? progreso : 'Subir archivo' }}
         </button>
-        <button type="button" :class="[BOTON, 'text-primary']" @click="insertarImagen">Poner</button>
+        <button type="button" :class="[BOTON, 'text-primary']" @click="insertarImagen">
+          Poner
+        </button>
       </div>
 
       <p v-if="errorSubida" role="alert" class="mt-2 text-sm leading-relaxed text-primary">
@@ -311,7 +404,9 @@ const BOTON =
           @input="
             editor
               .chain()
-              .updateAttributes('blockquote', { cite: ($event.target as HTMLInputElement).value || null })
+              .updateAttributes('blockquote', {
+                cite: ($event.target as HTMLInputElement).value || null,
+              })
               .run()
           "
         />

@@ -20,7 +20,9 @@ const emit = defineEmits<{ cambiar: [valor: unknown]; salir: [] }>()
       @blur="emit('salir')"
     />
     <span>
-      <span class="block font-mono text-[0.65rem] uppercase tracking-[0.25em]">{{ campo.label }}</span>
+      <span class="block font-mono text-[0.65rem] uppercase tracking-[0.25em]">{{
+        campo.label
+      }}</span>
       <span v-if="campo.help" class="mt-1.5 block text-sm leading-relaxed text-muted-foreground">
         {{ campo.help }}
       </span>

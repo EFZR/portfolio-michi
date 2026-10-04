@@ -22,7 +22,6 @@ defineProps<FieldProps>()
     </p>
     <pre
       class="mt-3 overflow-x-auto rounded-md bg-surface p-3 font-mono text-xs text-muted-foreground"
-      >{{ JSON.stringify(valor, null, 2) }}</pre
-    >
+      >{{ JSON.stringify(valor, null, 2) }}</pre>
   </div>
 </template>
