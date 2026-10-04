@@ -1,9 +1,15 @@
 rules_version = '2';
 
 
-// Imágenes del sitio: las sirve la web pública, así que la lectura es abierta.
+// Archivos del sitio: los sirve la web pública, así que la lectura es abierta.
 // La escritura es solo de la admin, y además acotada — un panel con un fallo
-// puede subir un vídeo de 200 MB por accidente; las reglas no.
+// puede subir un archivo enorme por accidente; las reglas no.
+//
+// OJO CON CÓMO SE COMBINAN LAS REGLAS: cuando varias coinciden con la misma
+// ruta, el acceso se concede si CUALQUIERA de ellas lo permite (es un OR, no
+// gana la más específica). Por eso el bloque de `media/` no «sobrescribe» al
+// comodín de abajo: lo AMPLÍA para esa carpeta, y el comodín sigue poniendo el
+// límite estrecho en todo lo demás.
 
 service firebase.storage {
   match /b/{bucket}/o {
@@ -13,9 +19,47 @@ service firebase.storage {
           && request.auth.uid == 'P6sA78EI10QVrPDbg0CAxEL1f8o2';
     }
 
+    /**
+     * Lo que el pipeline de medios produce y sube bajo `media/<id>/`.
+     *
+     * Los topes salen de lo MEDIDO, no de un número redondo:
+     *
+     *  - Imágenes: la rendition más pesada de una foto de 1200 px fueron
+     *    110 KB, y el original de una cámara de 24 MP está entre 8 y 10 MB.
+     *    25 MB deja margen para un JPEG grande sin abrir la puerta a un RAW de
+     *    60 MB, que además no se puede servir en una web.
+     *
+     *  - Vídeo: las dos renditions de un clip de 6 s pesaron 2.9 MB; el
+     *    original de un minuto en 1080p desde un móvil ronda los 100-150 MB.
+     *    200 MB cubre eso. Por encima conviene recortar antes de subir: el
+     *    tier gratuito son 5 GB y a 200 MB por pieza se agota con 25.
+     *
+     *  - `asset.json`: el registro medido pesó 4.1 KB. 64 KB es holgado
+     *    incluso con un historial de decisiones largo.
+     *
+     * Se comprueba el TIPO además del tamaño: sin eso, `media/<id>/x.jpg`
+     * podría ser un ejecutable con la extensión cambiada.
+     */
+    function isValidMediaFile() {
+      let r = request.resource;
+      return (r.contentType.matches('image/(jpeg|png|webp|avif|gif)')
+                && r.size <= 25 * 1024 * 1024)
+          || (r.contentType.matches('video/(mp4|webm|quicktime)')
+                && r.size <= 200 * 1024 * 1024)
+          || (r.contentType == 'application/json' && r.size <= 64 * 1024);
+    }
+
+    /** Lo que subía el widget viejo: una sola imagen convertida en el canvas. */
     function isValidImage() {
       return request.resource.size <= 5 * 1024 * 1024
           && request.resource.contentType.matches('image/(jpeg|png|webp|avif)');
+    }
+
+    // La biblioteca de medios.
+    match /media/{assetId}/{file} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidMediaFile();
+      allow delete: if isAdmin();
     }
 
     match /{path=**} {

@@ -63,6 +63,7 @@ beforeEach(async () => {
     await setDoc(doc(db, 'projects/prueba'), { title: 'Proyecto' })
     await setDoc(doc(db, 'schemas/contact'), { version: 1 })
     await setDoc(doc(db, 'messages/uno'), { name: 'X' })
+    await setDoc(doc(db, 'media/a3019c0e70e8a473'), { slug: 'foto', kind: 'image' })
   })
 })
 
@@ -163,6 +164,34 @@ describe('el formulario de contacto', () => {
     await assertFails(getDoc(doc(anon(), 'messages/uno')))
     await assertFails(deleteDoc(doc(anon(), 'messages/uno')))
     await assertSucceeds(getDoc(doc(admin(), 'messages/uno')))
+  })
+})
+
+describe('la biblioteca de medios', () => {
+  it('cualquiera la lee: el prebuild de la web la baja SIN autenticarse', async () => {
+    // Es deliberado. Así el build lee exactamente lo que ve un visitante y, si
+    // una regla ocultara algo que la web necesita, el fallo sale en el build y
+    // no en producción con la página a medio pintar.
+    await assertSucceeds(getDoc(doc(anon(), 'media/a3019c0e70e8a473')))
+  })
+
+  it('solo la admin escribe', async () => {
+    await assertFails(setDoc(doc(anon(), 'media/nuevo'), { slug: 'x', kind: 'image' }))
+    await assertFails(setDoc(doc(otro(), 'media/nuevo'), { slug: 'x', kind: 'image' }))
+    await assertSucceeds(setDoc(doc(admin(), 'media/nuevo'), { slug: 'x', kind: 'image' }))
+  })
+
+  it('un anónimo no puede borrar un medio ni cambiarle el alt', async () => {
+    // El `alt` es lo que decide si se publica (R12): dejarlo editable por
+    // cualquiera permitiría publicar una imagen sin describir.
+    await assertFails(deleteDoc(doc(anon(), 'media/a3019c0e70e8a473')))
+    await assertFails(updateDoc(doc(anon(), 'media/a3019c0e70e8a473'), { alt: 'puesto' }))
+  })
+
+  it('la admin puede reemplazar y borrar un medio', async () => {
+    const db = admin()
+    await assertSucceeds(updateDoc(doc(db, 'media/a3019c0e70e8a473'), { alt: 'Retrato' }))
+    await assertSucceeds(deleteDoc(doc(db, 'media/a3019c0e70e8a473')))
   })
 })
 
