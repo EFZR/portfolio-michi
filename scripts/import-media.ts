@@ -226,7 +226,17 @@ if (!APLICAR) {
   process.exit(0)
 }
 
-const token = await auth.currentUser!.getIdToken()
+/**
+ * El token se pide POR IMAGEN, no una vez antes del bucle.
+ *
+ * `getIdToken()` devuelve el que ya tiene en caché y solo va a la red cuando
+ * está por caducar, así que no cuesta nada. Pedirlo una vez funcionaría para
+ * estas 46 (son unos tres minutos) pero un lote grande —o un re-derivado de
+ * toda la biblioteca, que es para lo que existe `media-cli`— pasaría de la
+ * hora de vida del token y fallaría a mitad, dejando parte migrada y parte no.
+ */
+const token = () => auth.currentUser!.getIdToken()
+
 let hechas = 0
 let saltadas = 0
 const fallos: string[] = []
@@ -253,7 +263,7 @@ try {
             '--path', ruta,
             '--out', TMP,
             '--bucket', bucket,
-            '--token', token,
+            '--token', await token(),
             '--title', rs[0].titulo,
             // El `alt` NO se inventa. Sin él el asset no se publica (R12), y
             // eso es correcto: una descripción automática sería peor que la
