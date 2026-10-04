@@ -1,0 +1,2962 @@
+{
+  "fetchedAt": "2026-10-04T02:28:37.183Z",
+  "ui": {
+    "about": {
+      "statement": [
+        {
+          "en": "",
+          "es": "Mercadóloga,"
+        },
+        {
+          "en": "",
+          "es": "fotógrafa"
+        },
+        {
+          "en": "",
+          "es": "& modelo."
+        }
+      ],
+      "aria": {
+        "es": "Soy mercadóloga, fotógrafa y modelo",
+        "en": ""
+      },
+      "kicker": {
+        "es": "¿Qué hago?",
+        "en": ""
+      },
+      "cueText": {
+        "es": "DESLIZA · SCROLL · ",
+        "en": ""
+      },
+      "copy": {
+        "es": "Uno la mirada estética con la estrategia de marca: creo imágenes que comunican, conectan y convierten.",
+        "en": ""
+      }
+    },
+    "contact": {
+      "statement": {
+        "es": "Hagamos algo que la gente",
+        "en": ""
+      },
+      "phrase": {
+        "es": "Escríbeme a {email} — trabajo desde {location}, con la agenda abierta.",
+        "en": ""
+      },
+      "arcAccent": {
+        "es": "juntos",
+        "en": ""
+      },
+      "arcTitle": {
+        "es": "Estás listo para trabajar",
+        "en": ""
+      },
+      "statementAccent": {
+        "es": "recuerde",
+        "en": ""
+      }
+    },
+    "blog": {
+      "kicker": {
+        "es": "Blog",
+        "en": ""
+      },
+      "title": [
+        {
+          "en": "",
+          "es": "Notas"
+        },
+        {
+          "en": "",
+          "es": "de taller"
+        }
+      ],
+      "categories": [
+        {
+          "en": "",
+          "es": "Dirección de arte"
+        },
+        {
+          "en": "",
+          "es": "Detrás de cámara"
+        },
+        {
+          "en": "",
+          "es": "Marketing"
+        },
+        {
+          "en": "",
+          "es": "Oficio"
+        },
+        {
+          "en": "",
+          "es": "Herramientas"
+        }
+      ],
+      "emptyTitle": {
+        "es": "Por aquí no hay nada",
+        "en": ""
+      },
+      "archiveDays": 365,
+      "recentDays": 7,
+      "subhead": {
+        "es": "Lo que voy aprendiendo mientras trabajo. Sin fórmulas ni listas de diez pasos: solo lo que me funcionó y lo que no.",
+        "en": ""
+      },
+      "ctaShowAll": {
+        "es": "Ver todo",
+        "en": ""
+      },
+      "ctaBack": {
+        "es": "Ver todas las notas",
+        "en": ""
+      },
+      "emptyDetail": {
+        "es": "Prueba con otra palabra, o quita el filtro y échale un ojo a todo.",
+        "en": ""
+      }
+    },
+    "footer": {
+      "colStudio": {
+        "es": "Estudio",
+        "en": ""
+      },
+      "copyright": {
+        "es": "© {year} {author}. Todos los derechos reservados.",
+        "en": ""
+      },
+      "social": [],
+      "backToTop": {
+        "es": "Volver arriba",
+        "en": ""
+      },
+      "studioHighlight": {
+        "es": "freelance",
+        "en": ""
+      },
+      "colNav": {
+        "es": "Navegación",
+        "en": ""
+      },
+      "colSocial": {
+        "es": "Redes",
+        "en": ""
+      },
+      "links": [
+        {
+          "label": {
+            "en": "",
+            "es": "Inicio"
+          },
+          "to": "/"
+        },
+        {
+          "to": "/projects",
+          "label": {
+            "en": "",
+            "es": "Portafolio"
+          }
+        },
+        {
+          "to": "/blog",
+          "label": {
+            "en": "",
+            "es": "Blog"
+          }
+        },
+        {
+          "label": {
+            "en": "",
+            "es": "Proceso"
+          },
+          "to": "/#process"
+        },
+        {
+          "label": {
+            "en": "",
+            "es": "Sobre mí"
+          },
+          "to": "/#about"
+        },
+        {
+          "label": {
+            "en": "",
+            "es": "Contacto"
+          },
+          "to": "/contact"
+        }
+      ],
+      "cta": {
+        "es": "Hablemos",
+        "en": ""
+      },
+      "studioText": {
+        "es": "Disponible para proyectos freelance y colaboraciones.",
+        "en": ""
+      },
+      "kicker": {
+        "es": "¿Trabajamos juntos?",
+        "en": ""
+      }
+    },
+    "services": {
+      "modalEyebrow": {
+        "es": "Todo lo que hago",
+        "en": ""
+      },
+      "cta": {
+        "es": "Catálogo completo",
+        "en": ""
+      },
+      "subhead": {
+        "es": "Tres frentes, una misma mirada.",
+        "en": ""
+      },
+      "modalTitle": {
+        "es": "Catálogo de servicios",
+        "en": ""
+      },
+      "modalClosingLink": {
+        "es": "escríbeme y lo armamos a medida",
+        "en": ""
+      },
+      "kicker": {
+        "es": "Servicios",
+        "en": ""
+      },
+      "modalClosing": {
+        "es": "¿Tu proyecto no encaja en ninguna casilla? Suele ser la mejor señal —",
+        "en": ""
+      }
+    },
+    "site": {
+      "author": "Michi My Princess",
+      "email": "karolmpalmam@gmail.com",
+      "name": "Princess Portfolio",
+      "location": "Tegucigalpa, Honduras",
+      "description": {
+        "es": "Fotógrafa, directora de arte y mercadóloga. Imágenes que comunican, conectan y convierten.",
+        "en": ""
+      }
+    },
+    "hero": {
+      "words": [
+        {
+          "en": "",
+          "es": "tu"
+        },
+        {
+          "en": "",
+          "es": "siguiente"
+        },
+        {
+          "en": "",
+          "es": "nivel"
+        },
+        {
+          "en": "",
+          "es": "empieza"
+        },
+        {
+          "en": "",
+          "es": "aquí"
+        }
+      ],
+      "imageAlt": {
+        "es": "Retrato",
+        "en": ""
+      },
+      "scrollCue": {
+        "es": "(Scroll para ver más)",
+        "en": ""
+      },
+      "aria": {
+        "es": "Tu siguiente nivel empieza aquí",
+        "en": ""
+      },
+      "copy": {
+        "es": "Visualiza, ilustra, dirige. Hace que las ideas existan.",
+        "en": ""
+      }
+    },
+    "notFound": {
+      "copy": {
+        "es": "El recurso que buscas no existe o fue movido.",
+        "en": ""
+      },
+      "kicker": {
+        "es": "404",
+        "en": ""
+      },
+      "title": {
+        "es": "Página no encontrada",
+        "en": ""
+      },
+      "cta": {
+        "es": "Volver al inicio",
+        "en": ""
+      }
+    },
+    "contactPage": {
+      "title": [
+        {
+          "en": "",
+          "es": "Cuéntame"
+        },
+        {
+          "en": "",
+          "es": "qué traes"
+        }
+      ],
+      "kicker": {
+        "es": "Contacto",
+        "en": ""
+      },
+      "subhead": {
+        "es": "No hace falta que lo tengas resuelto. Con que me digas qué quieres que pase, ya tenemos por dónde empezar.",
+        "en": ""
+      },
+      "howItWorks": {
+        "es": "Cómo funciona",
+        "en": ""
+      },
+      "steps": [
+        {
+          "detail": {
+            "en": "",
+            "es": "En un par de días, con mis dudas y una idea de tiempos."
+          },
+          "title": {
+            "en": "",
+            "es": "Te respondo"
+          }
+        },
+        {
+          "title": {
+            "en": "",
+            "es": "Nos llamamos"
+          },
+          "detail": {
+            "en": "",
+            "es": "Media hora para ver si encajamos. No cobro por esta parte."
+          }
+        },
+        {
+          "detail": {
+            "en": "",
+            "es": "Alcance, calendario y precio cerrado. Sin letra pequeña."
+          },
+          "title": {
+            "en": "",
+            "es": "Te paso propuesta"
+          }
+        }
+      ],
+      "locationPhrase": {
+        "es": "Trabajo desde {location}, con la agenda abierta.",
+        "en": ""
+      },
+      "direct": {
+        "es": "O directo",
+        "en": ""
+      }
+    },
+    "_version": 1,
+    "nav": {
+      "drawerAria": {
+        "es": "Navegación del pie",
+        "en": ""
+      },
+      "close": {
+        "es": "Cerrar",
+        "en": ""
+      },
+      "items": [
+        {
+          "label": {
+            "en": "",
+            "es": "Portafolio"
+          },
+          "to": "/projects"
+        },
+        {
+          "label": {
+            "en": "",
+            "es": "Blog"
+          },
+          "to": "/blog"
+        },
+        {
+          "to": "/#about",
+          "label": {
+            "en": "",
+            "es": "Sobre mí"
+          }
+        }
+      ],
+      "drawer": [
+        {
+          "to": "/",
+          "label": {
+            "en": "",
+            "es": "Inicio"
+          }
+        },
+        {
+          "label": {
+            "en": "",
+            "es": "Portafolio"
+          },
+          "to": "/projects"
+        },
+        {
+          "to": "/blog",
+          "label": {
+            "en": "",
+            "es": "Blog"
+          }
+        },
+        {
+          "label": {
+            "en": "",
+            "es": "Sobre mí"
+          },
+          "to": "/#about"
+        },
+        {
+          "label": {
+            "en": "",
+            "es": "Contacto"
+          },
+          "to": "/contact"
+        }
+      ],
+      "open": {
+        "es": "Menú",
+        "en": ""
+      },
+      "logoAria": {
+        "es": "Inicio — my Princess",
+        "en": ""
+      },
+      "cta": {
+        "es": "Hablemos",
+        "en": ""
+      }
+    },
+    "portfolio": {
+      "ctaMore": {
+        "es": "Ver {n} historias más",
+        "en": ""
+      },
+      "ctaShowAll": {
+        "es": "Verlo todo",
+        "en": ""
+      },
+      "kicker": {
+        "es": "Portafolio",
+        "en": ""
+      },
+      "stateFiltered": {
+        "es": "Solo {category}",
+        "en": ""
+      },
+      "batch": 6,
+      "subhead": {
+        "es": "Treinta historias que ya salieron de mi cabeza. Entra por el oficio que te llame o recórrelas revueltas, como fueron pasando.",
+        "en": ""
+      },
+      "title": [
+        {
+          "en": "",
+          "es": "Trabajo"
+        },
+        {
+          "en": "",
+          "es": "seleccionado"
+        }
+      ],
+      "stateAll": {
+        "es": "Todo revuelto",
+        "en": ""
+      }
+    },
+    "routes": {
+      "blogPost": {
+        "es": "Artículo · Princess Portfolio",
+        "en": ""
+      },
+      "projects": {
+        "es": "Portafolio · Princess Portfolio",
+        "en": ""
+      },
+      "blog": {
+        "es": "Blog · Princess Portfolio",
+        "en": ""
+      },
+      "notFound": {
+        "es": "404 · Página no encontrada",
+        "en": ""
+      },
+      "projectDetail": {
+        "es": "Proyecto · Princess Portfolio",
+        "en": ""
+      },
+      "home": {
+        "es": "Princess Portfolio — Inicio",
+        "en": ""
+      },
+      "contact": {
+        "es": "Contacto · Princess Portfolio",
+        "en": ""
+      }
+    },
+    "form": {
+      "errorEmailFormat": {
+        "es": "Ese correo no parece completo, revísalo.",
+        "en": ""
+      },
+      "emailLabel": {
+        "es": "A dónde te escribo",
+        "en": ""
+      },
+      "disciplineOther": {
+        "es": "Otra cosa",
+        "en": ""
+      },
+      "emailPlaceholder": {
+        "es": "tucorreo@ejemplo.com",
+        "en": ""
+      },
+      "namePlaceholder": {
+        "es": "Tu nombre",
+        "en": ""
+      },
+      "messageLabel": {
+        "es": "Cuéntame",
+        "en": ""
+      },
+      "messagePlaceholder": {
+        "es": "Estoy montando una marca de…",
+        "en": ""
+      },
+      "disciplineLabel": {
+        "es": "Qué necesitas",
+        "en": ""
+      },
+      "errorName": {
+        "es": "Me falta tu nombre.",
+        "en": ""
+      },
+      "errorMessage": {
+        "es": "Cuéntame un poco más, aunque sean dos líneas.",
+        "en": ""
+      },
+      "errorEmailEmpty": {
+        "es": "Sin un correo no puedo responderte.",
+        "en": ""
+      },
+      "nameLabel": {
+        "es": "Cómo te llamas",
+        "en": ""
+      },
+      "errorDiscipline": {
+        "es": "Dime por dónde va la cosa.",
+        "en": ""
+      }
+    }
+  },
+  "categories": [
+    {
+      "id": "marketing",
+      "description": {
+        "es": "Campañas, identidad y contenido que sostienen una temporada entera.",
+        "en": ""
+      },
+      "tagline": {
+        "es": "Estrategia · Contenido de marca",
+        "en": ""
+      },
+      "order": 0,
+      "name": {
+        "es": "Marketing",
+        "en": ""
+      },
+      "image": "/servicio-marketing.jpg",
+      "kicker": {
+        "es": "Estrategia & marca",
+        "en": ""
+      },
+      "detail": {
+        "es": "Convierto la estética en mensajes que conectan y venden.",
+        "en": ""
+      }
+    },
+    {
+      "id": "fotografia",
+      "image": "/servicio-fotografia.jpg",
+      "tagline": {
+        "es": "Editorial · Producto · Retrato",
+        "en": ""
+      },
+      "name": {
+        "es": "Fotografía",
+        "en": ""
+      },
+      "detail": {
+        "es": "Dirijo la luz para que cada imagen cuente tu historia.",
+        "en": ""
+      },
+      "kicker": {
+        "es": "Editorial & producto",
+        "en": ""
+      },
+      "order": 1,
+      "description": {
+        "es": "Series con concepto, luz dirigida y una paleta que se reconoce.",
+        "en": ""
+      }
+    },
+    {
+      "id": "modelaje",
+      "name": {
+        "es": "Modelaje",
+        "en": ""
+      },
+      "order": 2,
+      "tagline": {
+        "es": "Pasarela · Campaña · Lookbook",
+        "en": ""
+      },
+      "image": "/servicio-modelaje.jpg",
+      "kicker": {
+        "es": "Pasarela & campaña",
+        "en": ""
+      },
+      "detail": {
+        "es": "Presencia frente a cámara con dirección propia.",
+        "en": ""
+      },
+      "description": {
+        "es": "Presencia frente a cámara con dirección propia, del casting al cierre.",
+        "en": ""
+      }
+    }
+  ],
+  "catalog": [
+    {
+      "id": "fotografia",
+      "title": {
+        "es": "Fotografía",
+        "en": ""
+      },
+      "note": {
+        "es": "Set · Locación · Estudio",
+        "en": ""
+      },
+      "items": [
+        {
+          "name": {
+            "en": "",
+            "es": "Editorial de moda"
+          },
+          "description": {
+            "en": "",
+            "es": "Series narrativas con concepto, styling y luz propia."
+          }
+        },
+        {
+          "name": {
+            "en": "",
+            "es": "Retrato de autor"
+          },
+          "description": {
+            "en": "",
+            "es": "Personal o corporativo, dirigido para que la pose no se sienta pose."
+          }
+        },
+        {
+          "description": {
+            "en": "",
+            "es": "Catálogo, e-commerce y piezas de campaña con luz controlada."
+          },
+          "name": {
+            "en": "",
+            "es": "Producto y bodegón"
+          }
+        },
+        {
+          "name": {
+            "en": "",
+            "es": "Lookbook de marca"
+          },
+          "description": {
+            "en": "",
+            "es": "Colección completa lista para tienda, redes y prensa."
+          }
+        },
+        {
+          "description": {
+            "en": "",
+            "es": "Documental de marca: montaje, invitados y detalle."
+          },
+          "name": {
+            "en": "",
+            "es": "Cobertura de evento"
+          }
+        },
+        {
+          "name": {
+            "en": "",
+            "es": "Dirección de arte en set"
+          },
+          "description": {
+            "en": "",
+            "es": "Concepto, paleta, atrezo y moodboard antes del primer disparo."
+          }
+        }
+      ]
+    },
+    {
+      "id": "marketing",
+      "note": {
+        "es": "Estrategia · Contenido · Marca",
+        "en": ""
+      },
+      "title": {
+        "es": "Marketing",
+        "en": ""
+      },
+      "items": [
+        {
+          "description": {
+            "en": "",
+            "es": "Calendario, pilares y formatos según el objetivo del trimestre."
+          },
+          "name": {
+            "en": "",
+            "es": "Estrategia de contenido"
+          }
+        },
+        {
+          "description": {
+            "en": "",
+            "es": "Guía viva de color, tipografía y voz para que todo se vea tuyo."
+          },
+          "name": {
+            "en": "",
+            "es": "Identidad visual y tono"
+          }
+        },
+        {
+          "name": {
+            "en": "",
+            "es": "Gestión de redes"
+          },
+          "description": {
+            "en": "",
+            "es": "Publicación, comunidad y respuesta con criterio editorial."
+          }
+        },
+        {
+          "description": {
+            "en": "",
+            "es": "Del teaser al cierre: piezas, calendario y medición."
+          },
+          "name": {
+            "en": "",
+            "es": "Campañas de lanzamiento"
+          }
+        },
+        {
+          "description": {
+            "en": "",
+            "es": "Textos que suenan a la marca y empujan a la acción."
+          },
+          "name": {
+            "en": "",
+            "es": "Copywriting con estética"
+          }
+        },
+        {
+          "name": {
+            "en": "",
+            "es": "Reportes de desempeño"
+          },
+          "description": {
+            "en": "",
+            "es": "Métricas leídas en claro, con la decisión que sigue."
+          }
+        }
+      ]
+    },
+    {
+      "id": "modelaje",
+      "title": {
+        "es": "Modelaje",
+        "en": ""
+      },
+      "items": [
+        {
+          "name": {
+            "en": "",
+            "es": "Pasarela"
+          },
+          "description": {
+            "en": "",
+            "es": "Desfile, prueba de vestuario y ensayo incluidos."
+          }
+        },
+        {
+          "name": {
+            "en": "",
+            "es": "Campaña publicitaria"
+          },
+          "description": {
+            "en": "",
+            "es": "Imagen de producto o servicio para medios impresos y digitales."
+          }
+        },
+        {
+          "name": {
+            "en": "",
+            "es": "Lookbook y catálogo"
+          },
+          "description": {
+            "en": "",
+            "es": "Jornadas de alto volumen con cambios rápidos y continuidad."
+          }
+        },
+        {
+          "description": {
+            "en": "",
+            "es": "Rostro recurrente de una marca a lo largo de una temporada."
+          },
+          "name": {
+            "en": "",
+            "es": "Imagen de marca"
+          }
+        },
+        {
+          "name": {
+            "en": "",
+            "es": "Contenido UGC"
+          },
+          "description": {
+            "en": "",
+            "es": "Piezas verticales, nativas y creíbles para redes."
+          }
+        },
+        {
+          "name": {
+            "en": "",
+            "es": "Asesoría de portafolio"
+          },
+          "description": {
+            "en": "",
+            "es": "Selección, secuencia y edición para book de modelo."
+          }
+        }
+      ],
+      "note": {
+        "es": "Pasarela · Campaña · Imagen",
+        "en": ""
+      }
+    }
+  ],
+  "projects": [
+    {
+      "id": "manifiesto-aurora",
+      "summary": {
+        "es": "Relanzamiento de una casa de perfumería botánica en clave de manifiesto.",
+        "en": ""
+      },
+      "slug": "manifiesto-aurora",
+      "draft": false,
+      "title": {
+        "es": "Manifiesto Aurora",
+        "en": ""
+      },
+      "category": "marketing",
+      "location": {
+        "es": "Ciudad de México",
+        "en": ""
+      },
+      "year": 2026,
+      "tags": [
+        {
+          "en": "",
+          "es": "Posicionamiento"
+        },
+        {
+          "en": "",
+          "es": "Tono de voz"
+        },
+        {
+          "en": "",
+          "es": "Lanzamiento"
+        }
+      ],
+      "role": {
+        "es": "Estrategia de marca y dirección de contenido",
+        "en": ""
+      },
+      "order": 0,
+      "client": {
+        "es": "Aurora Botánica",
+        "en": ""
+      },
+      "description": {
+        "es": "Aurora llevaba seis años vendiendo sin decir quién era. Reescribimos la marca desde una sola frase —\"el olor de lo que todavía no pasa\"— y de ahí bajaron el tono de voz, la paleta y un calendario de doce semanas con tres piezas por semana. El relanzamiento abrió con un manifiesto impreso que se metía dentro de cada caja.",
+        "en": ""
+      },
+      "image": "https://picsum.photos/seed/manifiesto-aurora/1000/1250"
+    },
+    {
+      "id": "temporada-cero",
+      "location": {
+        "es": "Monterrey",
+        "en": ""
+      },
+      "category": "marketing",
+      "image": "https://picsum.photos/seed/temporada-cero/1000/1250",
+      "client": {
+        "es": "Norte Denim",
+        "en": ""
+      },
+      "order": 1,
+      "slug": "temporada-cero",
+      "description": {
+        "es": "Norte quería estrenar su línea de denim crudo sin fotos de producto. Construimos una campaña de ausencia: texturas, sonido de telar, fragmentos de patrón y una cuenta regresiva sin fecha visible. El día del lanzamiento la lista de espera cubría el 70% del primer tiraje.",
+        "en": ""
+      },
+      "tags": [
+        {
+          "en": "",
+          "es": "Campaña"
+        },
+        {
+          "en": "",
+          "es": "Expectativa"
+        },
+        {
+          "en": "",
+          "es": "Preventa"
+        }
+      ],
+      "year": 2025,
+      "summary": {
+        "es": "La colección que se anunció antes de existir: nueve semanas de expectativa.",
+        "en": ""
+      },
+      "draft": false,
+      "title": {
+        "es": "Temporada Cero",
+        "en": ""
+      },
+      "role": {
+        "es": "Dirección de campaña",
+        "en": ""
+      }
+    },
+    {
+      "id": "ruido-blanco",
+      "description": {
+        "es": "El feed de Salvia competía con el resto de la categoría a base de promesas. Cambiamos la métrica de éxito de alcance a lectura completa: piezas largas, tipografía grande, cero stock photos y un pilar fijo de \"lo que este producto no hace\". El guardado por publicación subió y las devoluciones bajaron.",
+        "en": ""
+      },
+      "summary": {
+        "es": "Una marca de skincare que dejó de gritar y empezó a explicar.",
+        "en": ""
+      },
+      "title": {
+        "es": "Ruido Blanco",
+        "en": ""
+      },
+      "draft": false,
+      "location": {
+        "es": "Remoto",
+        "en": ""
+      },
+      "year": 2025,
+      "tags": [
+        {
+          "en": "",
+          "es": "Contenido"
+        },
+        {
+          "en": "",
+          "es": "Copywriting"
+        },
+        {
+          "en": "",
+          "es": "Educación de marca"
+        }
+      ],
+      "category": "marketing",
+      "image": "https://picsum.photos/seed/ruido-blanco/1000/1250",
+      "role": {
+        "es": "Estrategia de contenido y copywriting",
+        "en": ""
+      },
+      "client": {
+        "es": "Salvia Skincare",
+        "en": ""
+      },
+      "order": 2,
+      "slug": "ruido-blanco"
+    },
+    {
+      "id": "carta-abierta",
+      "role": {
+        "es": "Dirección editorial y newsletter",
+        "en": ""
+      },
+      "image": "https://picsum.photos/seed/carta-abierta/1000/1250",
+      "tags": [
+        {
+          "en": "",
+          "es": "Newsletter"
+        },
+        {
+          "en": "",
+          "es": "Comunidad"
+        },
+        {
+          "en": "",
+          "es": "Marca personal"
+        }
+      ],
+      "year": 2024,
+      "slug": "carta-abierta",
+      "summary": {
+        "es": "Newsletter quincenal que convirtió a una editorial pequeña en una comunidad.",
+        "en": ""
+      },
+      "order": 3,
+      "client": {
+        "es": "Pluma Editorial",
+        "en": ""
+      },
+      "location": {
+        "es": "Bogotá",
+        "en": ""
+      },
+      "category": "marketing",
+      "title": {
+        "es": "Carta Abierta",
+        "en": ""
+      },
+      "draft": false,
+      "description": {
+        "es": "Una editorial independiente con catálogo corto y presupuesto más corto. En lugar de anuncios, una carta cada quince días firmada por una persona real: qué se está leyendo en la oficina, qué se rechazó y por qué. Doce meses después la carta vendía más que la tienda.",
+        "en": ""
+      }
+    },
+    {
+      "id": "mercado-lento",
+      "image": "https://picsum.photos/seed/mercado-lento/1000/1250",
+      "role": {
+        "es": "Estrategia y dirección de arte",
+        "en": ""
+      },
+      "year": 2024,
+      "tags": [
+        {
+          "en": "",
+          "es": "Marca con propósito"
+        },
+        {
+          "en": "",
+          "es": "Dirección de arte"
+        },
+        {
+          "en": "",
+          "es": "Retail"
+        }
+      ],
+      "slug": "mercado-lento",
+      "summary": {
+        "es": "Cooperativa textil contada sin folclore ni lástima.",
+        "en": ""
+      },
+      "order": 4,
+      "client": {
+        "es": "Marea Textil",
+        "en": ""
+      },
+      "location": {
+        "es": "Oaxaca",
+        "en": ""
+      },
+      "category": "marketing",
+      "draft": false,
+      "title": {
+        "es": "Mercado Lento",
+        "en": ""
+      },
+      "description": {
+        "es": "El reto era vender precio justo sin caer en el relato de rescate. Trabajamos la marca como lo que es: un taller con oficio, tiempos largos y lista de espera. Retratos de manos, fichas técnicas visibles y el nombre de quien teje en cada etiqueta.",
+        "en": ""
+      }
+    },
+    {
+      "id": "plan-vitrina",
+      "slug": "plan-vitrina",
+      "image": "https://picsum.photos/seed/plan-vitrina/1000/1250",
+      "location": {
+        "es": "Guadalajara",
+        "en": ""
+      },
+      "category": "marketing",
+      "role": {
+        "es": "Estrategia omnicanal",
+        "en": ""
+      },
+      "order": 5,
+      "year": 2024,
+      "tags": [
+        {
+          "en": "",
+          "es": "Omnicanal"
+        },
+        {
+          "en": "",
+          "es": "Retail"
+        },
+        {
+          "en": "",
+          "es": "Sistema de contenido"
+        }
+      ],
+      "client": {
+        "es": "Ferro Muebles",
+        "en": ""
+      },
+      "summary": {
+        "es": "Puente entre la tienda física y el catálogo digital de una casa de muebles.",
+        "en": ""
+      },
+      "description": {
+        "es": "Ferro tenía dos marcas sin saberlo: la del showroom y la de internet. Unificamos ficha, foto y discurso, y montamos un sistema de \"vitrina viva\": cada montaje del local se fotografía el mismo día y sale como pieza social con el link de compra. El tráfico a tienda dejó de depender del fin de semana.",
+        "en": ""
+      },
+      "title": {
+        "es": "Plan Vitrina",
+        "en": ""
+      },
+      "draft": false
+    },
+    {
+      "id": "cuenta-regresiva",
+      "client": {
+        "es": "Fauna Swim",
+        "en": ""
+      },
+      "description": {
+        "es": "Colección cápsula, inventario corto y una sola oportunidad. Diseñamos una campaña de catorce días con una pieza diaria, un único color por semana y pauta concentrada en las últimas 72 horas. Se agotó antes del cierre y quedó una lista de espera que alimentó la temporada siguiente.",
+        "en": ""
+      },
+      "title": {
+        "es": "Cuenta Regresiva",
+        "en": ""
+      },
+      "draft": false,
+      "location": {
+        "es": "Cartagena",
+        "en": ""
+      },
+      "category": "marketing",
+      "slug": "cuenta-regresiva",
+      "image": "https://picsum.photos/seed/cuenta-regresiva/1000/1250",
+      "summary": {
+        "es": "Lanzamiento de temporada resuelto en catorce días de tensión controlada.",
+        "en": ""
+      },
+      "role": {
+        "es": "Dirección de campaña y pauta",
+        "en": ""
+      },
+      "order": 6,
+      "year": 2023,
+      "tags": [
+        {
+          "en": "",
+          "es": "Lanzamiento"
+        },
+        {
+          "en": "",
+          "es": "Pauta"
+        },
+        {
+          "en": "",
+          "es": "Cápsula"
+        }
+      ]
+    },
+    {
+      "id": "tono-de-casa",
+      "draft": false,
+      "title": {
+        "es": "Tono de Casa",
+        "en": ""
+      },
+      "location": {
+        "es": "Tulum",
+        "en": ""
+      },
+      "category": "marketing",
+      "image": "https://picsum.photos/seed/tono-de-casa/1000/1250",
+      "role": {
+        "es": "Identidad verbal y guía de contenido",
+        "en": ""
+      },
+      "tags": [
+        {
+          "en": "",
+          "es": "Identidad verbal"
+        },
+        {
+          "en": "",
+          "es": "Guía de marca"
+        },
+        {
+          "en": "",
+          "es": "Hospitalidad"
+        }
+      ],
+      "year": 2023,
+      "description": {
+        "es": "Recepción, spa, restaurante y redes sonaban a cuatro hoteles. Escribimos una guía viva de treinta páginas —con ejemplos reales, no reglas abstractas— y la entrenamos en dos talleres. Seis meses después, el 90% de las publicaciones pasaba la revisión a la primera.",
+        "en": ""
+      },
+      "slug": "tono-de-casa",
+      "client": {
+        "es": "Duna Hotel",
+        "en": ""
+      },
+      "order": 7,
+      "summary": {
+        "es": "Manual de voz para un hotel donde escribían once personas distintas.",
+        "en": ""
+      }
+    },
+    {
+      "id": "boletin-quince",
+      "draft": false,
+      "title": {
+        "es": "Boletín Quince",
+        "en": ""
+      },
+      "location": {
+        "es": "Medellín",
+        "en": ""
+      },
+      "category": "marketing",
+      "image": "https://picsum.photos/seed/boletin-quince/1000/1250",
+      "role": {
+        "es": "Contenido y gestión de comunidad",
+        "en": ""
+      },
+      "year": 2023,
+      "tags": [
+        {
+          "en": "",
+          "es": "Suscripción"
+        },
+        {
+          "en": "",
+          "es": "Comunidad"
+        },
+        {
+          "en": "",
+          "es": "Retención"
+        }
+      ],
+      "description": {
+        "es": "Óxido vendía bolsas; queríamos que vendiera pertenencia. Cada quince días, un origen nuevo con su ficha de cata, la historia del productor y una receta de método. El churn de la suscripción cayó a la mitad en el primer trimestre.",
+        "en": ""
+      },
+      "slug": "boletin-quince",
+      "client": {
+        "es": "Óxido Café",
+        "en": ""
+      },
+      "order": 8,
+      "summary": {
+        "es": "Suscripción de café convertida en club con calendario propio.",
+        "en": ""
+      }
+    },
+    {
+      "id": "metrica-honesta",
+      "summary": {
+        "es": "Tablero de reportes que dejó de celebrar números que no significaban nada.",
+        "en": ""
+      },
+      "location": {
+        "es": "Remoto",
+        "en": ""
+      },
+      "client": {
+        "es": "Pauta Agencia",
+        "en": ""
+      },
+      "category": "marketing",
+      "draft": false,
+      "title": {
+        "es": "Métrica Honesta",
+        "en": ""
+      },
+      "description": {
+        "es": "Una agencia mediana reportaba impresiones a clientes que solo querían saber si vendían. Redefinimos el set de métricas por objetivo, armamos un tablero de una sola pantalla y escribimos la plantilla de lectura: qué pasó, qué se decide, qué se prueba. Las reuniones mensuales pasaron de noventa a treinta minutos.",
+        "en": ""
+      },
+      "slug": "metrica-honesta",
+      "image": "https://picsum.photos/seed/metrica-honesta/1000/1250",
+      "role": {
+        "es": "Consultoría de medición",
+        "en": ""
+      },
+      "order": 9,
+      "tags": [
+        {
+          "en": "",
+          "es": "Analítica"
+        },
+        {
+          "en": "",
+          "es": "Reportes"
+        },
+        {
+          "en": "",
+          "es": "Consultoría"
+        }
+      ],
+      "year": 2022
+    },
+    {
+      "id": "luz-de-sal",
+      "client": {
+        "es": "Atelier Sereno",
+        "en": ""
+      },
+      "title": {
+        "es": "Luz de Sal",
+        "en": ""
+      },
+      "draft": false,
+      "summary": {
+        "es": "Editorial de lino y algodón crudo rodada entre las once y la una.",
+        "en": ""
+      },
+      "tags": [
+        {
+          "en": "",
+          "es": "Editorial"
+        },
+        {
+          "en": "",
+          "es": "Luz natural"
+        },
+        {
+          "en": "",
+          "es": "Moda"
+        }
+      ],
+      "year": 2026,
+      "image": "https://picsum.photos/seed/luz-de-sal/1000/1250",
+      "location": {
+        "es": "Salinas de Cuyutlán",
+        "en": ""
+      },
+      "description": {
+        "es": "Seis looks de la colección de verano fotografiados en el peor horario posible, a propósito: la sal devuelve la luz desde abajo y rellena las sombras duras del mediodía. Sin rebotadores, sin difusores, sin retoque de piel. La serie abrió el lookbook y terminó en dos revistas de moda regionales.",
+        "en": ""
+      },
+      "category": "fotografia",
+      "role": {
+        "es": "Fotografía y dirección de arte",
+        "en": ""
+      },
+      "order": 10,
+      "slug": "luz-de-sal"
+    },
+    {
+      "id": "ceniza-y-seda",
+      "location": {
+        "es": "Estudio · CDMX",
+        "en": ""
+      },
+      "category": "fotografia",
+      "title": {
+        "es": "Ceniza & Seda",
+        "en": ""
+      },
+      "draft": false,
+      "summary": {
+        "es": "Estudio en clave baja donde el tejido es el único punto de luz.",
+        "en": ""
+      },
+      "image": "https://picsum.photos/seed/ceniza-y-seda/1000/1250",
+      "client": {
+        "es": "Casa Bruma",
+        "en": ""
+      },
+      "role": {
+        "es": "Fotografía, concepto y styling",
+        "en": ""
+      },
+      "year": 2025,
+      "tags": [
+        {
+          "en": "",
+          "es": "Estudio"
+        },
+        {
+          "en": "",
+          "es": "Clave baja"
+        },
+        {
+          "en": "",
+          "es": "Textil"
+        }
+      ],
+      "slug": "ceniza-y-seda",
+      "description": {
+        "es": "Un solo foco cenital con snoot y el resto de la escena en negro absoluto. La seda entra y sale del haz según la modelo respira, de modo que cada disparo es irrepetible. Doce imágenes finales de novecientas capturas, montadas como secuencia de una sola noche.",
+        "en": ""
+      },
+      "order": 11
+    },
+    {
+      "id": "mirador-norte",
+      "location": {
+        "es": "Sierra de Arteaga",
+        "en": ""
+      },
+      "category": "fotografia",
+      "title": {
+        "es": "Mirador Norte",
+        "en": ""
+      },
+      "draft": false,
+      "summary": {
+        "es": "Ocho páginas de portada sobre abrigo técnico a dos mil metros.",
+        "en": ""
+      },
+      "image": "https://picsum.photos/seed/mirador-norte/1000/1250",
+      "client": {
+        "es": "Cobalto Magazine",
+        "en": ""
+      },
+      "role": {
+        "es": "Fotografía editorial",
+        "en": ""
+      },
+      "tags": [
+        {
+          "en": "",
+          "es": "Editorial"
+        },
+        {
+          "en": "",
+          "es": "Exteriores"
+        },
+        {
+          "en": "",
+          "es": "Portada"
+        }
+      ],
+      "year": 2025,
+      "slug": "mirador-norte",
+      "description": {
+        "es": "Encargo de revista con una ventana de dos días y viento constante. Armamos el plan de rodaje alrededor del clima en vez de contra él: el granizo entró en la historia y la doble página central es la única foto del set con la modelo mirando a cámara.",
+        "en": ""
+      },
+      "order": 12
+    },
+    {
+      "id": "bodegon-invierno",
+      "order": 13,
+      "category": "fotografia",
+      "location": {
+        "es": "Estudio · Puebla",
+        "en": ""
+      },
+      "image": "https://picsum.photos/seed/bodegon-invierno/1000/1250",
+      "summary": {
+        "es": "Catálogo de cerámica esmaltada fotografiado como naturaleza muerta.",
+        "en": ""
+      },
+      "description": {
+        "es": "Cuarenta piezas que en la ficha de e-commerce necesitaban fondo limpio y en campaña necesitaban alma. Resolvimos las dos con el mismo set: una ventana norte, una mesa de nogal y una rutina de cuatro ángulos por pieza. El cliente recortó en cuatro horas lo que antes le tomaba dos jornadas.",
+        "en": ""
+      },
+      "client": {
+        "es": "Rama Cerámica",
+        "en": ""
+      },
+      "draft": false,
+      "title": {
+        "es": "Bodegón de Invierno",
+        "en": ""
+      },
+      "slug": "bodegon-invierno",
+      "tags": [
+        {
+          "en": "",
+          "es": "Producto"
+        },
+        {
+          "en": "",
+          "es": "Bodegón"
+        },
+        {
+          "en": "",
+          "es": "E-commerce"
+        }
+      ],
+      "year": 2025,
+      "role": {
+        "es": "Fotografía de producto",
+        "en": ""
+      }
+    },
+    {
+      "id": "retrato-de-taller",
+      "order": 14,
+      "client": {
+        "es": "Estudio Mímica",
+        "en": ""
+      },
+      "image": "https://picsum.photos/seed/retrato-de-taller/1000/1250",
+      "description": {
+        "es": "Catorce personas de un estudio de diseño, cada una fotografiada en su propio puesto y con sus propias manos ocupadas. Nadie miró a cámara en el primer cuarto de hora: primero conversación, después cámara. El resultado se usa desde la web hasta las tarjetas de prensa.",
+        "en": ""
+      },
+      "role": {
+        "es": "Fotografía de retrato",
+        "en": ""
+      },
+      "summary": {
+        "es": "Serie de retratos corporativos que no parecen retratos corporativos.",
+        "en": ""
+      },
+      "title": {
+        "es": "Retrato de Taller",
+        "en": ""
+      },
+      "draft": false,
+      "tags": [
+        {
+          "en": "",
+          "es": "Retrato"
+        },
+        {
+          "en": "",
+          "es": "Corporativo"
+        },
+        {
+          "en": "",
+          "es": "Documental"
+        }
+      ],
+      "year": 2024,
+      "category": "fotografia",
+      "location": {
+        "es": "Quito",
+        "en": ""
+      },
+      "slug": "retrato-de-taller"
+    },
+    {
+      "id": "la-hora-azul",
+      "order": 15,
+      "client": {
+        "es": "Lumen Joyería",
+        "en": ""
+      },
+      "image": "https://picsum.photos/seed/la-hora-azul/1000/1250",
+      "description": {
+        "es": "El oro pulido es un espejo: de día devuelve el set entero. Rodamos en hora azul, con la ciudad como única fuente y una linterna de mano para el acento. Cada pieza se disparó tres noches seguidas para tener continuidad de color entre looks.",
+        "en": ""
+      },
+      "role": {
+        "es": "Fotografía y dirección de arte",
+        "en": ""
+      },
+      "summary": {
+        "es": "Joyería fotografiada en los veinte minutos exactos después del ocaso.",
+        "en": ""
+      },
+      "title": {
+        "es": "La Hora Azul",
+        "en": ""
+      },
+      "draft": false,
+      "tags": [
+        {
+          "en": "",
+          "es": "Joyería"
+        },
+        {
+          "en": "",
+          "es": "Hora azul"
+        },
+        {
+          "en": "",
+          "es": "Campaña"
+        }
+      ],
+      "year": 2024,
+      "category": "fotografia",
+      "location": {
+        "es": "Valparaíso",
+        "en": ""
+      },
+      "slug": "la-hora-azul"
+    },
+    {
+      "id": "piel-de-lino",
+      "slug": "piel-de-lino",
+      "draft": false,
+      "title": {
+        "es": "Piel de Lino",
+        "en": ""
+      },
+      "summary": {
+        "es": "Campaña de ropa de cama donde la arruga es el argumento de venta.",
+        "en": ""
+      },
+      "role": {
+        "es": "Fotografía de campaña",
+        "en": ""
+      },
+      "description": {
+        "es": "La categoría entera fotografía camas perfectas. Nosotros rodamos al amanecer una cama recién usada, con luz rasante que convierte cada pliegue en relieve. Tres piezas, ningún modelo visible y un aumento del 40% en tiempo de permanencia en la ficha.",
+        "en": ""
+      },
+      "category": "fotografia",
+      "year": 2024,
+      "tags": [
+        {
+          "en": "",
+          "es": "Campaña"
+        },
+        {
+          "en": "",
+          "es": "Textil"
+        },
+        {
+          "en": "",
+          "es": "Interiores"
+        }
+      ],
+      "location": {
+        "es": "Mérida",
+        "en": ""
+      },
+      "order": 16,
+      "client": {
+        "es": "Quinta Esencia",
+        "en": ""
+      },
+      "image": "https://picsum.photos/seed/piel-de-lino/1000/1250"
+    },
+    {
+      "id": "vidrio-templado",
+      "description": {
+        "es": "Fotografiar vidrio transparente sobre fondo claro es un ejercicio de bordes: se ilumina el fondo, no el objeto. Dos paneles, banderas negras a los lados para dibujar el contorno y una jornada completa por cada familia de piezas.",
+        "en": ""
+      },
+      "summary": {
+        "es": "Cristalería soplada resuelta con dos luces y muchísima paciencia.",
+        "en": ""
+      },
+      "slug": "vidrio-templado",
+      "draft": false,
+      "title": {
+        "es": "Vidrio Templado",
+        "en": ""
+      },
+      "category": "fotografia",
+      "location": {
+        "es": "Estudio · CDMX",
+        "en": ""
+      },
+      "tags": [
+        {
+          "en": "",
+          "es": "Still life"
+        },
+        {
+          "en": "",
+          "es": "Producto"
+        },
+        {
+          "en": "",
+          "es": "Estudio"
+        }
+      ],
+      "year": 2023,
+      "role": {
+        "es": "Fotografía de producto y still life",
+        "en": ""
+      },
+      "order": 17,
+      "client": {
+        "es": "Núcleo Studio",
+        "en": ""
+      },
+      "image": "https://picsum.photos/seed/vidrio-templado/1000/1250"
+    },
+    {
+      "id": "campo-abierto",
+      "order": 18,
+      "client": {
+        "es": "Tierra Alta",
+        "en": ""
+      },
+      "summary": {
+        "es": "Tres días de vendimia contados sin una sola foto posada.",
+        "en": ""
+      },
+      "image": "https://picsum.photos/seed/campo-abierto/1000/1250",
+      "description": {
+        "es": "Una bodega familiar quería imágenes para etiqueta, web y prensa. Nos quedamos los tres días de la cosecha desde antes del amanecer, sin dirigir a nadie. Salieron ochocientas fotos; la marca trabaja desde entonces con una selección de sesenta.",
+        "en": ""
+      },
+      "year": 2023,
+      "tags": [
+        {
+          "en": "",
+          "es": "Documental"
+        },
+        {
+          "en": "",
+          "es": "Marca"
+        },
+        {
+          "en": "",
+          "es": "Exteriores"
+        }
+      ],
+      "draft": false,
+      "title": {
+        "es": "Campo Abierto",
+        "en": ""
+      },
+      "role": {
+        "es": "Fotografía documental de marca",
+        "en": ""
+      },
+      "category": "fotografia",
+      "location": {
+        "es": "Valle de Guadalupe",
+        "en": ""
+      },
+      "slug": "campo-abierto"
+    },
+    {
+      "id": "archivo-domestico",
+      "client": {
+        "es": "Nadie, es mío",
+        "en": ""
+      },
+      "summary": {
+        "es": "Serie personal sobre objetos heredados y lo que sostienen.",
+        "en": ""
+      },
+      "slug": "archivo-domestico",
+      "image": "https://picsum.photos/seed/archivo-domestico/1000/1250",
+      "role": {
+        "es": "Fotografía y edición",
+        "en": ""
+      },
+      "order": 19,
+      "location": {
+        "es": "Lima",
+        "en": ""
+      },
+      "category": "fotografia",
+      "tags": [
+        {
+          "en": "",
+          "es": "Mío"
+        },
+        {
+          "en": "",
+          "es": "Serie"
+        },
+        {
+          "en": "",
+          "es": "Bodegón"
+        }
+      ],
+      "year": 2022,
+      "description": {
+        "es": "Cuarenta objetos de tres generaciones de una misma casa, fotografiados con la misma luz, el mismo encuadre y el mismo fondo, como piezas de museo. El contraste entre el rigor del método y la trivialidad de los objetos es todo lo que quería contar. Se expuso en una galería pequeña y sigue creciendo.",
+        "en": ""
+      },
+      "title": {
+        "es": "Archivo Doméstico",
+        "en": ""
+      },
+      "draft": false
+    },
+    {
+      "id": "pasarela-obsidiana",
+      "tags": [
+        {
+          "en": "",
+          "es": "Pasarela"
+        },
+        {
+          "en": "",
+          "es": "Apertura"
+        },
+        {
+          "en": "",
+          "es": "Alta costura"
+        }
+      ],
+      "year": 2026,
+      "order": 20,
+      "role": {
+        "es": "Modelo de pasarela — apertura",
+        "en": ""
+      },
+      "client": {
+        "es": "Casa Bruma",
+        "en": ""
+      },
+      "summary": {
+        "es": "Apertura de desfile con la colección de invierno en negro sobre negro.",
+        "en": ""
+      },
+      "image": "https://picsum.photos/seed/pasarela-obsidiana/1000/1250",
+      "description": {
+        "es": "Abrir un desfile significa fijar el ritmo de los veintidós looks que vienen detrás. Tres pruebas de vestuario, dos ensayos de recorrido y una capa de ocho kilos que había que mover como si no pesara. La foto de apertura terminó siendo la imagen de prensa de la temporada.",
+        "en": ""
+      },
+      "slug": "pasarela-obsidiana",
+      "title": {
+        "es": "Pasarela Obsidiana",
+        "en": ""
+      },
+      "draft": false,
+      "category": "modelaje",
+      "location": {
+        "es": "Fashion Week · CDMX",
+        "en": ""
+      }
+    },
+    {
+      "id": "lookbook-nomada",
+      "tags": [
+        {
+          "en": "",
+          "es": "Lookbook"
+        },
+        {
+          "en": "",
+          "es": "Alto volumen"
+        },
+        {
+          "en": "",
+          "es": "Exteriores"
+        }
+      ],
+      "year": 2025,
+      "order": 21,
+      "role": {
+        "es": "Modelo — colección completa",
+        "en": ""
+      },
+      "client": {
+        "es": "Marea Textil",
+        "en": ""
+      },
+      "summary": {
+        "es": "Treinta y cuatro looks en dos jornadas, con cambio a la intemperie.",
+        "en": ""
+      },
+      "image": "https://picsum.photos/seed/lookbook-nomada/1000/1250",
+      "description": {
+        "es": "Producción de alto volumen: un look cada once minutos, sin carpa y con luz que cambiaba cada media hora. La continuidad se sostuvo con una lista de poses acordada la noche anterior y un espejo de cuerpo entero atado a una camioneta.",
+        "en": ""
+      },
+      "slug": "lookbook-nomada",
+      "draft": false,
+      "title": {
+        "es": "Lookbook Nómada",
+        "en": ""
+      },
+      "category": "modelaje",
+      "location": {
+        "es": "Oaxaca",
+        "en": ""
+      }
+    },
+    {
+      "id": "verano-lento",
+      "summary": {
+        "es": "Campaña de baño rodada dentro del agua, no junto a ella.",
+        "en": ""
+      },
+      "order": 22,
+      "description": {
+        "es": "Cinco horas de inmersión repartidas en dos días, con la cámara en carcasa y la dirección gritando desde una tabla. El brief pedía calma; la calma dentro del agua salada es trabajo físico. Dos de las tomas finales son apneas de más de treinta segundos.",
+        "en": ""
+      },
+      "client": {
+        "es": "Fauna Swim",
+        "en": ""
+      },
+      "category": "modelaje",
+      "location": {
+        "es": "Cartagena",
+        "en": ""
+      },
+      "image": "https://picsum.photos/seed/verano-lento/1000/1250",
+      "slug": "verano-lento",
+      "title": {
+        "es": "Verano Lento",
+        "en": ""
+      },
+      "draft": false,
+      "role": {
+        "es": "Modelo de campaña",
+        "en": ""
+      },
+      "year": 2025,
+      "tags": [
+        {
+          "en": "",
+          "es": "Campaña"
+        },
+        {
+          "en": "",
+          "es": "Swimwear"
+        },
+        {
+          "en": "",
+          "es": "Submarino"
+        }
+      ]
+    },
+    {
+      "id": "rostro-de-temporada",
+      "category": "modelaje",
+      "location": {
+        "es": "CDMX · Estudio",
+        "en": ""
+      },
+      "tags": [
+        {
+          "en": "",
+          "es": "Beauty"
+        },
+        {
+          "en": "",
+          "es": "Imagen de marca"
+        },
+        {
+          "en": "",
+          "es": "Contrato"
+        }
+      ],
+      "year": 2024,
+      "order": 23,
+      "summary": {
+        "es": "Seis meses como cara visible de una línea de cosmética natural.",
+        "en": ""
+      },
+      "role": {
+        "es": "Imagen de marca — contrato de temporada",
+        "en": ""
+      },
+      "description": {
+        "es": "Un contrato de temporada no es una sesión: es sostener el mismo personaje en nueve entregas, con el mismo tono de piel, el mismo gesto y el mismo largo de cabello durante medio año. Incluyó tres sesiones de producto, dos de contenido social y la gráfica de punto de venta.",
+        "en": ""
+      },
+      "image": "https://picsum.photos/seed/rostro-de-temporada/1000/1250",
+      "slug": "rostro-de-temporada",
+      "title": {
+        "es": "Rostro de Temporada",
+        "en": ""
+      },
+      "draft": false,
+      "client": {
+        "es": "Verbena Beauty",
+        "en": ""
+      }
+    },
+    {
+      "id": "prueba-de-vestuario",
+      "category": "modelaje",
+      "location": {
+        "es": "Taller · CDMX",
+        "en": ""
+      },
+      "year": 2024,
+      "tags": [
+        {
+          "en": "",
+          "es": "Fitting"
+        },
+        {
+          "en": "",
+          "es": "Atelier"
+        },
+        {
+          "en": "",
+          "es": "Pasarela"
+        }
+      ],
+      "order": 24,
+      "summary": {
+        "es": "Modelo de ajuste durante el desarrollo completo de una colección.",
+        "en": ""
+      },
+      "role": {
+        "es": "Modelo de ajuste y pasarela",
+        "en": ""
+      },
+      "description": {
+        "es": "Once semanas de pruebas: cada prenda se montó, se marcó y se volvió a montar sobre el mismo cuerpo hasta que el patrón funcionó. Es el trabajo que nadie fotografía y el que decide si el desfile se ve bien. Cerró con la pasarela de presentación.",
+        "en": ""
+      },
+      "image": "https://picsum.photos/seed/prueba-de-vestuario/1000/1250",
+      "slug": "prueba-de-vestuario",
+      "draft": false,
+      "title": {
+        "es": "Prueba de Vestuario",
+        "en": ""
+      },
+      "client": {
+        "es": "Atelier Sereno",
+        "en": ""
+      }
+    },
+    {
+      "id": "noche-de-gala",
+      "image": "https://picsum.photos/seed/noche-de-gala/1000/1250",
+      "description": {
+        "es": "Dos horas circulando entre mesas con collares de archivo, protocolo de seguridad y una lista de ángulos acordada con el fotógrafo de prensa. La campaña impresa se rodó la mañana siguiente, en el mismo teatro vacío, aprovechando la luz de servicio.",
+        "en": ""
+      },
+      "order": 25,
+      "client": {
+        "es": "Lumen Joyería",
+        "en": ""
+      },
+      "slug": "noche-de-gala",
+      "location": {
+        "es": "Teatro Metropólitan",
+        "en": ""
+      },
+      "category": "modelaje",
+      "role": {
+        "es": "Modelo de campaña y evento",
+        "en": ""
+      },
+      "summary": {
+        "es": "Piezas de archivo llevadas en vivo durante la subasta anual.",
+        "en": ""
+      },
+      "tags": [
+        {
+          "en": "",
+          "es": "Evento"
+        },
+        {
+          "en": "",
+          "es": "Joyería"
+        },
+        {
+          "en": "",
+          "es": "Campaña"
+        }
+      ],
+      "year": 2024,
+      "title": {
+        "es": "Noche de Gala",
+        "en": ""
+      },
+      "draft": false
+    },
+    {
+      "id": "denim-crudo",
+      "tags": [
+        {
+          "en": "",
+          "es": "Campaña"
+        },
+        {
+          "en": "",
+          "es": "Denim"
+        },
+        {
+          "en": "",
+          "es": "Serie larga"
+        }
+      ],
+      "year": 2023,
+      "client": {
+        "es": "Norte Denim",
+        "en": ""
+      },
+      "image": "https://picsum.photos/seed/denim-crudo/1000/1250",
+      "role": {
+        "es": "Modelo de campaña",
+        "en": ""
+      },
+      "order": 26,
+      "slug": "denim-crudo",
+      "description": {
+        "es": "La marca quería mostrar cómo envejece su denim. El mismo par de pantalones, el mismo encuadre y la misma pose cada treinta días, medio año seguido. La pieza final es un díptico entre el día uno y el día ciento ochenta.",
+        "en": ""
+      },
+      "draft": false,
+      "title": {
+        "es": "Denim Crudo",
+        "en": ""
+      },
+      "summary": {
+        "es": "Campaña de selvedge fotografiada durante seis meses de uso real.",
+        "en": ""
+      },
+      "location": {
+        "es": "Monterrey",
+        "en": ""
+      },
+      "category": "modelaje"
+    },
+    {
+      "id": "editorial-subterranea",
+      "slug": "editorial-subterranea",
+      "role": {
+        "es": "Modelo editorial",
+        "en": ""
+      },
+      "tags": [
+        {
+          "en": "",
+          "es": "Editorial"
+        },
+        {
+          "en": "",
+          "es": "Revista"
+        },
+        {
+          "en": "",
+          "es": "Locación"
+        }
+      ],
+      "year": 2023,
+      "draft": false,
+      "title": {
+        "es": "Editorial Subterránea",
+        "en": ""
+      },
+      "summary": {
+        "es": "Ocho páginas rodadas en cuatro horas de permiso municipal.",
+        "en": ""
+      },
+      "description": {
+        "es": "Locación cerrada, sin electricidad y con un reloj corriendo. Toda la sesión se resolvió con dos luces de batería y reflejos sobre azulejo. El equipo ensayó la secuencia completa en la calle antes de bajar, para no perder un minuto abajo.",
+        "en": ""
+      },
+      "image": "https://picsum.photos/seed/editorial-subterranea/1000/1250",
+      "client": {
+        "es": "Cobalto Magazine",
+        "en": ""
+      },
+      "order": 27,
+      "location": {
+        "es": "Estación abandonada · CDMX",
+        "en": ""
+      },
+      "category": "modelaje"
+    },
+    {
+      "id": "primer-plano",
+      "client": {
+        "es": "Salvia Skincare",
+        "en": ""
+      },
+      "image": "https://picsum.photos/seed/primer-plano/1000/1250",
+      "description": {
+        "es": "Contenido nativo grabado en casa con luz de ventana, a una toma por pieza y sin retoque de piel. El brief prohibía expresamente la palabra \"perfecto\". Fue la tanda con mejor retención del año para la marca y se reutilizó en pauta durante dos trimestres.",
+        "en": ""
+      },
+      "order": 28,
+      "summary": {
+        "es": "Cuarenta piezas verticales de rutina real, sin guion actuado.",
+        "en": ""
+      },
+      "location": {
+        "es": "Remoto",
+        "en": ""
+      },
+      "category": "modelaje",
+      "slug": "primer-plano",
+      "tags": [
+        {
+          "en": "",
+          "es": "UGC"
+        },
+        {
+          "en": "",
+          "es": "Vertical"
+        },
+        {
+          "en": "",
+          "es": "Beauty"
+        }
+      ],
+      "year": 2023,
+      "role": {
+        "es": "Modelo y creadora de contenido",
+        "en": ""
+      },
+      "draft": false,
+      "title": {
+        "es": "Primer Plano",
+        "en": ""
+      }
+    },
+    {
+      "id": "book-retrospectiva",
+      "category": "modelaje",
+      "order": 29,
+      "location": {
+        "es": "Lima · CDMX",
+        "en": ""
+      },
+      "image": "https://picsum.photos/seed/book-retrospectiva/1000/1250",
+      "summary": {
+        "es": "Cinco años de material propio editados en un book de veinte páginas.",
+        "en": ""
+      },
+      "description": {
+        "es": "Reunir el archivo fue lo fácil; decidir qué dejar fuera, no. El book final tiene veinte imágenes de cinco fotógrafos distintos, ordenadas por temperatura de color y no por fecha, para que se lea como una sola sesión larga. Es la pieza que abre cualquier conversación con agencias.",
+        "en": ""
+      },
+      "role": {
+        "es": "Modelo, edición y secuencia",
+        "en": ""
+      },
+      "draft": false,
+      "title": {
+        "es": "Book Retrospectiva",
+        "en": ""
+      },
+      "year": 2022,
+      "tags": [
+        {
+          "en": "",
+          "es": "Book"
+        },
+        {
+          "en": "",
+          "es": "Archivo"
+        },
+        {
+          "en": "",
+          "es": "Edición"
+        }
+      ],
+      "client": {
+        "es": "Nadie, es mío",
+        "en": ""
+      },
+      "slug": "book-retrospectiva"
+    }
+  ],
+  "articles": [
+    {
+      "id": "cinco-preguntas-antes-de-encender-una-luz",
+      "title": {
+        "es": "Cinco preguntas antes de encender una luz",
+        "en": ""
+      },
+      "draft": false,
+      "tags": [
+        {
+          "en": "",
+          "es": "iluminación"
+        },
+        {
+          "en": "",
+          "es": "preproducción"
+        },
+        {
+          "en": "",
+          "es": "set"
+        }
+      ],
+      "excerpt": {
+        "es": "El equipo es lo último que decido. Antes hay cinco preguntas que me ahorran media jornada y varias discusiones en set.",
+        "en": ""
+      },
+      "readTime": 5,
+      "publishedAt": "2026-09-16",
+      "author": "Karol",
+      "slug": "cinco-preguntas-antes-de-encender-una-luz",
+      "category": "Detrás de cámara",
+      "coverImage": "https://picsum.photos/seed/cinco-preguntas-luz/1600/900",
+      "priority": "high",
+      "likesCount": 74,
+      "content": [
+        {
+          "text": "Montar luces antes de saber qué se está contando es la forma más cara de perder una mañana. Estas cinco preguntas van siempre antes que el primer trípode.",
+          "type": "paragraph"
+        },
+        {
+          "ordered": true,
+          "type": "list",
+          "items": [
+            "¿A qué hora del día pertenece esta imagen? No qué hora es: a cuál pertenece.",
+            "¿De dónde viene la luz en ese mundo? Una ventana, una farola, un flash de prensa.",
+            "¿Qué textura tiene que verse? La piel, la tela y el metal no piden lo mismo.",
+            "¿Qué NO se debe ver? Casi siempre es más decisivo que lo anterior.",
+            "¿Qué pasa si se va la corriente? Si no hay plan B, el plan A es un deseo."
+          ]
+        },
+        {
+          "text": "La quinta parece una broma y es la que más veces me ha salvado. En locación, la mitad de las sesiones acaban resolviéndose con luz natural y un reflector porque algo falló.",
+          "type": "paragraph"
+        },
+        {
+          "text": "Si tu esquema de luz solo funciona con todo el equipo encendido, no es un esquema: es una apuesta.",
+          "type": "quote"
+        }
+      ]
+    },
+    {
+      "id": "como-leer-una-convocatoria-de-casting",
+      "slug": "como-leer-una-convocatoria-de-casting",
+      "publishedAt": "2026-07-11",
+      "draft": false,
+      "title": {
+        "es": "Cómo leer una convocatoria de casting",
+        "en": ""
+      },
+      "priority": "high",
+      "author": "Karol",
+      "excerpt": {
+        "es": "Lo que una convocatoria dice, lo que calla y las tres señales que llevan años avisándome de que no vale la pena ir.",
+        "en": ""
+      },
+      "category": "Oficio",
+      "tags": [
+        {
+          "en": "",
+          "es": "modelaje"
+        },
+        {
+          "en": "",
+          "es": "casting"
+        },
+        {
+          "en": "",
+          "es": "consejos"
+        }
+      ],
+      "content": [
+        {
+          "text": "He ido a castings buenos con convocatorias horribles y a castings horribles con convocatorias impecables. Aun así, hay patrones que aciertan más de lo que fallan.",
+          "type": "paragraph"
+        },
+        {
+          "text": "Las tres señales",
+          "type": "heading"
+        },
+        {
+          "items": [
+            "No dice quién es el cliente. Una marca que no se nombra suele ser una marca que no ha cerrado el presupuesto.",
+            "Pide fotos nuevas con ropa específica antes de la primera llamada. Eso es trabajo sin contrato.",
+            "Habla de \"exposición\" en la parte donde debería hablar de dinero."
+          ],
+          "ordered": true,
+          "type": "list"
+        },
+        {
+          "text": "La tercera es la más común y la más cara. La exposición no paga el transporte y, en mi experiencia, las marcas que la ofrecen tampoco acaban publicando.",
+          "type": "paragraph"
+        },
+        {
+          "text": "Lo que sí quiero ver",
+          "type": "heading"
+        },
+        {
+          "text": "Fechas concretas, horas de jornada, uso de la imagen y por cuánto tiempo. Una convocatoria que responde esas cuatro cosas en el primer mensaje es, casi siempre, un trabajo que existe de verdad.",
+          "type": "paragraph"
+        }
+      ],
+      "likesCount": 96,
+      "readTime": 8,
+      "coverImage": "https://picsum.photos/seed/convocatoria-casting/1600/900"
+    },
+    {
+      "id": "el-dia-que-deje-de-retocar-la-piel",
+      "coverImage": "https://picsum.photos/seed/retocar-piel/1600/900",
+      "content": [
+        {
+          "text": "No fue una decisión ética, al principio. Fue que el retoque me estaba comiendo más horas que la sesión y el resultado empezaba a parecerse al de todo el mundo.",
+          "type": "paragraph"
+        },
+        {
+          "text": "Lo que hago ahora: corrijo lo que no estará ahí la semana que viene —un grano, una pestaña suelta— y no toco lo que la persona verá en el espejo mañana. La regla cabe en una frase y por eso funciona en set, cuando alguien pregunta.",
+          "type": "paragraph"
+        },
+        {
+          "text": "Si tengo que borrarlo para que la foto funcione, la foto no funcionaba.",
+          "type": "quote"
+        }
+      ],
+      "category": "Detrás de cámara",
+      "title": {
+        "es": "El día que dejé de retocar la piel",
+        "en": ""
+      },
+      "draft": false,
+      "publishedAt": "2026-06-02",
+      "author": "Karol",
+      "priority": "normal",
+      "likesCount": 187,
+      "readTime": 4,
+      "slug": "el-dia-que-deje-de-retocar-la-piel",
+      "excerpt": {
+        "es": "Perdí un cliente por esto y gané tres. Un año después no volvería atrás, aunque la primera semana fue incómoda.",
+        "en": ""
+      },
+      "tags": [
+        {
+          "en": "",
+          "es": "retoque"
+        },
+        {
+          "en": "",
+          "es": "retrato"
+        },
+        {
+          "en": "",
+          "es": "criterio"
+        }
+      ]
+    },
+    {
+      "id": "el-encuadre-no-es-el-tema",
+      "readTime": 7,
+      "excerpt": {
+        "es": "Llevo un año revisando por qué mis fotos buenas son buenas. No es la luz, no es la cámara y casi nunca es la modelo.",
+        "en": ""
+      },
+      "title": {
+        "es": "El encuadre no es el tema",
+        "en": ""
+      },
+      "draft": false,
+      "likesCount": 128,
+      "tags": [
+        {
+          "en": "",
+          "es": "composición"
+        },
+        {
+          "en": "",
+          "es": "dirección"
+        },
+        {
+          "en": "",
+          "es": "método"
+        }
+      ],
+      "publishedAt": "2026-09-18",
+      "category": "Dirección de arte",
+      "author": "Karol",
+      "content": [
+        {
+          "text": "Cuando alguien me enseña una foto que no funciona, lo primero que me dice es qué cámara usó. Lo segundo, qué hora era. Nunca me dice qué quería contar, y ese es exactamente el problema: el encuadre no es el tema, es la consecuencia de haber decidido un tema.",
+          "type": "paragraph"
+        },
+        {
+          "text": "Durante el último año guardé las cincuenta imágenes con las que me quedé de cada trabajo y las puse juntas, sin metadatos, sin saber de qué sesión venía cada una. Quería ver si había un patrón. Lo hay, y no es el que esperaba.",
+          "type": "paragraph"
+        },
+        {
+          "text": "Lo que tenían en común",
+          "type": "heading"
+        },
+        {
+          "text": "Ninguna estaba bien compuesta en el sentido de manual. Casi la mitad rompía la regla de los tercios de forma grosera. Lo que sí compartían todas era una decisión visible: algo estaba cortado, tapado o fuera de foco a propósito, y esa ausencia era el asunto de la imagen.",
+          "type": "paragraph"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Una silueta que tapa la mitad del titular, y por eso lo hace legible.",
+            "Un rostro cortado por el borde, que obliga a mirar las manos.",
+            "Un fondo desenfocado hasta el punto de que deja de ser un lugar."
+          ]
+        },
+        {
+          "text": "Una foto no se compone: se decide qué se le quita a la realidad hasta que queda una sola cosa.",
+          "type": "quote"
+        },
+        {
+          "text": "Esto cambió cómo preparo un set. Antes llegaba con referencias de encuadre. Ahora llego con una frase escrita en la primera página del cuaderno, y si al final de la jornada la frase no se sostiene, no importa cuántas imágenes limpias tenga: la sesión no salió.",
+          "type": "paragraph"
+        },
+        {
+          "caption": "Prueba de encuadre antes de la primera toma. La frase del día iba escrita en cinta, pegada al trípode.",
+          "src": "https://picsum.photos/seed/encuadre-set/1600/900",
+          "type": "image"
+        },
+        {
+          "text": "Cómo lo estoy aplicando",
+          "type": "heading"
+        },
+        {
+          "text": "La prueba que hago ahora es tonta y funciona: describo la foto por teléfono a alguien que no estaba. Si necesito más de una frase, la imagen tiene dos temas y hay que tirar uno.",
+          "type": "paragraph"
+        }
+      ],
+      "slug": "el-encuadre-no-es-el-tema",
+      "priority": "hero",
+      "coverImage": "https://picsum.photos/seed/el-encuadre-no-es-el-tema/1600/900"
+    },
+    {
+      "id": "escribir-para-que-se-lea",
+      "excerpt": {
+        "es": "Los textos que más me han servido son los que nadie compartió. Una nota sobre métricas que engañan y las que no.",
+        "en": ""
+      },
+      "priority": "normal",
+      "publishedAt": "2025-12-15",
+      "category": "Marketing",
+      "slug": "escribir-para-que-se-lea",
+      "likesCount": 119,
+      "author": "Karol",
+      "draft": false,
+      "title": {
+        "es": "Escribir para que se lea, no para que se comparta",
+        "en": ""
+      },
+      "readTime": 7,
+      "content": [
+        {
+          "text": "Compartir es una acción social: se comparte lo que dice algo de quien comparte. Leer es una acción privada. Son cosas distintas y casi nunca se dan a la vez.",
+          "type": "paragraph"
+        },
+        {
+          "text": "Cuando monté el tablero de Pauta cambiamos la métrica principal a tiempo de lectura por encima del 70%. La fórmula que usamos era deliberadamente simple, para que nadie la tuviera que explicar dos veces:",
+          "type": "paragraph"
+        },
+        {
+          "type": "code",
+          "code": "SELECT pieza,\n       COUNT(*) FILTER (WHERE avance >= 0.7) * 1.0 / COUNT(*) AS lectura_real\nFROM eventos_scroll\nGROUP BY pieza\nORDER BY lectura_real DESC;",
+          "language": "SQL"
+        },
+        {
+          "text": "El artículo más compartido del trimestre quedó el penúltimo en esa tabla. El que nadie compartió llevaba tres meses trayendo clientes.",
+          "type": "paragraph"
+        }
+      ],
+      "tags": [
+        {
+          "en": "",
+          "es": "copywriting"
+        },
+        {
+          "en": "",
+          "es": "métricas"
+        },
+        {
+          "en": "",
+          "es": "contenido"
+        }
+      ],
+      "coverImage": "https://picsum.photos/seed/escribir-para-leer/1600/900"
+    },
+    {
+      "id": "la-luz-de-las-once",
+      "excerpt": {
+        "es": "Todo el mundo rueda en hora dorada. Llevo dos años rodando a mediodía a propósito y estas son las condiciones en las que gana.",
+        "en": ""
+      },
+      "publishedAt": "2026-02-24",
+      "priority": "normal",
+      "category": "Detrás de cámara",
+      "likesCount": 88,
+      "slug": "la-luz-de-las-once",
+      "author": "Karol",
+      "title": {
+        "es": "La luz de las once",
+        "en": ""
+      },
+      "draft": false,
+      "content": [
+        {
+          "text": "La luz de mediodía tiene mala fama porque hace sombras duras bajo los ojos. Eso es cierto en asfalto. Sobre superficies que devuelven luz desde abajo —sal, arena clara, hormigón pulido, agua— deja de serlo.",
+          "type": "paragraph"
+        },
+        {
+          "text": "La serie de las salinas se rodó entera entre las once y la una, sin rebotadores. El suelo hacía de rebotador gigante y rellenaba exactamente lo que sobraba.",
+          "type": "paragraph"
+        },
+        {
+          "text": "No hay luz mala. Hay luz en el sitio equivocado.",
+          "type": "quote"
+        }
+      ],
+      "readTime": 5,
+      "tags": [
+        {
+          "en": "",
+          "es": "luz natural"
+        },
+        {
+          "en": "",
+          "es": "exteriores"
+        },
+        {
+          "en": "",
+          "es": "editorial"
+        }
+      ],
+      "coverImage": "https://picsum.photos/seed/luz-de-las-once/1600/900"
+    },
+    {
+      "id": "lo-que-aprendi-en-mi-primera-pasarela",
+      "author": "Karol",
+      "content": [
+        {
+          "text": "Nadie te explica que el desfile es la parte corta. Lo largo son las seis horas anteriores, de pie, con la ropa a medio ajustar y sin saber cuándo te toca.",
+          "type": "paragraph"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Come antes. No habrá momento después y nadie te lo va a recordar.",
+            "Aprende el recorrido con los zapatos puestos, no con los tuyos.",
+            "El ritmo lo marca quien abre. Si abres tú, lo marcas para veintidós personas."
+          ]
+        },
+        {
+          "text": "Aquel día fui la número once y salí demasiado rápido. Se nota en las fotos. Dos temporadas después abrí un desfile y me acordé de esto en cada paso.",
+          "type": "paragraph"
+        }
+      ],
+      "publishedAt": "2025-03-18",
+      "readTime": 6,
+      "draft": false,
+      "title": {
+        "es": "Lo que aprendí en mi primera pasarela",
+        "en": ""
+      },
+      "priority": "normal",
+      "likesCount": 243,
+      "tags": [
+        {
+          "en": "",
+          "es": "pasarela"
+        },
+        {
+          "en": "",
+          "es": "principios"
+        },
+        {
+          "en": "",
+          "es": "modelaje"
+        }
+      ],
+      "excerpt": {
+        "es": "Llegué dos horas antes, no comí y me equivoqué en casi todo. Sigue siendo el trabajo del que más aprendí.",
+        "en": ""
+      },
+      "slug": "lo-que-aprendi-en-mi-primera-pasarela",
+      "coverImage": "https://picsum.photos/seed/primera-pasarela/1600/900",
+      "category": "Oficio"
+    },
+    {
+      "id": "mi-maleta-de-locacion",
+      "priority": "normal",
+      "likesCount": 71,
+      "slug": "mi-maleta-de-locacion",
+      "excerpt": {
+        "es": "Lo que llevo siempre, lo que dejé de llevar y las dos cosas baratas que me han sacado de más apuros que la cámara.",
+        "en": ""
+      },
+      "draft": false,
+      "title": {
+        "es": "Mi maleta de locación",
+        "en": ""
+      },
+      "author": "Karol",
+      "category": "Herramientas",
+      "tags": [
+        {
+          "en": "",
+          "es": "equipo"
+        },
+        {
+          "en": "",
+          "es": "locación"
+        },
+        {
+          "en": "",
+          "es": "práctico"
+        }
+      ],
+      "coverImage": "https://picsum.photos/seed/maleta-locacion/1600/900",
+      "publishedAt": "2025-10-30",
+      "content": [
+        {
+          "text": "Cargo menos que hace cinco años y resuelvo más. La lista se redujo sola: lo que no usé en tres sesiones seguidas, salió.",
+          "type": "paragraph"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Cinta de gaffer negra. Sujeta, tapa reflejos y marca posiciones en el suelo.",
+            "Pinzas de madera. Sostienen tela, cierran ropa por detrás, fijan reflectores.",
+            "Un espejo de cuerpo entero plegable, desde el lookbook de Oaxaca.",
+            "Baterías de sobra. Nunca son suficientes, siempre son pocas."
+          ]
+        },
+        {
+          "text": "Lo que dejé de llevar: tres objetivos que usaba una vez al año y un flash que no encendía desde 2023.",
+          "type": "paragraph"
+        }
+      ],
+      "readTime": 4
+    },
+    {
+      "id": "por-que-deje-lightroom-seis-meses",
+      "content": [
+        {
+          "text": "Me di cuenta de que todas mis fotos del año tenían el mismo revelado porque tenían el mismo preset, no porque tuvieran la misma intención. Así que lo quité todo durante seis meses.",
+          "type": "paragraph"
+        },
+        {
+          "text": "Fue lento y bastante peor al principio. Hacia el tercer mes empecé a ver qué hacía realmente cada control, y volví a los presets con una diferencia: ahora los construyo por proyecto, no por gusto.",
+          "type": "paragraph"
+        },
+        {
+          "text": "Un preset es una decisión que tomaste una vez y sigues aplicando sin acordarte de por qué.",
+          "type": "quote"
+        }
+      ],
+      "priority": "normal",
+      "title": {
+        "es": "Por qué dejé Lightroom seis meses",
+        "en": ""
+      },
+      "draft": false,
+      "author": "Karol",
+      "category": "Herramientas",
+      "coverImage": "https://picsum.photos/seed/deje-lightroom/1600/900",
+      "tags": [
+        {
+          "en": "",
+          "es": "revelado"
+        },
+        {
+          "en": "",
+          "es": "experimento"
+        },
+        {
+          "en": "",
+          "es": "flujo"
+        }
+      ],
+      "readTime": 5,
+      "slug": "por-que-deje-lightroom-seis-meses",
+      "likesCount": 58,
+      "publishedAt": "2024-11-05",
+      "excerpt": {
+        "es": "Un experimento incómodo: revelar todo un semestre sin presets, sin curvas guardadas y sin copiar ajustes entre fotos.",
+        "en": ""
+      }
+    },
+    {
+      "id": "precio-cerrado-o-por-hora",
+      "author": "Karol",
+      "draft": false,
+      "title": {
+        "es": "Precio cerrado o por hora",
+        "en": ""
+      },
+      "excerpt": {
+        "es": "Cobré por hora durante tres años. Cambiar a precio cerrado me subió los ingresos y, sobre todo, me quitó las conversaciones incómodas.",
+        "en": ""
+      },
+      "readTime": 6,
+      "slug": "precio-cerrado-o-por-hora",
+      "content": [
+        {
+          "text": "Cobrar por hora premia ser lento. Es una frase que suena a consultor, pero la viví: cuanto mejor me volvía, menos ganaba por el mismo trabajo.",
+          "type": "paragraph"
+        },
+        {
+          "text": "Cómo calculo un precio cerrado",
+          "type": "heading"
+        },
+        {
+          "items": [
+            "Horas que creo que me va a llevar, honestamente.",
+            "Por 1,4, que es lo que históricamente me he equivocado.",
+            "Más los gastos reales: transporte, asistente, alquiler de equipo.",
+            "Más una ronda de revisión incluida. La segunda se cobra."
+          ],
+          "ordered": true,
+          "type": "list"
+        },
+        {
+          "text": "El 1,4 no es superstición: salió de revisar veinte proyectos anteriores y comparar lo estimado con lo real. Recomiendo hacer ese número propio antes que copiar el mío.",
+          "type": "paragraph"
+        }
+      ],
+      "priority": "normal",
+      "coverImage": "https://picsum.photos/seed/precio-cerrado/1600/900",
+      "likesCount": 152,
+      "category": "Oficio",
+      "tags": [
+        {
+          "en": "",
+          "es": "tarifas"
+        },
+        {
+          "en": "",
+          "es": "negocio"
+        },
+        {
+          "en": "",
+          "es": "freelance"
+        }
+      ],
+      "publishedAt": "2026-04-07"
+    },
+    {
+      "id": "tu-marca-no-necesita-mas-contenido",
+      "content": [
+        {
+          "text": "La petición llega siempre igual: necesitamos publicar más, el algoritmo nos está castigando. Casi nunca es cierto. Lo que pasa es que hay treinta piezas al mes y ninguna se puede recordar al día siguiente.",
+          "type": "paragraph"
+        },
+        {
+          "text": "La prueba de la semana en blanco",
+          "type": "heading"
+        },
+        {
+          "text": "Antes de proponer un calendario, pido una semana sin publicar nada. Al séptimo día miramos qué pasó. En dos años haciendo esto, las ventas nunca cayeron. Lo que sí cae, y mucho, es la ansiedad del equipo.",
+          "type": "paragraph"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Menos piezas, más largas, con algo que solo esa marca puede decir.",
+            "Un pilar fijo de \"lo que este producto no hace\". Genera más confianza que diez testimonios.",
+            "Una métrica de lectura completa en vez de alcance."
+          ]
+        },
+        {
+          "text": "Con Salvia Skincare el resultado fue medible: el guardado por publicación subió y las devoluciones bajaron, porque la gente compraba sabiendo qué estaba comprando.",
+          "type": "paragraph"
+        },
+        {
+          "text": "Publicar todos los días no es una estrategia. Es una forma elegante de no haber decidido nada.",
+          "type": "quote",
+          "cite": "Lo que le digo a todos mis clientes en la primera llamada"
+        }
+      ],
+      "priority": "high",
+      "title": {
+        "es": "Tu marca no necesita más contenido",
+        "en": ""
+      },
+      "draft": false,
+      "category": "Marketing",
+      "author": "Karol",
+      "coverImage": "https://picsum.photos/seed/mas-contenido/1600/900",
+      "tags": [
+        {
+          "en": "",
+          "es": "estrategia"
+        },
+        {
+          "en": "",
+          "es": "contenido"
+        },
+        {
+          "en": "",
+          "es": "marca"
+        }
+      ],
+      "readTime": 6,
+      "slug": "tu-marca-no-necesita-mas-contenido",
+      "likesCount": 213,
+      "publishedAt": "2026-08-28",
+      "excerpt": {
+        "es": "Casi todos los clientes que llegan pidiendo publicar más tienen el problema contrario: publican demasiado y no dicen nada.",
+        "en": ""
+      }
+    },
+    {
+      "id": "un-moodboard-no-es-un-collage",
+      "likesCount": 64,
+      "content": [
+        {
+          "text": "El moodboard que entrego tiene como mucho seis imágenes, y cada una viene con una frase que dice qué se toma de ella. Sin esa frase, el cliente se queda con lo que más le gusta de cada foto, que casi nunca es lo que yo señalaba.",
+          "type": "paragraph"
+        },
+        {
+          "type": "list",
+          "items": [
+            "De esta, la temperatura de color. Nada más.",
+            "De esta, la distancia a la que está la cámara.",
+            "De esta, el desorden controlado del fondo."
+          ]
+        },
+        {
+          "text": "Desde que trabajo así, las rondas de revisión bajaron de cuatro a una. No porque acierte más, sino porque discutimos lo correcto desde el principio.",
+          "type": "paragraph"
+        }
+      ],
+      "publishedAt": "2026-05-19",
+      "tags": [
+        {
+          "en": "",
+          "es": "moodboard"
+        },
+        {
+          "en": "",
+          "es": "método"
+        },
+        {
+          "en": "",
+          "es": "cliente"
+        }
+      ],
+      "readTime": 5,
+      "slug": "un-moodboard-no-es-un-collage",
+      "author": "Karol",
+      "coverImage": "https://picsum.photos/seed/moodboard-collage/1600/900",
+      "title": {
+        "es": "Un moodboard no es un collage",
+        "en": ""
+      },
+      "draft": false,
+      "priority": "normal",
+      "excerpt": {
+        "es": "Veinte imágenes bonitas juntas no son una dirección de arte. Son veinte imágenes bonitas y un cliente confundido.",
+        "en": ""
+      },
+      "category": "Dirección de arte"
+    }
+  ]
+}

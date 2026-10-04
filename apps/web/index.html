@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--
+      Google Fonts:
+        - Anton          (display heavy condensed, solo Hero)
+        - Fraunces       (serif decorativa, palabra "así" y otros highlights)
+        - Space Grotesk  (sans-body global)
+        - JetBrains Mono (code/badges)
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:opsz,wght@9..144,300..900&family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!--
+      Título y descripción de ARRANQUE. El router los sustituye en cuanto monta
+      (ver `meta.title`), pero estos son los que ve un rastreador que no ejecuta
+      JavaScript, así que tienen que estar en el HTML servido.
+    -->
+    <title>Princess Portfolio — Inicio</title>
+    <meta
+      name="description"
+      content="Fotógrafa, directora de arte y mercadóloga. Imágenes que comunican, conectan y convierten."
+    />
+  </head>
+  <body>
+
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
