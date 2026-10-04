@@ -1,0 +1,24 @@
+# Despliegue de la web. Antes del monorepo esto vivía en los ajustes del sitio
+# en Netlify; ahora vive aquí porque las rutas cambiaron y un archivo en el
+# repo se revisa en el pull request — un ajuste en un panel web, no.
+#
+# OJO AL MIGRAR: un `netlify.toml` GANA sobre lo configurado en la interfaz.
+# Hay que comprobar que estos tres valores coinciden con lo que el sitio tenía
+# (Site configuration → Build & deploy → Build settings) antes del primer push.
+
+[build]
+  # Netlify hace `cd` aquí antes de todo, así que `publish` y `command` son
+  # relativos a esta carpeta.
+  base = "apps/web"
+  publish = "dist"
+
+  # `npm install` en la raíz del workspace instala TODO el monorepo y enlaza
+  # `@princess/contenido`; sin `--prefix` Netlify instalaría solo apps/web y el
+  # paquete compartido quedaría sin resolver.
+  command = "npm install --prefix ../.. && npm run build"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# El SPA fallback sigue viniendo de `apps/web/public/_redirects` (`/* /index.html 200`).
+# Se deja ahí y no aquí para no partir la configuración de rutas en dos sitios.

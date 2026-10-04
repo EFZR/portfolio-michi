@@ -3,32 +3,41 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@vueuse/core": "^14.3.0",
-    "gsap": "^3.15.0",
-    "vue": "^3.5.38",
-    "vue-router": "^4.6.4"
+    "dev": "npm run dev --workspace @princess/web",
+    "build": "npm run build --workspace @princess/web",
+    "preview": "npm run preview --workspace @princess/web",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "eslint apps packages",
+    "format": "prettier --write .",
+    "test:rules": "firebase emulators:exec --only firestore --project demo-princess-rules \"vitest run firebase\"",
+    "deploy:rules": "node scripts/deploy-rules.mjs",
+    "test": "vitest run packages apps",
+    "test:all": "npm run test && npm run test:rules",
+    "schemas:push": "vite-node scripts/schemas.ts -- push",
+    "schemas:pull": "vite-node scripts/schemas.ts -- pull",
+    "seed": "vite-node scripts/seed.ts",
+    "fetch:content": "vite-node scripts/fetch-content.ts"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.3.1",
+    "@firebase/rules-unit-testing": "^5.0.2",
     "@types/node": "^24.13.2",
-    "@vitejs/plugin-vue": "^6.0.7",
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/eslint-config-typescript": "^14.9.0",
-    "@vue/tsconfig": "^0.9.1",
+    "@vue/test-utils": "^2.5.1",
     "eslint": "^10.6.0",
     "eslint-plugin-vue": "^10.9.2",
+    "firebase-tools": "^15.30.2",
     "globals": "^17.7.0",
+    "happy-dom": "^20.14.5",
     "prettier": "^3.9.0",
-    "tailwindcss": "^4.3.1",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.62.0",
-    "vite": "^8.1.0",
-    "vue-tsc": "^3.3.5"
+    "vite-node": "^6.0.0",
+    "vitest": "^4.1.11"
   }
 }

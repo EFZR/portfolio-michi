@@ -12,7 +12,9 @@ export default defineConfigWithVueTs(
   },
   {
     name: 'app/files-to-ignore',
-    ignores: ['**/dist/**', '**/node_modules/**'],
+    // `target/` y `gen/` los genera Rust/Tauri al compilar: hay JS generado
+    // dentro que no es nuestro y que dispara reglas de estilo sin sentido.
+    ignores: ['**/dist/**', '**/node_modules/**', '**/src-tauri/target/**', '**/src-tauri/gen/**'],
   },
   pluginVue.configs['flat/recommended'],
   vueTsConfigs.recommended,

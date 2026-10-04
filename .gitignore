@@ -12,8 +12,17 @@ dist
 dist-ssr
 *.local
 
+# Rust / Tauri — artefactos de compilación y código generado
+**/src-tauri/target
+**/src-tauri/gen
+
 # Environment / secrets
 .env
+
+# Claves de firma del actualizador de Tauri. La privada vive en ~/.tauri,
+# FUERA del repo; estos patrones son la red por si alguien la copia aquí.
+*.key
+*.key.pub
 .env.*
 !.env.example
 
