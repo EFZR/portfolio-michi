@@ -105,21 +105,6 @@ service cloud.firestore {
     // es la deduplicación que una biblioteca necesita.
     match /media/{id}        { allow read: if true; allow write: if isAdmin(); }
 
-    // ─────────────────────── Biblioteca de medios ─────────────────────────
-    // Un documento por foto o vídeo procesado. Los proyectos y artículos
-    // guardan solo el id que apunta acá, así que la misma foto se referencia
-    // desde varios sitios sin duplicarse.
-    //
-    // LECTURA PÚBLICA porque el prebuild de la web la baja SIN autenticarse, a
-    // propósito: así lee exactamente lo que ve un visitante y, si una regla
-    // ocultara algo que la web necesita, el fallo sale en el build y no en
-    // producción con la página a medio pintar.
-    //
-    // El id del documento es el sha256 del original recortado, no un
-    // aleatorio: subir dos veces el mismo archivo da el mismo documento, que
-    // es la deduplicación que una biblioteca necesita.
-    match /media/{id}        { allow read: if true; allow write: if isAdmin(); }
-
     // ───────────────────────────── Esquemas ───────────────────────────────
     // NO son públicos. Describen la forma del backend y al visitante no le
     // aportan nada; el que los consume es el panel, siempre autenticado.
