@@ -1,0 +1,31 @@
+rules_version = '2';
+
+
+// Imágenes del sitio: las sirve la web pública, así que la lectura es abierta.
+// La escritura es solo de la admin, y además acotada — un panel con un fallo
+// puede subir un vídeo de 200 MB por accidente; las reglas no.
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isAdmin() {
+      return request.auth != null
+          && request.auth.uid == 'P6sA78EI10QVrPDbg0CAxEL1f8o2';
+    }
+
+    function isValidImage() {
+      return request.resource.size <= 5 * 1024 * 1024
+          && request.resource.contentType.matches('image/(jpeg|png|webp|avif)');
+    }
+
+    match /{path=**} {
+      allow read: if true;
+
+      // create/update y delete van SEPARADOS a propósito: al borrar,
+      // `request.resource` es null, así que un `allow write` único con
+      // isValidImage() haría imposible borrar nada.
+      allow create, update: if isAdmin() && isValidImage();
+      allow delete: if isAdmin();
+    }
+  }
+}

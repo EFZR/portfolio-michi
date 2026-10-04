@@ -1,0 +1,124 @@
+rules_version = '2';
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  REGLAS DE FIRESTORE
+//
+//  Con SDK de cliente y sin servidor propio, esto ES el backend: no hay otra
+//  capa donde comprobar nada.
+//
+//  Son cortas a propósito. La versión anterior del plan replicaba aquí los 105
+//  topes de caracteres de los esquemas, para defenderse de un cliente admin
+//  comprometido. Pero el único actor no confiable real es el visitante anónimo,
+//  y solo puede hacer TRES cosas: leer, sumar +1 a un like y crear un mensaje.
+//  Esas tres llevan reglas estrictas; lo que escribe la admin autenticada ya
+//  pasó por el panel, que valida con el esquema.
+//
+//  Ventaja lateral: estas reglas no cambian aunque se publiquen cien esquemas
+//  nuevos, así que no hay dos sitios que mantener sincronizados.
+//  Ver docs/fase-2-ui-dinamica.md §5.5.
+// ═══════════════════════════════════════════════════════════════════════════
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─────────────────────────── Identidad ────────────────────────────────
+    // Administradora única. Sin Admin SDK no se pueden poner custom claims, y
+    // una colección /admins/{uid} costaría una lectura extra en CADA escritura
+    // para resolver un dato que no cambia nunca. Para un solo administrador,
+    // la constante es la respuesta correcta.
+    //
+    // Un UID no es un secreto: identifica, no autoriza. Quien lo conozca sigue
+    // necesitando la contraseña para que `request.auth.uid` valga esto.
+    function isAdmin() {
+      return request.auth != null
+          && request.auth.uid == 'P6sA78EI10QVrPDbg0CAxEL1f8o2';
+    }
+
+    function incoming() { return request.resource.data; }
+    function current()  { return resource.data; }
+
+    /** Claves que esta escritura modifica respecto del documento actual. */
+    function changedKeys() {
+      return incoming().diff(current()).affectedKeys();
+    }
+
+    /**
+     * Lo ÚNICO que un anónimo puede hacerle a un artículo: sumar exactamente 1
+     * al contador, y nada más. Cualquier otra clave tocada, o un incremento
+     * distinto de +1, y la escritura se rechaza.
+     *
+     * Dicho sin adornos: esto acota cada PETICIÓN, no cuántas peticiones se
+     * hacen. Un bot puede repetirla. La mitigación real es App Check; hasta
+     * que haya tráfico que lo justifique, el contador es decorativo.
+     */
+    function isAnonymousLike() {
+      return changedKeys().hasOnly(['likesCount'])
+          && incoming().likesCount == current().likesCount + 1;
+    }
+
+    /**
+     * Mensaje del formulario de contacto. Aquí sí hay topes, porque lo escribe
+     * cualquiera: `hasOnly` cierra el conjunto de campos (nadie mete basura
+     * extra) y `receivedAt == request.time` obliga a usar `serverTimestamp()`,
+     * así que la fecha no la elige quien envía.
+     */
+    /**
+     * OJO CON `read`: es PALABRA RESERVADA del lenguaje de reglas (`allow read`).
+     * Escrita como `d.read`, el compilador falla con un `mismatched input` que
+     * no menciona cuál es la palabra culpable, y tampoco se puede usar como
+     * nombre de un `let` — de ahí el corchete y `readFlag`.
+     *
+     * El campo del oficio se llamaba `service` y chocaba igual
+     * (`service cloud.firestore`); se renombró a `discipline` justamente por eso.
+     */
+    function isValidMessage() {
+      let d = incoming();
+      let readFlag = d['read'];
+      return d.keys().hasOnly(['name', 'email', 'discipline', 'message', 'receivedAt', 'read'])
+          && d.keys().hasAll(['name', 'email', 'discipline', 'message', 'receivedAt', 'read'])
+          && d.name is string    && d.name.size() > 0      && d.name.size() <= 80
+          && d.email is string   && d.email.size() > 0     && d.email.size() <= 120
+          && d.discipline is string && d.discipline.size() > 0 && d.discipline.size() <= 40
+          && d.message is string && d.message.size() >= 10 && d.message.size() <= 4000
+          && readFlag == false
+          && d.receivedAt == request.time;
+    }
+
+    // ──────────────────── Contenido: público al leer ──────────────────────
+    match /config/{document}  { allow read: if true; allow write: if isAdmin(); }
+    match /categories/{id}    { allow read: if true; allow write: if isAdmin(); }
+    match /catalog/{id}       { allow read: if true; allow write: if isAdmin(); }
+    match /projects/{slug}    { allow read: if true; allow write: if isAdmin(); }
+
+    // ───────────────────────────── Esquemas ───────────────────────────────
+    // NO son públicos. Describen la forma del backend y al visitante no le
+    // aportan nada; el que los consume es el panel, siempre autenticado.
+    match /schemas/{id}       { allow read, write: if isAdmin(); }
+
+    // ───────────────────────────── Artículos ──────────────────────────────
+    match /articles/{slug} {
+      allow read: if true;
+      allow create, delete: if isAdmin();
+
+      // La admin edita todo MENOS likesCount: el contador es del público, y
+      // dejarlo editable convierte un dato social en uno inventado.
+      allow update: if (isAdmin() && !changedKeys().hasAny(['likesCount']))
+                    || isAnonymousLike();
+    }
+
+    // ───────────────────── Bandeja del formulario ─────────────────────────
+    // Cualquiera escribe (es un formulario público), nadie lee salvo la admin:
+    // los mensajes llevan el correo de quien escribe.
+    match /messages/{id} {
+      allow create: if isValidMessage();
+      allow read, update, delete: if isAdmin();
+    }
+
+    // ────────────────────────────── Cierre ────────────────────────────────
+    // Todo lo no declarado arriba queda prohibido. Sin esto, una colección
+    // nueva nace abierta.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
