@@ -90,12 +90,6 @@ export function compileField(f: Field): z.ZodTypeAny {
       out = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Formato esperado: YYYY-MM-DD.')
       break
 
-    case 'image':
-      // La proporción y el peso NO se validan aquí: se comprueban al subir,
-      // sobre el File, antes de que exista una URL. Aquí solo queda la ruta.
-      out = z.union([z.url(), z.string().regex(/^\/[\w\-./]+$/)])
-      break
-
     case 'media':
       // El valor es el ID de un documento de la biblioteca, que sale del
       // sha256 del archivo original: hexadecimal y nada más.

@@ -6,10 +6,10 @@ import Link from '@tiptap/extension-link'
 import { CitaConAutor, ImagenConPie } from './extensiones'
 import type { Locale } from '@princess/content'
 import { useEditLocale } from '@/composables/useEditLocale'
-import { useUpload } from '@/composables/useUpload'
 import { bloquesADocumento, documentoABloques, type Bloque } from './cast'
 import type { FieldProps } from './tipos'
 import ArticleContent from '@web/components/blog/ArticleContent.vue'
+import ResponsiveImage from '@web/components/ui/ResponsiveImage.vue'
 import { useMediaLibrary } from '@/composables/useMediaLibrary'
 import { mediaUrl } from '@princess/content/media'
 
@@ -151,34 +151,36 @@ function enlazar() {
 const pidiendoEnlace = ref(false)
 const urlEnlace = ref('')
 const pidiendoImagen = ref(false)
-const urlImagen = ref('')
+const medioElegido = ref('')
 const pieImagen = ref('')
-const fileInput = ref<HTMLInputElement | null>(null)
 
-const { subir, subiendo, progreso, error: errorSubida } = useUpload()
-
+/**
+ * Inserta una imagen de la biblioteca.
+ *
+ * Se guardan los DOS atributos y cada uno hace un trabajo distinto: `mediaId`
+ * es lo que persiste —la referencia estable— y `src` es lo que ProseMirror
+ * necesita para pintar algo ahora mismo.
+ */
 function insertarImagen() {
-  const src = urlImagen.value.trim()
+  const id = medioElegido.value
   const pie = pieImagen.value.trim()
   // Sin pie no se inserta: la web lo exige y un bloque sin él no valida.
-  if (!src || !pie) return
-  editor.chain().focus().setImage({ src, title: pie, alt: pie }).run()
+  if (!id || !pie) return
+  editor
+    .chain()
+    .focus()
+    .setImage({ src: resolverUrl(id) ?? '', title: pie, alt: pie })
+    .updateAttributes('image', { mediaId: id })
+    .run()
   pidiendoImagen.value = false
-  urlImagen.value = ''
+  medioElegido.value = ''
   pieImagen.value = ''
 }
 
-/**
- * Las imágenes DENTRO de un artículo no llevan proporción fija: a diferencia de
- * las fichas y las portadas, aquí la foto se pinta tal cual y el texto se
- * acomoda. Por eso se sube sin comprobar el encuadre.
- */
-async function alElegirArchivo(e: Event) {
-  const file = (e.target as HTMLInputElement).files?.[0]
-  if (!file) return
-  const r = await subir(file, 'articles/{slug}/bloque.webp', { slug: props.ruta })
-  if (r) urlImagen.value = r.url
-  if (fileInput.value) fileInput.value.value = ''
+/** Sube una imagen nueva y la deja elegida, lista para insertar. */
+async function subirYElegir() {
+  const nuevo = await biblioteca.importar({ kind: 'image' })
+  if (nuevo) medioElegido.value = nuevo.id
 }
 
 function confirmarEnlace() {
@@ -347,45 +349,71 @@ const BOTON =
         </button>
       </div>
 
-      <!-- Insertar imagen: URL y pie. El pie es obligatorio en la web. -->
-      <div v-if="pidiendoImagen" class="mt-3 flex flex-wrap items-center gap-3">
-        <input
-          v-model="urlImagen"
-          type="url"
-          placeholder="https://… o /ruta-en-public.jpg"
-          class="min-w-0 flex-1 border-0 border-b border-border bg-transparent px-0 py-2 text-sm focus:border-primary focus:outline-none"
-        />
-        <input
-          v-model="pieImagen"
-          type="text"
-          placeholder="Pie de foto (obligatorio)"
-          class="min-w-0 flex-1 border-0 border-b border-border bg-transparent px-0 py-2 text-sm focus:border-primary focus:outline-none"
-          @keydown.enter.prevent="insertarImagen"
-        />
-        <button
-          type="button"
-          :disabled="subiendo"
-          :class="[BOTON, 'text-muted-foreground hover:text-primary disabled:opacity-50']"
-          @click="fileInput?.click()"
+      <!--
+        Insertar imagen: se ELIGE de la biblioteca, no se pega una URL. El pie
+        es obligatorio porque la web lo exige y un bloque sin él no valida.
+      -->
+      <div v-if="pidiendoImagen" class="mt-3 space-y-3">
+        <div class="flex flex-wrap items-center gap-3">
+          <input
+            v-model="pieImagen"
+            type="text"
+            placeholder="Pie de foto (obligatorio)"
+            class="min-w-0 flex-1 border-0 border-b border-border bg-transparent px-0 py-2 text-sm focus:border-primary focus:outline-none"
+            @keydown.enter.prevent="insertarImagen"
+          />
+          <button
+            type="button"
+            :disabled="biblioteca.ocupado.value"
+            :class="[BOTON, 'text-muted-foreground hover:text-primary disabled:opacity-50']"
+            @click="subirYElegir"
+          >
+            Subir nueva
+          </button>
+          <button
+            type="button"
+            :disabled="!medioElegido || !pieImagen.trim()"
+            :class="[BOTON, 'text-primary disabled:opacity-40']"
+            @click="insertarImagen"
+          >
+            Poner
+          </button>
+        </div>
+
+        <!--
+          Miniaturas y no un `<select>` de títulos: 42 de los medios se llaman
+          «object-object» por un bug de la importación, así que una lista de
+          nombres sería inservible. Y `sizes` declara el ancho real de la celda
+          para que el navegador baje el archivo de 320 y no el mayor.
+        -->
+        <ul
+          v-if="biblioteca.assets.value.length"
+          class="grid max-h-40 grid-cols-5 gap-2 overflow-y-auto sm:grid-cols-8"
         >
-          {{ subiendo ? progreso : 'Subir archivo' }}
-        </button>
-        <button type="button" :class="[BOTON, 'text-primary']" @click="insertarImagen">
-          Poner
-        </button>
+          <li v-for="a in biblioteca.filtrar('image')" :key="a.id">
+            <button
+              type="button"
+              class="block w-full overflow-hidden rounded-md border transition-colors duration-200"
+              :class="
+                a.id === medioElegido ? 'border-primary' : 'border-border hover:border-primary'
+              "
+              :style="{ aspectRatio: String(a.intrinsic.aspectRatio) }"
+              :aria-pressed="a.id === medioElegido"
+              :title="a.title"
+              @click="medioElegido = a.id"
+            >
+              <ResponsiveImage :media-id="a.id" :resolver="resolverMedio" alt="" sizes="72px" />
+            </button>
+          </li>
+        </ul>
+        <p v-else class="text-sm leading-relaxed text-muted-foreground">
+          La biblioteca está vacía. Subí la primera con «Subir nueva».
+        </p>
+
+        <p v-if="biblioteca.error.value" role="alert" class="text-sm leading-relaxed text-primary">
+          {{ biblioteca.error.value }}
+        </p>
       </div>
-
-      <p v-if="errorSubida" role="alert" class="mt-2 text-sm leading-relaxed text-primary">
-        {{ errorSubida }}
-      </p>
-
-      <input
-        ref="fileInput"
-        type="file"
-        accept="image/jpeg,image/png,image/webp,image/avif"
-        class="hidden"
-        @change="alElegirArchivo"
-      />
 
       <!--
         Autor de la cita. Solo aparece con el cursor DENTRO de una cita: es el

@@ -24,6 +24,20 @@ import type { MediaAsset } from '@princess/content/media'
 
 const biblioteca = useMediaLibrary()
 
+/**
+ * DOS EJES INDEPENDIENTES, y conviene no confundirlos:
+ *
+ *   - DESCRITA o no (`alt`). Sin descripción no se publica (R12).
+ *   - PROVISIONAL o definitiva (etiqueta `provisional`). Una provisional es un
+ *     placeholder importado de la fase anterior, no una foto de Karol.
+ *
+ * Son ortogonales: una placeholder puede estar descrita. La primera versión de
+ * esta pantalla definía «Listos» solo por el `alt`, así que una provisional
+ * descrita salía en «Provisionales» Y en «Listos» a la vez — que es exactamente
+ * lo que hizo que no se entendiera.
+ *
+ * Ahora LISTA significa lista en los dos ejes: descrita y no provisional.
+ */
 type Filtro = 'todos' | 'sin-alt' | 'provisional' | 'listos'
 
 // Arranca en «sin describir» a propósito: es lo que bloquea publicar, así que
@@ -45,7 +59,7 @@ const lista = computed(() => {
     case 'provisional':
       return base.filter((a) => (a.tags ?? []).includes('provisional'))
     case 'listos':
-      return base.filter((a) => a.alt !== undefined)
+      return base.filter((a) => a.alt !== undefined && !(a.tags ?? []).includes('provisional'))
     default:
       return base
   }
@@ -59,15 +73,16 @@ const conteos = computed(() => {
     todos: todos.length,
     'sin-alt': todos.filter((a) => a.alt === undefined).length,
     provisional: todos.filter((a) => (a.tags ?? []).includes('provisional')).length,
-    listos: todos.filter((a) => a.alt !== undefined).length,
+    listos: todos.filter((a) => a.alt !== undefined && !(a.tags ?? []).includes('provisional'))
+      .length,
   }
 })
 
 const FILTROS: { id: Filtro; label: string }[] = [
   { id: 'sin-alt', label: 'Sin describir' },
   { id: 'provisional', label: 'Provisionales' },
-  { id: 'listos', label: 'Listos' },
-  { id: 'todos', label: 'Todos' },
+  { id: 'listos', label: 'Listas' },
+  { id: 'todos', label: 'Todas' },
 ]
 
 /**
@@ -119,6 +134,30 @@ async function guardar() {
 /** Quita la etiqueta `provisional`: ya no es una imagen de relleno. */
 async function confirmar(a: MediaAsset) {
   await biblioteca.guardar(a.id, { tags: (a.tags ?? []).filter((t) => t !== 'provisional') })
+}
+
+/**
+ * Borrado en DOS PASOS y sin `confirm()`.
+ *
+ * Un diálogo nativo del navegador bloquea el webview entero, y en Tauri eso
+ * puede dejar la ventana sin responder. Dos clics en el mismo sitio hacen el
+ * mismo trabajo sin ese riesgo.
+ */
+const confirmandoBorrado = ref(false)
+const borrando = ref(false)
+
+watch(abierto, () => {
+  confirmandoBorrado.value = false
+})
+
+async function borrar() {
+  const a = abierto.value
+  if (!a) return
+  borrando.value = true
+  const ok = await biblioteca.borrar(a.id)
+  borrando.value = false
+  confirmandoBorrado.value = false
+  if (ok) seleccionado.value = null
 }
 
 const kb = (b: number) => `${Math.round(b / 1024)} KB`
@@ -324,6 +363,36 @@ onMounted(() => biblioteca.cargar())
             </div>
           </dl>
 
+          <!--
+            Dónde está usada. Va ANTES del formulario porque cambia lo que se
+            puede hacer: si está en uso, no se puede borrar, y es mejor saberlo
+            al abrir que al intentarlo.
+          -->
+          <div
+            v-if="biblioteca.usosDe(abierto.id).length"
+            class="space-y-1 border-t border-border pt-4"
+          >
+            <p class="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground">
+              En uso en {{ biblioteca.usosDe(abierto.id).length }}
+              {{ biblioteca.usosDe(abierto.id).length === 1 ? 'sitio' : 'sitios' }}
+            </p>
+            <ul class="space-y-0.5">
+              <li
+                v-for="(u, i) in biblioteca.usosDe(abierto.id)"
+                :key="`${u.coleccion}-${u.documento}-${i}`"
+                class="truncate text-sm text-foreground"
+              >
+                {{ u.etiqueta }}
+              </li>
+            </ul>
+          </div>
+          <p
+            v-else
+            class="border-t border-border pt-4 font-mono text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground"
+          >
+            No se usa en ningún sitio
+          </p>
+
           <form class="space-y-6" @submit.prevent="guardar">
             <label class="block">
               <span
@@ -419,11 +488,52 @@ onMounted(() => biblioteca.cargar())
 
               <button
                 type="button"
-                class="ms-auto font-mono text-[0.65rem] uppercase tracking-[0.25em] text-muted-foreground transition-colors duration-200 hover:text-primary"
+                class="font-mono text-[0.65rem] uppercase tracking-[0.25em] text-muted-foreground transition-colors duration-200 hover:text-primary"
                 @click="seleccionado = null"
               >
                 Cerrar
               </button>
+
+              <!--
+                Borrar queda a la derecha y separado: es la única acción de esta
+                ficha que no se puede deshacer.
+              -->
+              <template v-if="!biblioteca.usosDe(abierto.id).length">
+                <button
+                  v-if="!confirmandoBorrado"
+                  type="button"
+                  class="ms-auto font-mono text-[0.65rem] uppercase tracking-[0.25em] text-muted-foreground transition-colors duration-200 hover:text-primary"
+                  @click="confirmandoBorrado = true"
+                >
+                  Borrar
+                </button>
+                <span v-else class="ms-auto flex items-center gap-4">
+                  <span
+                    class="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground"
+                  >
+                    ¿Borrar las
+                    {{
+                      abierto.renditions.images.length + abierto.renditions.videos.length + 1
+                    }}
+                    versiones?
+                  </span>
+                  <button
+                    type="button"
+                    :disabled="borrando"
+                    class="font-mono text-[0.65rem] uppercase tracking-[0.25em] text-primary underline decoration-primary/40 underline-offset-4 transition-colors duration-200 hover:decoration-primary disabled:opacity-50"
+                    @click="borrar"
+                  >
+                    {{ borrando ? 'Borrando…' : 'Sí, borrar' }}
+                  </button>
+                  <button
+                    type="button"
+                    class="font-mono text-[0.65rem] uppercase tracking-[0.25em] text-muted-foreground transition-colors duration-200 hover:text-foreground"
+                    @click="confirmandoBorrado = false"
+                  >
+                    No
+                  </button>
+                </span>
+              </template>
             </div>
 
             <p

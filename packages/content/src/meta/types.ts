@@ -15,11 +15,13 @@ export const FIELD_TYPES = [
   'boolean',
   'enum',
   'date',
-  'image',
   // Referencia a un documento de la biblioteca de medios (`media/<id>`), no
-  // una URL. Reemplaza a `image`, que guardaba la URL suelta y obligaba a
-  // subir la foto antes en otra parte. `image` se mantiene mientras queden
-  // esquemas sin migrar.
+  // una URL.
+  //
+  // Reemplazó al tipo `image`, que guardaba la dirección suelta y obligaba a
+  // subir la foto antes en otra parte. `image` se quitó cuando los cuatro
+  // esquemas que lo usaban pasaron a `media`: dejarlo habría obligado a
+  // mantener vivo su widget y el subidor por canvas, que ya no se usan.
   'media',
   'tuple',
   'list',

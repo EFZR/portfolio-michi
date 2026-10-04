@@ -29,10 +29,8 @@ export const REGISTRO: Record<string, Component> = {
   tuple: markRaw(CampoTupla),
   list: markRaw(CampoLista),
   group: markRaw(CampoGrupo),
-  // Pesado y poco usado → asíncrono: no entra en el bundle del login.
-  image: markRaw(defineAsyncComponent(() => import('./CampoImagen.vue'))),
-  // El selector de la biblioteca. Asíncrono por lo mismo, y además arrastra
-  // los helpers del `<picture>` del paquete compartido.
+  // El selector de la biblioteca. Asíncrono: es el widget más pesado y no
+  // entra en el bundle del login.
   media: markRaw(defineAsyncComponent(() => import('./CampoMedia.vue'))),
 }
 

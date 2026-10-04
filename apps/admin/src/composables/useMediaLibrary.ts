@@ -1,6 +1,15 @@
 import { computed, ref, shallowRef, type ComputedRef, type Ref } from 'vue'
-import { collection, doc, getDocs, setDoc, updateDoc } from 'firebase/firestore'
-import { getFirebaseAuth, getFirestoreDb } from '@princess/content'
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore'
+import { deleteObject, listAll, ref as storageRef } from 'firebase/storage'
+import { getFirebaseAuth, getFirebaseStorage, getFirestoreDb } from '@princess/content'
 import type { MediaAsset, MediaKind } from '@princess/content/media'
 
 /**
@@ -35,7 +44,16 @@ export interface Progreso {
   porcentaje: number
 }
 
+/** Dónde está usado un medio. Lo que impide borrarlo sin darse cuenta. */
+export interface Uso {
+  /** Para la pantalla: «Proyecto · Manifiesto Aurora». */
+  etiqueta: string
+  coleccion: string
+  documento: string
+}
+
 const assets = shallowRef<MediaAsset[]>([])
+const usos = shallowRef<Map<string, Uso[]>>(new Map())
 const estado = ref<EstadoBiblioteca>('inactivo')
 const error = ref('')
 const progreso = ref<Progreso | null>(null)
@@ -85,6 +103,13 @@ export interface UseMediaLibraryReturn {
   filtrar: (kind?: MediaKind, texto?: string) => MediaAsset[]
   importar: (opciones?: { kind?: MediaKind }) => Promise<MediaAsset | null>
   guardar: (id: string, cambios: EditableMedia) => Promise<boolean>
+  /** Dónde está usado un medio. Vacío = se puede borrar. */
+  usosDe: (id: string) => Uso[]
+  /**
+   * Borra un medio y sus archivos. Devuelve `false` y NO toca nada si está
+   * referenciado desde algún sitio.
+   */
+  borrar: (id: string) => Promise<boolean>
   /** Cuántos medios no se pueden publicar porque les falta el `alt` (R12). */
   sinAlt: ComputedRef<number>
 }
@@ -114,7 +139,7 @@ export function useMediaLibrary(): UseMediaLibraryReturn {
     error.value = ''
     cargaEnCurso = (async () => {
       try {
-        const snap = await getDocs(collection(db(), 'media'))
+        const [snap] = await Promise.all([getDocs(collection(db(), 'media')), cargarUsos()])
         assets.value = snap.docs
           .map((d) => ({ ...(d.data() as MediaAsset), id: d.id }))
           // Lo último subido primero: es lo que se acaba de procesar y lo que
@@ -288,6 +313,135 @@ export function useMediaLibrary(): UseMediaLibraryReturn {
     }
   }
 
+  /**
+   * Recorre el contenido buscando qué medios están en uso.
+   *
+   * Se lee TODO y se cruza en el cliente en vez de consultar por id, por dos
+   * razones: son 46 documentos (nada), y el bloque de imagen de un artículo
+   * vive dentro de un array —`content[].mediaId`— que Firestore no sabe
+   * consultar. Media consulta no sirve de nada acá: o se sabe de todos los
+   * usos o no se puede ofrecer un botón de borrar.
+   */
+  async function cargarUsos(): Promise<void> {
+    const mapa = new Map<string, Uso[]>()
+    const anotar = (id: unknown, uso: Uso) => {
+      if (typeof id !== 'string' || !id) return
+      mapa.set(id, [...(mapa.get(id) ?? []), uso])
+    }
+    const texto = (v: unknown, respaldo: string): string => {
+      if (typeof v === 'string' && v.trim()) return v
+      if (v && typeof v === 'object') {
+        const o = v as Record<string, unknown>
+        if (typeof o.es === 'string' && o.es.trim()) return o.es
+      }
+      return respaldo
+    }
+
+    try {
+      const [proyectos, articulos, rubros, ui] = await Promise.all([
+        getDocs(collection(db(), 'projects')),
+        getDocs(collection(db(), 'articles')),
+        getDocs(collection(db(), 'categories')),
+        getDoc(doc(db(), 'config', 'ui')),
+      ])
+
+      for (const d of proyectos.docs) {
+        const x = d.data() as Record<string, unknown>
+        anotar(x.image, {
+          etiqueta: `Proyecto · ${texto(x.title, d.id)}`,
+          coleccion: 'projects',
+          documento: d.id,
+        })
+      }
+      for (const d of rubros.docs) {
+        const x = d.data() as Record<string, unknown>
+        anotar(x.image, {
+          etiqueta: `Rubro · ${texto(x.name ?? x.title, d.id)}`,
+          coleccion: 'categories',
+          documento: d.id,
+        })
+      }
+      for (const d of articulos.docs) {
+        const x = d.data() as Record<string, unknown>
+        const titulo = texto(x.title, d.id)
+        anotar(x.coverImage, {
+          etiqueta: `Artículo · ${titulo}`,
+          coleccion: 'articles',
+          documento: d.id,
+        })
+        // El contenido es lista plana en los sembrados y `{ es, en }` en los
+        // editados desde el panel. Conviven a propósito.
+        const bloques = Array.isArray(x.content)
+          ? x.content
+          : Object.values((x.content ?? {}) as Record<string, unknown[]>).flat()
+        for (const b of bloques as Record<string, unknown>[]) {
+          if (b?.type === 'image') {
+            anotar(b.mediaId, {
+              etiqueta: `Dentro de · ${titulo}`,
+              coleccion: 'articles',
+              documento: d.id,
+            })
+          }
+        }
+      }
+      const site = (ui.data()?.site ?? {}) as Record<string, unknown>
+      anotar(site.ogImage, {
+        etiqueta: 'Imagen al compartir',
+        coleccion: 'config',
+        documento: 'ui',
+      })
+
+      usos.value = mapa
+    } catch (e) {
+      // Que falle no debe romper la pantalla, pero SÍ tiene que impedir el
+      // borrado: sin saber los usos, borrar es adivinar. `usos` queda vacío y
+      // `borrar()` lo trata como «no se pudo comprobar».
+      error.value = 'No se pudo comprobar dónde se usan los medios; el borrado queda desactivado.'
+      console.warn('[media]', e)
+    }
+  }
+
+  const usosDe = (id: string): Uso[] => usos.value.get(id) ?? []
+
+  /**
+   * Borra un medio: primero los archivos de Storage, después el documento.
+   *
+   * EL ORDEN IMPORTA. Al revés —documento primero— un fallo a mitad dejaría
+   * archivos en Storage sin nada que los referencie: huérfanos invisibles que
+   * nadie va a encontrar. Así, un fallo a mitad deja un documento apuntando a
+   * archivos que ya no están, que se ve en la biblioteca y se puede reintentar.
+   */
+  async function borrar(id: string): Promise<boolean> {
+    error.value = ''
+    const a = assets.value.find((x) => x.id === id)
+    if (!a) return false
+
+    if (!usos.value.size) {
+      error.value = 'No se comprobó dónde se usan los medios. Recargá antes de borrar.'
+      return false
+    }
+    const enUso = usosDe(id)
+    if (enUso.length) {
+      error.value = `Está usada en ${enUso.length} ${enUso.length === 1 ? 'sitio' : 'sitios'}. Quitala de ahí antes de borrarla.`
+      return false
+    }
+
+    try {
+      if (a.basePath) {
+        const carpeta = storageRef(getFirebaseStorage(import.meta.env), a.basePath)
+        const { items } = await listAll(carpeta)
+        await Promise.all(items.map((i) => deleteObject(i)))
+      }
+      await deleteDoc(doc(db(), 'media', id))
+      assets.value = assets.value.filter((x) => x.id !== id)
+      return true
+    } catch (e) {
+      error.value = 'No se pudo borrar del todo. Volvé a intentarlo.'
+      console.warn('[media]', e)
+      return false
+    }
+  }
+
   return {
     assets: assets as Readonly<Ref<MediaAsset[]>>,
     estado,
@@ -297,6 +451,8 @@ export function useMediaLibrary(): UseMediaLibraryReturn {
     sinAlt: computed(() => assets.value.filter((a) => a.alt === undefined).length),
     cargar,
     guardar,
+    usosDe,
+    borrar,
     porId,
     filtrar,
     importar,
