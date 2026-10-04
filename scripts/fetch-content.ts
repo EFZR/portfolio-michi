@@ -34,6 +34,22 @@ import { readEnv } from './env'
 
 const DEST = 'apps/web/src/data/content.json'
 
+/** Serializa con las claves de cada objeto en orden alfabético. */
+function estable(valor: unknown): string {
+  const ordenar = (v: unknown): unknown => {
+    if (Array.isArray(v)) return v.map(ordenar)
+    if (v && typeof v === 'object') {
+      return Object.fromEntries(
+        Object.keys(v as Record<string, unknown>)
+          .sort()
+          .map((k) => [k, ordenar((v as Record<string, unknown>)[k])]),
+      )
+    }
+    return v
+  }
+  return JSON.stringify(ordenar(valor), null, 2)
+}
+
 const env = readEnv()
 
 const VARIABLES = [
@@ -151,7 +167,17 @@ try {
     media,
   }
 
-  writeFileSync(DEST, JSON.stringify(content, null, 2) + '\n', 'utf8')
+  // Claves ORDENADAS al escribir, y no es cosmética.
+  //
+  // Firestore devuelve los campos de un documento en un orden que no es
+  // estable, así que `JSON.stringify` tal cual producía un diff de 7180 líneas
+  // cada vez que se bajaba el contenido, aunque no hubiera cambiado nada. Un
+  // archivo generado que se commitea tiene que dar diffs LEGIBLES, o deja de
+  // poder revisarse y se commitea a ciegas.
+  //
+  // Los arrays NO se ordenan: ahí el orden es contenido (la secuencia de
+  // bloques de un artículo, el orden de los proyectos en la galería).
+  writeFileSync(DEST, estable(content) + '\n', 'utf8')
 
   console.log(`   ${content.categories.length} rubros`)
   console.log(`   ${content.catalog.length} grupos de catálogo`)
