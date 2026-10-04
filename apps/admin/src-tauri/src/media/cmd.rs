@@ -20,6 +20,9 @@ pub const ENCODE: Duration = Duration::from_secs(600);
 
 pub struct Output {
     pub stdout: String,
+    /// ffmpeg escribe los avisos y la salida de `showinfo` acá, no en stdout.
+    /// Es de donde sale el timestamp del poster (R7).
+    pub stderr: String,
 }
 
 /// Ejecuta y espera, con tope de tiempo y matando al hijo si se pasa.
@@ -82,8 +85,9 @@ pub fn run<S: AsRef<OsStr>>(
             .with_detail(format!("output {program}: {e}"))
     })?;
 
+    let stderr = String::from_utf8_lossy(&out.stderr).into_owned();
+
     if !out.status.success() {
-        let stderr = String::from_utf8_lossy(&out.stderr);
 
         // El mensaje público queda genérico a propósito. Quién convierte esto
         // en `invalid_media` o `unsupported_source` es quien llamó, que sabe
@@ -98,6 +102,10 @@ pub fn run<S: AsRef<OsStr>>(
     }
 
     Ok(Output {
+        // OJO: `from_utf8_lossy` destruye los bytes > 127. Si alguna vez hace
+        // falta leer un medio por stdout (un frame en rawvideo, por ejemplo),
+        // NO sirve este camino: hay que escribir a un archivo y leerlo.
         stdout: String::from_utf8_lossy(&out.stdout).into_owned(),
+        stderr,
     })
 }

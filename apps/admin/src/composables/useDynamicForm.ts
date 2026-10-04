@@ -8,7 +8,7 @@ import {
   type SchemaDoc,
   type VisibilityGraph,
 } from '@princess/content'
-import type { ZodTypeAny } from 'zod'
+import type { ZodType } from 'zod'
 
 /**
  * ESTADO DE UN FORMULARIO DINÁMICO.
@@ -64,7 +64,7 @@ export function useDynamicForm(doc: SchemaDoc, initial: Record<string, unknown> 
   const isVisible = (key: string) => visible.value.get(key) !== false
 
   function validateField(key: string): void {
-    const schema: ZodTypeAny | undefined = perField.get(key)
+    const schema: ZodType | undefined = perField.get(key)
     if (!schema) return
     const r = schema.safeParse(data[key])
     errors[key] = r.success ? '' : (r.error.issues[0]?.message ?? 'Valor no válido.')

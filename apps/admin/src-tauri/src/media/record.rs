@@ -5,8 +5,9 @@
 //! alcanzar para que el front arme el `<picture>` sin consultar nada más.
 
 use crate::media::error::MediaError;
-use crate::media::images::{ImageOutput, ImageRendition};
+use crate::media::images::ImageRendition;
 use crate::media::probe::{Kind, Orientation, SourceInfo};
+use crate::media::video::{PickedBy, PreviewLoop, VideoRendition};
 use serde::Serialize;
 
 /// R11 — `pipeline.version` no es decorativa. Cuando esto suba, los assets de
@@ -76,8 +77,35 @@ pub struct Colour {
 #[serde(rename_all = "camelCase")]
 pub struct Renditions {
     pub images: Vec<ImageRendition>,
-    /// Vacío por ahora: el vídeo es el paso siguiente (R6-R9).
-    pub videos: Vec<serde_json::Value>,
+    pub videos: Vec<VideoRendition>,
+}
+
+/// R7 — el poster es una imagen más, y es la que se ve en la galería: va en
+/// los mismos tres formatos y en el mismo ladder de anchos.
+#[derive(Serialize, Debug, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct Poster {
+    pub width: u32,
+    pub height: u32,
+    pub at_sec: f64,
+    /// Si es `Manual`, un re-proceso tiene que respetar `at_sec` y no volver
+    /// a elegir.
+    pub picked_by: PickedBy,
+    pub formats: Vec<ImageRendition>,
+}
+
+/// Todo lo que el pipeline derivó, sea de una imagen o de un vídeo.
+#[derive(Debug, Clone, Default)]
+pub struct Derived {
+    pub images: Vec<ImageRendition>,
+    pub videos: Vec<VideoRendition>,
+    pub poster: Option<Poster>,
+    pub preview_loop: Option<PreviewLoop>,
+    pub placeholder: Option<String>,
+    pub dominant: Option<String>,
+    pub source_colour_space: String,
+    pub decisions: Vec<String>,
+    pub warnings: Vec<String>,
 }
 
 #[derive(Serialize, Debug, Clone)]
@@ -109,6 +137,10 @@ pub struct AssetRecord {
     pub intrinsic: Intrinsic,
     pub colour: Colour,
     pub renditions: Renditions,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub poster: Option<Poster>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub preview_loop: Option<PreviewLoop>,
     pub pipeline: Pipeline,
     pub status: Status,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -128,7 +160,16 @@ impl AssetRecord {
     /// fallara el procesamiento por falta de `alt`, habría que re-encodear
     /// todo después de escribir una frase.
     pub fn can_publish(&self) -> bool {
-        self.alt.is_some() && self.status == Status::Ready && !self.renditions.images.is_empty()
+        self.alt.is_some() && self.status == Status::Ready && self.fallback_exists()
+    }
+
+    /// Invariante 6 para los dos tipos: una imagen necesita jpeg o png, un
+    /// vídeo necesita el h264/mp4.
+    pub fn fallback_exists(&self) -> bool {
+        match self.kind {
+            Kind::Image => self.fallback().is_some(),
+            Kind::Video => self.renditions.videos.iter().any(|v| v.is_fallback),
+        }
     }
 
     /// El fallback universal del invariante 6: el `<img>` final del
@@ -194,13 +235,13 @@ pub fn build(
     title: String,
     alt: Option<String>,
     info: &SourceInfo,
-    images: ImageOutput,
+    derived: Derived,
     archived_at: String,
     ffmpeg_version: String,
     now: String,
     duration_ms: u64,
 ) -> AssetRecord {
-    let mut decisions = images.decisions;
+    let mut decisions = derived.decisions;
     if let Some(d) = orientation_decision(info) {
         decisions.push(d);
     }
@@ -231,19 +272,21 @@ pub fn build(
             is_animated: info.is_animated,
         },
         colour: Colour {
-            dominant: images.dominant,
-            placeholder: images.placeholder,
-            source_colour_space: images.source_colour_space,
+            dominant: derived.dominant,
+            placeholder: derived.placeholder,
+            source_colour_space: derived.source_colour_space,
             is_hdr_source: info.is_hdr_source,
         },
-        renditions: Renditions { images: images.renditions, videos: Vec::new() },
+        renditions: Renditions { images: derived.images, videos: derived.videos },
+        poster: derived.poster,
+        preview_loop: derived.preview_loop,
         pipeline: Pipeline {
             version: PIPELINE_VERSION.to_string(),
             ffmpeg_version,
             encoded_at: now.clone(),
             duration_ms,
             decisions,
-            warnings: images.warnings,
+            warnings: derived.warnings,
         },
         status: Status::Ready,
         error: None,

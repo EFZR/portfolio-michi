@@ -67,10 +67,31 @@ const STILL_DEMUXERS: &[&str] = &[
 /// sobre el nombre porque `bgr0` tiene una posición muerta y no alfa, y
 /// `pal8` (los GIF) la lleva en la paleta.
 const ALPHA_PIX_FMTS: &[&str] = &[
-    "rgba", "bgra", "argb", "abgr", "rgba64le", "rgba64be", "bgra64le", "bgra64be", "yuva420p",
-    "yuva422p", "yuva444p", "yuva420p9le", "yuva420p10le", "yuva422p10le", "yuva444p10le",
-    "yuva444p12le", "yuva444p16le", "ya8", "ya16le", "ya16be", "gbrap", "gbrap10le", "gbrap12le",
-    "gbrap16le", "pal8",
+    "rgba",
+    "bgra",
+    "argb",
+    "abgr",
+    "rgba64le",
+    "rgba64be",
+    "bgra64le",
+    "bgra64be",
+    "yuva420p",
+    "yuva422p",
+    "yuva444p",
+    "yuva420p9le",
+    "yuva420p10le",
+    "yuva422p10le",
+    "yuva444p10le",
+    "yuva444p12le",
+    "yuva444p16le",
+    "ya8",
+    "ya16le",
+    "ya16be",
+    "gbrap",
+    "gbrap10le",
+    "gbrap12le",
+    "gbrap16le",
+    "pal8",
 ];
 
 /// Transferencias HDR. Un archivo HDR servido sin tone-map se ve lavado en la
@@ -199,8 +220,9 @@ fn sha256_of(path: &Path) -> MediaResult<String> {
     use sha2::{Digest, Sha256};
     use std::io::Read;
 
-    let mut f = std::fs::File::open(path)
-        .map_err(|e| MediaError::invalid("No se pudo leer el archivo.").with_detail(e.to_string()))?;
+    let mut f = std::fs::File::open(path).map_err(|e| {
+        MediaError::invalid("No se pudo leer el archivo.").with_detail(e.to_string())
+    })?;
     let mut hasher = Sha256::new();
     // En trozos: un vídeo de 500 MB no entra cómodo en memoria.
     let mut buf = vec![0u8; 1 << 20];
@@ -270,14 +292,20 @@ pub fn probe(path: &Path) -> MediaResult<SourceInfo> {
             .with_detail(e.to_string())
     })?;
 
-    let streams = root.get("streams").and_then(Value::as_array).cloned().unwrap_or_default();
+    let streams = root
+        .get("streams")
+        .and_then(Value::as_array)
+        .cloned()
+        .unwrap_or_default();
     let video = streams
         .iter()
         .find(|s| s.get("codec_type").and_then(Value::as_str) == Some("video"))
         .ok_or_else(|| {
             // Un MP3 o un PDF llegan aquí: son archivos válidos, pero sin
             // imagen. No es que estén roto — es que no los soportamos.
-            MediaError::unsupported("Este archivo no tiene imagen, así que no se puede usar como medio del portafolio.")
+            MediaError::unsupported(
+                "Este archivo no tiene imagen, así que no se puede usar como medio del portafolio.",
+            )
         })?;
 
     let format = root.get("format").cloned().unwrap_or(Value::Null);
@@ -285,10 +313,12 @@ pub fn probe(path: &Path) -> MediaResult<SourceInfo> {
     let codec = json_str(video, "codec_name").unwrap_or_default();
     let pix_fmt = json_str(video, "pix_fmt").unwrap_or_default();
 
-    let stored_width = json_u32(video, "width")
-        .ok_or_else(|| MediaError::invalid("El archivo no declara su ancho; puede estar truncado."))?;
-    let stored_height = json_u32(video, "height")
-        .ok_or_else(|| MediaError::invalid("El archivo no declara su alto; puede estar truncado."))?;
+    let stored_width = json_u32(video, "width").ok_or_else(|| {
+        MediaError::invalid("El archivo no declara su ancho; puede estar truncado.")
+    })?;
+    let stored_height = json_u32(video, "height").ok_or_else(|| {
+        MediaError::invalid("El archivo no declara su alto; puede estar truncado.")
+    })?;
     if stored_width == 0 || stored_height == 0 {
         return Err(MediaError::invalid("El archivo declara un tamaño de cero."));
     }
@@ -431,9 +461,7 @@ fn read_display_matrix(path: &Path) -> MediaResult<Option<[i64; 9]>> {
         .and_then(Value::as_array)
         .into_iter()
         .flatten()
-        .find(|sd| {
-            sd.get("side_data_type").and_then(Value::as_str) == Some("3x3 displaymatrix")
-        })
+        .find(|sd| sd.get("side_data_type").and_then(Value::as_str) == Some("3x3 displaymatrix"))
         .and_then(|sd| sd.get("displaymatrix").and_then(Value::as_str))
         .and_then(parse_display_matrix);
 
@@ -513,7 +541,11 @@ mod tests {
         }
         for n in 5..=8 {
             let i = probe(&fixture(n)).unwrap();
-            assert_eq!((i.stored_width, i.stored_height), (60, 40), "orientación {n}");
+            assert_eq!(
+                (i.stored_width, i.stored_height),
+                (60, 40),
+                "orientación {n}"
+            );
             assert_eq!((i.width, i.height), (40, 60), "orientación {n}");
             assert_eq!(i.orientation, Orientation::Portrait, "orientación {n}");
             assert!((i.aspect_ratio - 40.0 / 60.0).abs() < 1e-9);
@@ -559,10 +591,19 @@ mod tests {
         crate::media::cmd::run(
             "ffmpeg",
             &[
-                "-v", "error", "-y",
-                "-i", &fixture(1).to_string_lossy(),
-                "-vf", "scale=1200:-2",
-                "-c:v", "mjpeg", "-q:v", "1", "-pix_fmt", "yuvj444p",
+                "-v",
+                "error",
+                "-y",
+                "-i",
+                &fixture(1).to_string_lossy(),
+                "-vf",
+                "scale=1200:-2",
+                "-c:v",
+                "mjpeg",
+                "-q:v",
+                "1",
+                "-pix_fmt",
+                "yuvj444p",
                 &grande.to_string_lossy(),
             ],
             crate::media::cmd::SHORT,
@@ -571,7 +612,10 @@ mod tests {
         .expect("el re-encode del fixture debe funcionar");
 
         let g = probe(&grande).unwrap();
-        assert_ne!(chico.container, g.container, "el supuesto del test ya no vale");
+        assert_ne!(
+            chico.container, g.container,
+            "el supuesto del test ya no vale"
+        );
         assert_eq!(chico.kind, Kind::Image);
         assert_eq!(g.kind, Kind::Image, "demuxer {}", g.container);
 
@@ -641,7 +685,12 @@ mod tests {
         // queda kind=video con isAnimated, y el front lo pinta con <video>.
         let gif = generar(
             "anim.gif",
-            &["-f", "lavfi", "-i", "testsrc2=size=64x48:rate=10:duration=1"],
+            &[
+                "-f",
+                "lavfi",
+                "-i",
+                "testsrc2=size=64x48:rate=10:duration=1",
+            ],
         );
         let i = probe(&gif).unwrap();
         assert_eq!(i.kind, Kind::Video, "un GIF animado no es una imagen fija");
@@ -669,10 +718,23 @@ mod tests {
         let mp4 = generar(
             "clip.mp4",
             &[
-                "-f", "lavfi", "-i", "testsrc2=size=160x120:rate=25:duration=1",
-                "-f", "lavfi", "-i", "sine=frequency=440:duration=1",
-                "-c:v", "libx264", "-crf", "30", "-pix_fmt", "yuv420p",
-                "-c:a", "aac", "-shortest",
+                "-f",
+                "lavfi",
+                "-i",
+                "testsrc2=size=160x120:rate=25:duration=1",
+                "-f",
+                "lavfi",
+                "-i",
+                "sine=frequency=440:duration=1",
+                "-c:v",
+                "libx264",
+                "-crf",
+                "30",
+                "-pix_fmt",
+                "yuv420p",
+                "-c:a",
+                "aac",
+                "-shortest",
             ],
         );
         let i = probe(&mp4).unwrap();
@@ -690,13 +752,30 @@ mod tests {
         // silencio y aparece fondo negro.
         let con = generar(
             "alfa.png",
-            &["-f", "lavfi", "-i", "color=c=red@0.5:size=64x64,format=rgba", "-frames:v", "1"],
+            &[
+                "-f",
+                "lavfi",
+                "-i",
+                "color=c=red@0.5:size=64x64,format=rgba",
+                "-frames:v",
+                "1",
+            ],
         );
         let sin = generar(
             "opaca.png",
-            &["-f", "lavfi", "-i", "color=c=red:size=64x64,format=rgb24", "-frames:v", "1"],
+            &[
+                "-f",
+                "lavfi",
+                "-i",
+                "color=c=red:size=64x64,format=rgb24",
+                "-frames:v",
+                "1",
+            ],
         );
-        assert!(probe(&con).unwrap().has_alpha, "pix_fmt con alfa no detectado");
+        assert!(
+            probe(&con).unwrap().has_alpha,
+            "pix_fmt con alfa no detectado"
+        );
         assert!(!probe(&sin).unwrap().has_alpha);
     }
 

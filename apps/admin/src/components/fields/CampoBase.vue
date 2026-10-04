@@ -13,7 +13,12 @@ import { computed, useId } from 'vue'
  * que hoy no tiene ninguna. Lo que importa reutilizar es el CABLEADO, y eso es
  * lo que se copia; la piel es de cada aplicación.
  */
-const { label, error = '', pista = '', opcional = false } = defineProps<{
+const {
+  label,
+  error = '',
+  pista = '',
+  opcional = false,
+} = defineProps<{
   label: string
   error?: string
   pista?: string
@@ -46,7 +51,11 @@ const descritoPor = computed(() => {
       </span>
     </label>
 
-    <p v-if="pista" :id="pistaId" class="mt-2 max-w-prose text-sm leading-relaxed text-muted-foreground">
+    <p
+      v-if="pista"
+      :id="pistaId"
+      class="mt-2 max-w-prose text-sm leading-relaxed text-muted-foreground"
+    >
       {{ pista }}
     </p>
 

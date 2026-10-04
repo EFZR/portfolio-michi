@@ -149,7 +149,11 @@ pub struct ImageOutput {
 /// R3 — la escalera. Sólo anchos ≤ el ancho ORIENTADO (invariante 1: nunca
 /// upscalear). Un original de 1800 produce hasta 1600 y ahí se corta.
 pub fn ladder(oriented_width: u32) -> Vec<u32> {
-    let v: Vec<u32> = WIDTHS.iter().copied().filter(|w| *w <= oriented_width).collect();
+    let v: Vec<u32> = WIDTHS
+        .iter()
+        .copied()
+        .filter(|w| *w <= oriented_width)
+        .collect();
     if v.is_empty() {
         // Una imagen más angosta que 320 px (un icono, un sello). La escalera
         // queda vacía y sin esto no habría ninguna rendition: el invariante 6
@@ -292,12 +296,10 @@ fn measure(path: &Path) -> MediaResult<(u32, u32, u64)> {
     )?;
 
     let txt = out.stdout.trim();
-    let (w, h) = txt
-        .split_once('x')
-        .ok_or_else(|| {
-            MediaError::failed("No se pudieron medir las dimensiones de un archivo generado.")
-                .with_detail(format!("ffprobe devolvió {txt:?} para {}", path.display()))
-        })?;
+    let (w, h) = txt.split_once('x').ok_or_else(|| {
+        MediaError::failed("No se pudieron medir las dimensiones de un archivo generado.")
+            .with_detail(format!("ffprobe devolvió {txt:?} para {}", path.display()))
+    })?;
     let w: u32 = w.trim().parse().map_err(|_| {
         MediaError::failed("Medición de ancho inválida.").with_detail(txt.to_string())
     })?;
@@ -305,7 +307,9 @@ fn measure(path: &Path) -> MediaResult<(u32, u32, u64)> {
         MediaError::failed("Medición de alto inválida.").with_detail(txt.to_string())
     })?;
     let bytes = std::fs::metadata(path)
-        .map_err(|e| MediaError::failed("No se pudo medir el archivo generado.").with_detail(e.to_string()))?
+        .map_err(|e| {
+            MediaError::failed("No se pudo medir el archivo generado.").with_detail(e.to_string())
+        })?
         .len();
 
     Ok((w, h, bytes))
@@ -452,8 +456,7 @@ pub fn render(
                 bytes,
                 path: name,
                 mime_type: format.mime(),
-                has_alpha: matches!(format, ImageFormat::Png | ImageFormat::Webp)
-                    && info.has_alpha,
+                has_alpha: matches!(format, ImageFormat::Png | ImageFormat::Webp) && info.has_alpha,
             });
         }
     }
@@ -562,7 +565,12 @@ mod tests {
     }
 
     fn todos() -> Encoders {
-        Encoders { avif: Some("libaom-av1"), webp: true, jpeg: true, png: true }
+        Encoders {
+            avif: Some("libaom-av1"),
+            webp: true,
+            jpeg: true,
+            png: true,
+        }
     }
 
     #[test]
@@ -592,7 +600,10 @@ mod tests {
         // todas las visitas— vieran un rectángulo negro.
         let mut i = probe(&fixture(1)).unwrap();
         i.has_alpha = true;
-        assert_eq!(formats_for(&i, &todos()), vec![ImageFormat::Webp, ImageFormat::Png]);
+        assert_eq!(
+            formats_for(&i, &todos()),
+            vec![ImageFormat::Webp, ImageFormat::Png]
+        );
     }
 
     #[test]
@@ -607,7 +618,10 @@ mod tests {
     #[test]
     fn si_falta_un_encoder_el_formato_desaparece_y_el_resto_sigue() {
         let i = probe(&fixture(1)).unwrap();
-        let sin_avif = Encoders { avif: None, ..todos() };
+        let sin_avif = Encoders {
+            avif: None,
+            ..todos()
+        };
         assert_eq!(
             formats_for(&i, &sin_avif),
             vec![ImageFormat::Webp, ImageFormat::Jpeg]
@@ -636,7 +650,10 @@ mod tests {
         // MEDIDO: sin esto el mjpeg de ffmpeg sale 4:4:4 y el archivo pesa
         // 128 927 bytes en vez de 83 468 — 54% más por un defecto.
         let a = encoder_args(ImageFormat::Jpeg, &todos());
-        let i = a.iter().position(|x| x == "-pix_fmt").expect("falta -pix_fmt");
+        let i = a
+            .iter()
+            .position(|x| x == "-pix_fmt")
+            .expect("falta -pix_fmt");
         assert_eq!(a[i + 1], "yuvj420p");
     }
 
@@ -651,7 +668,10 @@ mod tests {
     #[test]
     fn el_avif_lleva_yuv420p_porque_safari_no_decodifica_444() {
         let a = encoder_args(ImageFormat::Avif, &todos());
-        let i = a.iter().position(|x| x == "-pix_fmt").expect("falta -pix_fmt");
+        let i = a
+            .iter()
+            .position(|x| x == "-pix_fmt")
+            .expect("falta -pix_fmt");
         assert_eq!(a[i + 1], "yuv420p");
     }
 
@@ -724,7 +744,11 @@ mod tests {
 
         let p = out.placeholder.expect("placeholder");
         assert!(p.starts_with("data:image/webp;base64,"));
-        assert!(p.len() < 1400, "el placeholder tiene que ser diminuto: {}", p.len());
+        assert!(
+            p.len() < 1400,
+            "el placeholder tiene que ser diminuto: {}",
+            p.len()
+        );
 
         let d = out.dominant.expect("color dominante");
         assert_eq!(d.len(), 7, "formato #RRGGBB");
@@ -755,7 +779,13 @@ mod tests {
         let out = render(&i, &fixture(6), &dir, "retrato", &todos()).unwrap();
         for r in &out.renditions {
             assert_eq!(r.width, 40, "{:?} salió acostada", r.format);
-            assert!(r.height > r.width, "{:?} {}x{}", r.format, r.width, r.height);
+            assert!(
+                r.height > r.width,
+                "{:?} {}x{}",
+                r.format,
+                r.width,
+                r.height
+            );
         }
 
         std::fs::remove_dir_all(&dir).ok();

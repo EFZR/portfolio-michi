@@ -84,11 +84,7 @@ defineExpose({ form })
           :key="l"
           type="button"
           class="px-3 py-1.5 font-mono text-[0.7rem] uppercase tracking-[0.25em] transition-colors duration-200"
-          :class="
-            editLocale === l
-              ? 'text-primary'
-              : 'text-muted-foreground hover:text-foreground'
-          "
+          :class="editLocale === l ? 'text-primary' : 'text-muted-foreground hover:text-foreground'"
           :aria-pressed="editLocale === l"
           @click="editLocale = l"
         >
@@ -169,7 +165,11 @@ defineExpose({ form })
         class="group flex items-center gap-3 border-b border-foreground py-2 font-mono text-[0.7rem] uppercase tracking-[0.3em] transition-colors duration-300 enabled:hover:border-primary enabled:hover:text-primary disabled:border-border disabled:text-muted-foreground"
       >
         Guardar
-        <span aria-hidden="true" class="transition-transform duration-300 group-enabled:group-hover:translate-x-1">→</span>
+        <span
+          aria-hidden="true"
+          class="transition-transform duration-300 group-enabled:group-hover:translate-x-1"
+          >→</span
+        >
       </button>
     </div>
   </form>
