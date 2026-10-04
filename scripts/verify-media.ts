@@ -27,7 +27,19 @@ const PNG = Buffer.from(
   'base64',
 )
 
-const objeto = (n: string) => `media/__verificacion__/${n}`
+/**
+ * Prefijo de los archivos de prueba.
+ *
+ * NO usa `__verificacion__`: Firestore reserva los ids de documento que
+ * coinciden con `__.*__` y responde
+ * `INVALID_ARGUMENT: Resource id is invalid because it is reserved`.
+ * Storage no tiene esa restricción, pero conviene el mismo nombre en los dos
+ * sitios. (El id real de un asset es un sha256 en hexadecimal, así que nunca
+ * puede chocar con la regla.)
+ */
+const PRUEBA = 'zz-verificacion'
+
+const objeto = (n: string) => `media/${PRUEBA}/${n}`
 const url = (bucket: string, o: string) => `${API}/${bucket}/o/${encodeURIComponent(o)}?alt=media`
 const subida = (bucket: string, o: string) =>
   `${API}/${bucket}/o?uploadType=media&name=${encodeURIComponent(o)}`
@@ -127,7 +139,7 @@ try {
 
   // ── 5. La colección de Firestore
   console.log('\n5. La colección `media` en Firestore')
-  const ref = doc(db, 'media/__verificacion__')
+  const ref = doc(db, `media/${PRUEBA}`)
   try {
     await setDoc(ref, { slug: 'verificacion', kind: 'image', status: 'ready' })
     ok('la admin escribe un documento', true)

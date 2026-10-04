@@ -96,6 +96,22 @@ export function compileField(f: Field): z.ZodTypeAny {
       out = z.union([z.url(), z.string().regex(/^\/[\w\-./]+$/)])
       break
 
+    case 'media':
+      // El valor es el ID de un documento de la biblioteca, que sale del
+      // sha256 del archivo original: hexadecimal y nada más.
+      //
+      // Validar la FORMA y no solo «que haya algo» hace un trabajo concreto:
+      // una URL vieja —las 43 de picsum que quedan en los datos— falla acá en
+      // vez de colarse y acabar en un `<picture>` que no pinta nada. El
+      // mensaje tiene que decir qué hacer, porque lo va a leer Karol.
+      out = z
+        .string()
+        .regex(
+          /^[0-9a-f]{8,64}$/,
+          'Elegí una imagen de la biblioteca. (Si ves una dirección web acá, es una imagen vieja que todavía no se migró.)',
+        )
+      break
+
     case 'tuple':
       out = z.tuple(
         asFields(f.elements).map(compileField) as [z.ZodTypeAny, ...z.ZodTypeAny[]],

@@ -165,6 +165,32 @@ export const metaSchema = z
           message: `"${at}" es enum y no trae ni "source" ni "constraints.options".`,
         })
       }
+      // Un campo `media` con `constraints.kind` tiene que decir algo que la
+      // biblioteca entienda; si no, el selector filtraría por un valor que no
+      // existe y aparecería vacío sin explicación.
+      if (type === 'media') {
+        const kind = constraints['kind']
+        if (kind !== undefined && kind !== 'image' && kind !== 'video') {
+          ctx.addIssue({
+            code: 'custom',
+            message: `"${at}" es media y su "constraints.kind" es ${JSON.stringify(kind)}; solo vale "image" o "video".`,
+          })
+        }
+        // `destino`, `maxSizeMB` y `formats` eran del widget viejo, que subía
+        // la imagen a una ruta fija. Con la biblioteca la ruta la decide el
+        // pipeline (`media/<id>/`) y los topes los ponen las reglas de
+        // Storage. Dejarlos puestos no rompe nada, y eso es justo el
+        // problema: parecerían estar surtiendo efecto.
+        for (const obsoleto of ['destino', 'maxSizeMB', 'formats']) {
+          if (constraints[obsoleto] !== undefined || (field.ui as Record<string, unknown>)?.[obsoleto] !== undefined) {
+            ctx.addIssue({
+              code: 'custom',
+              message: `"${at}" es media y trae "${obsoleto}", que ya no se aplica: la ruta la decide el pipeline y los topes las reglas de Storage. Quitalo para no dar a entender que hace algo.`,
+            })
+          }
+        }
+      }
+
       // Localizar un número o una imagen no significa nada y casi siempre es
       // un descuido al copiar un campo.
       if (field.localized === true && type !== 'text') {

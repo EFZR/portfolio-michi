@@ -11,6 +11,7 @@ import { readFileSync, readdirSync } from 'node:fs'
 import { fileURLToPath, URL } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { metaSchema } from './src/meta/metaSchema'
+import { compileField } from './src/compiler/compile'
 import { t, onlyPrimary } from './src/meta/locales'
 
 const DIR = fileURLToPath(new URL('./src/schemas/', import.meta.url))
@@ -105,6 +106,74 @@ describe('el meta-esquema rechaza', () => {
         fields.push({ ...fields[0] })
       }),
     ).toBe(false)
+  })
+})
+
+describe('el campo `media`', () => {
+  /** Mete un campo media en un esquema válido y devuelve los problemas. */
+  function conCampo(campo: Record<string, unknown>) {
+    const d = base()
+    ;(d.fields as unknown[]).push({ key: 'foto', label: 'Foto', type: 'media', ...campo })
+    const r = metaSchema.safeParse(d)
+    return r.success ? [] : r.error.issues.map((i) => i.message)
+  }
+
+  it('sin constraints es válido', () => {
+    expect(conCampo({})).toEqual([])
+  })
+
+  it('acepta kind image y video', () => {
+    expect(conCampo({ constraints: { kind: 'image' } })).toEqual([])
+    expect(conCampo({ constraints: { kind: 'video' } })).toEqual([])
+  })
+
+  it('rechaza un kind que la biblioteca no entiende', () => {
+    // Si se colara, el selector filtraría por un valor inexistente y
+    // aparecería vacío sin explicar por qué.
+    const p = conCampo({ constraints: { kind: 'gif' } })
+    expect(p.join(' ')).toContain('solo vale "image" o "video"')
+  })
+
+  it('rechaza los constraints del widget viejo', () => {
+    // Dejarlos puestos no rompe nada, y eso es justo el problema: parecerían
+    // estar surtiendo efecto. La ruta la decide el pipeline y los topes las
+    // reglas de Storage.
+    for (const obsoleto of ['destino', 'maxSizeMB', 'formats']) {
+      const p = conCampo({ constraints: { [obsoleto]: 'x' } })
+      expect(p.join(' '), obsoleto).toContain(obsoleto)
+    }
+  })
+
+  it('no puede ser localized: un id no se traduce', () => {
+    expect(conCampo({ localized: true }).join(' ')).toContain('localized')
+  })
+
+  describe('al compilar', () => {
+    const v = (over: Record<string, unknown> = {}) =>
+      compileField({ key: 'foto', label: 'Foto', type: 'media', ...over } as never)
+
+    it('acepta el id hexadecimal que produce el pipeline', () => {
+      // El id sale del sha256 del original: 16 caracteres en la
+      // implementación actual.
+      expect(v().safeParse('a3019c0e70e8a473').success).toBe(true)
+    })
+
+    it('rechaza una URL con un mensaje que dice qué hacer', () => {
+      // Es el caso REAL: quedan 43 URLs de picsum en los datos. Que fallen
+      // acá es la señal de la migración, no un accidente.
+      const r = v().safeParse('https://picsum.photos/seed/x/1000/1250')
+      expect(r.success).toBe(false)
+      if (!r.success) {
+        expect(r.error.issues[0].message).toContain('biblioteca')
+        expect(r.error.issues[0].message).toContain('imagen vieja')
+      }
+    })
+
+    it('rechaza una ruta de /public y un id con mayúsculas', () => {
+      expect(v().safeParse('/servicio-fotografia.jpg').success).toBe(false)
+      expect(v().safeParse('A3019C0E').success).toBe(false)
+      expect(v().safeParse('').success).toBe(false)
+    })
   })
 })
 
