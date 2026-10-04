@@ -1,0 +1,597 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/media-asset.json",
+  "title": "Media asset de portafolio web — documento y contrato de normalización",
+  "description": "Forma del registro de un medio (imagen o video) de un portafolio web, y los parámetros de normalización que el panel administrativo aplica con ffmpeg. El destino es el NAVEGADOR (desktop y móvil), no un decoder de hardware. Las constantes marcadas 'medido' se verificaron ejecutando ffmpeg; el resto son decisiones de diseño.",
+
+  "type": "object",
+  "required": ["id", "slug", "kind", "title", "intrinsic", "renditions", "pipeline", "createdAt"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Identificador estable. No cambia nunca, ni si el slug cambia."
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "description": "Identificador URL-safe, único. Es parte de la ruta pública de los archivos, así que cambiarlo invalida URLs: mantener un historial de slugs viejos si el portafolio ya está indexado."
+    },
+    "kind": { "type": "string", "enum": ["image", "video"] },
+
+    "title": { "type": "string", "description": "Nombre visible de la pieza." },
+    "alt": {
+      "type": "string",
+      "description": "Texto alternativo. OBLIGATORIO para kind 'image' que no sea decorativa — es accesibilidad, no metadata opcional, y el panel NO debe permitir publicar sin él. Una cadena vacía es válida y significa explícitamente 'decorativa'; ausente significa 'nadie lo escribió todavía'. Son casos distintos, no los colapses."
+    },
+    "caption": {
+      "type": "string",
+      "description": "Pie de foto visible. Distinto de 'alt': el caption lo leen todos, el alt sólo quien no ve la imagen."
+    },
+    "credit": {
+      "type": "string",
+      "description": "Autoría / crédito. En un portafolio importa: ver x-normalization.images.metadataPolicy."
+    },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "projectId": {
+      "type": "string",
+      "description": "Pieza a la que pertenece, si el portafolio agrupa por proyecto."
+    },
+    "order": { "type": "integer", "description": "Orden manual dentro de su galería." },
+    "featured": { "type": "boolean", "default": false },
+
+    "source": {
+      "type": "object",
+      "description": "El archivo que subió el usuario. Se guarda para poder RE-DERIVAR todas las renditions cuando cambie el ladder o aparezca un formato nuevo, sin pedirle el archivo de nuevo.",
+      "required": ["filename", "bytes", "sha256", "mimeType"],
+      "additionalProperties": false,
+      "properties": {
+        "filename": {
+          "type": "string",
+          "description": "Nombre original, sólo informativo. Nunca usarlo como ruta."
+        },
+        "bytes": { "type": "integer" },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "Del archivo original. Es la clave de deduplicación y lo que detecta un re-upload del mismo medio."
+        },
+        "mimeType": { "type": "string" },
+        "storagePath": {
+          "type": "string",
+          "description": "Dónde quedó archivado el original. Si no se archiva, re-derivar es imposible — decisión consciente, no accidente."
+        },
+        "container": { "type": "string", "description": "format_name de ffprobe." },
+        "videoCodec": { "type": "string" },
+        "audioCodec": { "type": "string" },
+        "probedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+
+    "intrinsic": {
+      "type": "object",
+      "description": "Dimensiones y propiedades del medio YA normalizado. Son las que el front necesita ANTES de cargar el archivo, para reservar el espacio y no causar layout shift.",
+      "required": ["width", "height", "aspectRatio"],
+      "additionalProperties": false,
+      "properties": {
+        "width": {
+          "type": "integer",
+          "description": "Ancho de la rendition de referencia (la más grande)."
+        },
+        "height": { "type": "integer" },
+        "aspectRatio": {
+          "type": "number",
+          "description": "width / height, como número. Va directo a la CSS `aspect-ratio` del contenedor: es lo que evita el Cumulative Layout Shift. Guardarlo calculado y no hacer que el front lo derive, para que haya UNA fuente de verdad."
+        },
+        "orientation": { "type": "string", "enum": ["landscape", "portrait", "square"] },
+        "durationSec": {
+          "type": "number",
+          "description": "Sólo video. Se OMITE en imágenes — no mandar 0 ni null."
+        },
+        "fps": { "type": "number", "description": "Sólo video." },
+        "hasAudio": {
+          "type": "boolean",
+          "description": "Sólo video. Si es false el front puede omitir los controles de volumen; si es true, el autoplay DEBE ir muted o el navegador lo bloquea."
+        },
+        "isAnimated": {
+          "type": "boolean",
+          "description": "Para fuentes GIF/APNG/WebP animado convertidas a video. Ver x-normalization.animatedImages."
+        }
+      }
+    },
+
+    "colour": {
+      "type": "object",
+      "description": "Lo que el front necesita para pintar algo antes de que el medio baje.",
+      "additionalProperties": false,
+      "properties": {
+        "dominant": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "Color de fondo del placeholder."
+        },
+        "palette": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "maxItems": 6
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "LQIP: data URI de una versión diminuta (16-24 px de lado largo) para mostrar borrosa mientras carga. Debe pesar menos de ~1 KB — si no, deja de ser una mejora y se vuelve otro byte que bloquea. Ver x-normalization.placeholder."
+        },
+        "sourceColourSpace": {
+          "type": "string",
+          "description": "Lo que declaraba el original (ej. 'display-p3', 'bt709', 'untagged'). Se guarda para auditar: una imagen untagged wide-gamut es la causa clásica del 'se ve lavado en Safari'."
+        },
+        "isHdrSource": {
+          "type": "boolean",
+          "description": "Si el original era HDR (PQ/HLG/BT.2020). Si es true, las renditions son el resultado de un tone-map y eso es una decisión que conviene poder revisar."
+        }
+      }
+    },
+
+    "renditions": {
+      "type": "object",
+      "description": "Los archivos derivados que realmente se sirven. Cada entrada es un archivo concreto en disco/CDN.",
+      "additionalProperties": false,
+      "properties": {
+        "images": {
+          "type": "array",
+          "description": "Para kind 'image': el producto cartesiano de formatos x anchos. Para kind 'video' queda vacío (el poster va en su propio campo).",
+          "items": {
+            "type": "object",
+            "required": ["format", "width", "height", "bytes", "path"],
+            "additionalProperties": false,
+            "properties": {
+              "format": { "type": "string", "enum": ["avif", "webp", "jpeg", "png"] },
+              "width": { "type": "integer" },
+              "height": { "type": "integer" },
+              "bytes": { "type": "integer" },
+              "path": {
+                "type": "string",
+                "description": "Ruta relativa al root público. El front arma el srcset con esto y con 'width'."
+              },
+              "mimeType": {
+                "type": "string",
+                "enum": ["image/avif", "image/webp", "image/jpeg", "image/png"]
+              },
+              "hasAlpha": {
+                "type": "boolean",
+                "description": "Si es true, este archivo NO puede ser JPEG: la transparencia se pierde en silencio."
+              }
+            }
+          }
+        },
+        "videos": {
+          "type": "array",
+          "description": "Para kind 'video': una entrada por (formato, altura) del ladder.",
+          "items": {
+            "type": "object",
+            "required": ["format", "codec", "width", "height", "bytes", "path"],
+            "additionalProperties": false,
+            "properties": {
+              "format": { "type": "string", "enum": ["mp4", "webm"] },
+              "codec": { "type": "string", "enum": ["h264", "av1", "vp9", "hevc"] },
+              "width": { "type": "integer" },
+              "height": { "type": "integer" },
+              "bytes": { "type": "integer" },
+              "bitrateBps": { "type": "integer" },
+              "path": { "type": "string" },
+              "mimeType": {
+                "type": "string",
+                "examples": [
+                  "video/mp4; codecs=\"avc1.640028,mp4a.40.2\"",
+                  "video/webm; codecs=\"av01.0.05M.08,opus\""
+                ]
+              },
+              "hasAudio": { "type": "boolean" },
+              "isFallback": {
+                "type": "boolean",
+                "description": "Marca la rendition que SIEMPRE funciona (h264/mp4). Debe existir exactamente una, y el front la pone última en el <video>."
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "poster": {
+      "type": "object",
+      "description": "Sólo video. Es la imagen del atributo `poster` y la que se ve en la galería. Se elige con el filtro `thumbnail` de ffmpeg, no a ciegas en el segundo 1 — ver x-normalization.video.poster.",
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string" },
+        "width": { "type": "integer" },
+        "height": { "type": "integer" },
+        "atSec": {
+          "type": "number",
+          "description": "Timestamp del frame elegido. Guardarlo permite que un editor lo corrija a mano y que el re-proceso respete esa elección."
+        },
+        "pickedBy": {
+          "type": "string",
+          "enum": ["auto", "manual"],
+          "description": "Si es 'manual', re-procesar NO debe volver a elegir el frame automáticamente."
+        },
+        "formats": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["avif", "webp", "jpeg"] }
+        }
+      }
+    },
+
+    "previewLoop": {
+      "type": "object",
+      "description": "Sólo video. Clip corto, SIN audio, para autoplay en hover en la galería. Es un archivo distinto del video completo: servir el completo para un hover es el error de performance más común en portafolios.",
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string" },
+        "bytes": { "type": "integer" },
+        "durationSec": { "type": "number" },
+        "startSec": { "type": "number" },
+        "format": { "type": "string", "enum": ["mp4", "webm"] }
+      }
+    },
+
+    "pipeline": {
+      "type": "object",
+      "description": "Reproducibilidad. Sin esto, cuando cambies el ladder no vas a saber qué assets quedaron viejos.",
+      "required": ["version", "encodedAt"],
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Versión del pipeline de normalización (semver propio). Al subirla, los assets con versión menor quedan marcados como re-derivables."
+        },
+        "ffmpegVersion": {
+          "type": "string",
+          "description": "Salida de `ffmpeg -version`, primera línea. Dos ffmpeg distintos no dan bytes idénticos."
+        },
+        "encodedAt": { "type": "string", "format": "date-time" },
+        "durationMs": {
+          "type": "integer",
+          "description": "Cuánto tardó. Útil para que el panel estime el progreso del próximo lote."
+        },
+        "decisions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Qué se hizo y por qué, legible. Ej: 'tone-map HDR->BT.709', 'GIF animado -> mp4+webm', 'no se generó 2560w: el original mide 1800'. Es lo que vas a querer leer cuando un asset se vea mal y no recuerdes qué pasó.",
+          "examples": [
+            [
+              "sin upscale: original 1800w, ladder cortado en 1600",
+              "jpeg forzado a yuvj420p (ahorro medido 35%)"
+            ]
+          ]
+        },
+        "warnings": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Divergencias asumidas, no errores. Ej: 'JPEG con mjpeg de ffmpeg, no mozjpeg: ~1.8x más grande'."
+        }
+      }
+    },
+
+    "status": {
+      "type": "string",
+      "enum": ["uploaded", "processing", "ready", "failed", "stale"],
+      "description": "'stale' = las renditions existen pero son de una versión anterior del pipeline. Es un estado real y útil: deja re-procesar por lotes sin perder el asset."
+    },
+    "error": {
+      "type": "object",
+      "description": "Presente sólo con status 'failed'. Ver x-normalization.errorOwnership: el código dice de quién es la culpa.",
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "toolchain_unavailable",
+            "invalid_media",
+            "unsupported_source",
+            "processing_failed",
+            "too_large"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "description": "Para el usuario, en su idioma. NUNCA la salida cruda de ffmpeg: puede traer rutas locales."
+        },
+        "detail": { "type": "string", "description": "Para el log. Acá sí va la salida de ffmpeg." }
+      }
+    },
+
+    "publishedAt": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "null = existe pero no es público. El panel administrativo distingue borrador de publicado."
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 con zona. No epoch, no un Timestamp de base de datos: el consumidor es la web."
+    },
+    "updatedAt": { "type": "string", "format": "date-time" }
+  },
+
+  "x-normalization": {
+    "target": "Navegadores modernos, desktop y móvil. Lo que importa es: peso de transferencia, que el archivo empiece a reproducir/pintar antes de bajar completo, y que no haya layout shift. NO hay un decoder de hardware fijo al que respetarle límites.",
+    "toolchain": "ffmpeg + ffprobe únicamente. Encoders requeridos: libx264, libaom-av1 (o libsvtav1), libwebp, libvpx-vp9, mjpeg, png. Filtros: scale, zscale, thumbnail, palettegen. Verificar con `ffmpeg -encoders` al arrancar el panel y degradar con un mensaje claro, no fallar en el primer archivo.",
+
+    "invertedFromHardwarePipelines": {
+      "comment": "Si traés experiencia de un pipeline de digital signage / decoder embebido, estas reglas se INVIERTEN. Aplicarlas acá cuesta peso y calidad sin ganar nada.",
+      "bFrames": "ANTES: prohibidos (agrandan el DPB del decoder por hardware). ACÁ: SE USAN (-bf 3). Comprimen mejor y ningún navegador tiene problema. Prohibirlos es tirar ~10-15% de bitrate.",
+      "fpsCap": "ANTES: 30 fps máximo. ACÁ: hasta 60. Un showreel a 60 fps es parte de lo que se muestra; bajarlo a 30 es degradar la pieza.",
+      "profile": "ANTES: baseline/main. ACÁ: HIGH. Soportado universalmente desde hace más de una década y comprime mejor.",
+      "peakBitrate": "ANTES: el pico de 1 s era crítico (dos decoders concurrentes). ACÁ: importa el PESO TOTAL y el time-to-first-frame. Se usa capped CRF, no CBR.",
+      "hdr": "ANTES: no tocar, marcar para revisión manual. ACÁ: TONE-MAPEAR a SDR BT.709. Un archivo HDR sin tone-map se ve desaturado y lavado en la mayoría de los navegadores — es peor que la pérdida del tone-map.",
+      "gop": "ANTES: 48 frames fijos (~1.6 s). ACÁ: ~2 s (2 x fps). No hay prefetch de zonas que recuperar.",
+      "singleOutput": "ANTES: un archivo, porque el device es uno y conocido. ACÁ: VARIAS renditions. Servir 1080p a un teléfono es el desperdicio más grande del pipeline.",
+      "stillRelevant": [
+        "-movflags +faststart sigue siendo obligatorio (acá incluso más: sin él el navegador no puede empezar a reproducir hasta bajar todo).",
+        "yuv420p sigue siendo obligatorio: Safari no reproduce yuv444p/yuv422p.",
+        "Dimensiones pares siguen siendo obligatorias para H.264 con subsampling 4:2:0.",
+        "Nunca upscalear.",
+        "Nunca re-encodear lo que ya cumple.",
+        "Idempotencia y fallar seguro devolviendo el original."
+      ]
+    },
+
+    "images": {
+      "formatStrategy": {
+        "comment": "Tres formatos, servidos con <picture> en orden de preferencia. AVIF y WebP cargan el peso de la calidad; JPEG existe sólo como red de seguridad.",
+        "order": ["avif", "webp", "jpeg"],
+        "alphaRule": "Si la imagen tiene canal alfa, el fallback es PNG, NO JPEG. Un JPEG con transparencia la pierde en silencio y aparece un fondo negro.",
+        "measured": "Misma imagen 1600x900 de prueba: AVIF (libaom, crf 32) 23.1 KB · WebP (q 80) 40.5 KB · JPEG (mjpeg, q:v 3, 4:2:0) 83.5 KB. El JPEG de ffmpeg pesa ~3.6x el AVIF."
+      },
+      "widthLadder": {
+        "widths": [320, 640, 960, 1280, 1600, 1920, 2560],
+        "rule": "Generar sólo los anchos MENORES O IGUALES al ancho del original. Nunca upscalear: un 1800w produce hasta 1600, y 1920/2560 no existen para ese asset.",
+        "maxLongEdge": 2560,
+        "maxLongEdgeRationale": "Cubre un slot de 1280 CSS px en pantalla retina (2x). Más que eso es peso que nadie ve en un portafolio."
+      },
+      "encoders": {
+        "avif": {
+          "preferred": "libaom-av1 para imágenes fijas: en la prueba dio 23.1 KB contra 30.3 KB de libsvtav1 — 24% menos para la misma imagen.",
+          "args": [
+            "-c:v",
+            "libaom-av1",
+            "-crf",
+            "32",
+            "-cpu-used",
+            "6",
+            "-still-picture",
+            "1",
+            "-pix_fmt",
+            "yuv420p"
+          ],
+          "note": "libsvtav1 es más rápido y sirve para lotes grandes. Loguea internamente una altura redondeada a múltiplo de 8 (ej. 904 para una entrada de 900), pero VERIFICADO: el AVIF de salida queda en las dimensiones correctas (1600x900). No deforma; no hace falta compensarlo."
+        },
+        "webp": {
+          "args": ["-c:v", "libwebp", "-quality", "80", "-preset", "picture"],
+          "note": "Para imágenes con alfa, libwebp la preserva. Es el único de los tres fallbacks que da transparencia Y buena compresión."
+        },
+        "jpeg": {
+          "args": ["-c:v", "mjpeg", "-q:v", "3", "-pix_fmt", "yuvj420p"],
+          "criticalGotcha": "MEDIDO: sin `-pix_fmt yuvj420p` explícito, el encoder mjpeg de ffmpeg sale en 4:4:4 (yuvj444p) y el archivo pesa 128.9 KB en vez de 83.5 KB — 54% más grande por un default. Fijalo siempre.",
+          "knownWeakness": "ffmpeg NO tiene mozjpeg ni libjpeg-turbo optimizado. Este JPEG va a pesar ~1.5-2x lo que daría mozjpeg a calidad equivalente. Es el costo aceptado de la restricción ffmpeg-only, y por eso el JPEG es el ÚLTIMO fallback y no el formato principal. Anotalo en pipeline.warnings, no lo esconds."
+        }
+      },
+      "colourManagement": {
+        "goal": "Todo sale sRGB. Una imagen Display-P3 o untagged wide-gamut servida sin convertir se ve saturada o lavada según el navegador — es el bug de color más común en la web.",
+        "gotcha": "MEDIDO: `zscale=t=bt709:m=bt709:p=bt709` sobre un PNG sin tags falla con 'code 3074: no path between colorspaces'. zscale NO adivina la entrada. Hay que declararla: `zscale=min=bt709:tin=iec61966-2-1:pin=bt709:m=bt709:t=iec61966-2-1:p=bt709:r=full` — verificado que así funciona.",
+        "note": "iec61966-2-1 es la transferencia sRGB. Para una entrada que SÍ declara su espacio, leer los tags con ffprobe y usar esos valores como tin/pin/min en vez de asumir."
+      },
+      "metadataPolicy": {
+        "strip": "Por defecto ffmpeg descarta la mayoría de la metadata al re-encodear. Eso es lo que se quiere para GPS y datos de cámara.",
+        "mustStrip": [
+          "GPS / geolocalización — es privacidad, y en un portafolio público revela dónde vive o trabaja el autor",
+          "Números de serie de cámara/lente"
+        ],
+        "shouldKeep": ["Copyright", "Artist / autoría"],
+        "tension": "Acá hay un conflicto real: en un portafolio la autoría importa, pero ffmpeg no da control fino de EXIF por tag. Lo honesto es strip total + volver a escribir copyright/autor desde los campos `credit` del registro, que es la fuente de verdad de todos modos. Si hace falta control fino de EXIF, ffmpeg no es la herramienta y conviene admitirlo antes de pelearse con él."
+      },
+      "exifOrientation": {
+        "problem": "ffmpeg no aplica de forma confiable la orientación EXIF en imágenes FIJAS (en video sí, por el display matrix). Una foto de celular puede salir rotada 90°.",
+        "fix": "Leer el tag de orientación y aplicar `transpose`/`hflip` a mano, y medir las dimensiones YA orientadas antes de elegir el ancho del ladder — si no, un retrato se trata como paisaje y el ladder sale mal.",
+        "verifyWith": "Fotos reales de celular, en las cuatro orientaciones. Es el caso que más se escapa en pruebas con imágenes generadas."
+      }
+    },
+
+    "video": {
+      "ladder": {
+        "heights": [480, 720, 1080],
+        "optional": [1440, 2160],
+        "rule": "Sólo alturas <= la del original. Nunca upscalear. Para un portafolio, 1080p suele ser el techo útil; 1440/2160 sólo si la pieza es específicamente sobre resolución.",
+        "widthRule": "Derivar el ancho del aspect del original y redondear a par (round(n/2)*2). Mantener el aspect: nunca estirar ni recortar sin que sea una decisión editorial explícita."
+      },
+      "h264Fallback": {
+        "comment": "La rendition que SIEMPRE funciona. Verificado end-to-end: sale High profile, level 4.1, yuv420p, has_b_frames=2, moov antes de mdat.",
+        "args": [
+          "-c:v",
+          "libx264",
+          "-preset",
+          "slow",
+          "-crf",
+          "21",
+          "-profile:v",
+          "high",
+          "-level",
+          "4.1",
+          "-pix_fmt",
+          "yuv420p",
+          "-bf",
+          "3",
+          "-g",
+          "<2*fps>",
+          "-keyint_min",
+          "<2*fps>",
+          "-maxrate",
+          "<cap>",
+          "-bufsize",
+          "<2*cap>",
+          "-c:a",
+          "aac",
+          "-b:a",
+          "128k",
+          "-ar",
+          "48000",
+          "-ac",
+          "2",
+          "-movflags",
+          "+faststart",
+          "-f",
+          "mp4"
+        ],
+        "crf": "21 es un buen punto para portafolio (calidad visualmente transparente en material limpio). Bajar a 18 para piezas con gradientes o grano fino; subir a 23 para contenido hablado.",
+        "cappedCrf": "CRF controla la calidad; -maxrate/-bufsize sólo ponen un techo para que un plano caótico no dispare el peso. NO es CBR: un plano simple debe pesar poco.",
+        "maxrateByHeight": {
+          "480": "1.5M",
+          "720": "4M",
+          "1080": "8M",
+          "1440": "14M",
+          "2160": "28M"
+        },
+        "faststart": "VERIFICADO imprescindible: el orden de boxes queda ftyp/moov/free/mdat. Sin él el navegador tiene que bajar el archivo entero antes del primer frame."
+      },
+      "modernCodecs": {
+        "comment": "Opcional, fase 2. Reduce el peso bastante, pero duplica el tiempo de encode y la complejidad del panel. No lo hagas en la primera versión.",
+        "av1": [
+          "-c:v",
+          "libsvtav1",
+          "-crf",
+          "30",
+          "-preset",
+          "6",
+          "-pix_fmt",
+          "yuv420p",
+          "-c:a",
+          "libopus",
+          "-b:a",
+          "96k",
+          "-f",
+          "webm"
+        ],
+        "vp9": [
+          "-c:v",
+          "libvpx-vp9",
+          "-crf",
+          "32",
+          "-b:v",
+          "0",
+          "-row-mt",
+          "1",
+          "-pix_fmt",
+          "yuv420p",
+          "-c:a",
+          "libopus",
+          "-b:a",
+          "96k",
+          "-f",
+          "webm"
+        ],
+        "rule": "Si generás estas, el <video> lista webm/av1 primero, webm/vp9 después y mp4/h264 ÚLTIMO. Y el mp4 tiene que existir siempre: es el único que no falla en ningún lado."
+      },
+      "audio": {
+        "silentSources": "Si el video no tiene pista de audio, NO agregues una silenciosa (eso era necesario en pipelines de signage que exigían audio presente). Acá pesa de gratis: usá `-an` y marcá `hasAudio: false`.",
+        "autoplayRule": "Todo autoplay en la web tiene que ir muted, o el navegador lo bloquea. Por eso el previewLoop se genera SIEMPRE sin audio.",
+        "codec": "AAC-LC a 128k/48kHz estéreo para el mp4; Opus a 96k para el webm."
+      },
+      "poster": {
+        "method": "Filtro `thumbnail`, no un timestamp ciego. VERIFICADO funcionando: `-vf thumbnail=100 -frames:v 1` elige el frame más representativo de cada lote de 100.",
+        "whyNotFixedTimestamp": "Un timestamp fijo (ej. 00:00:01) cae en un fundido desde negro en la mitad de las piezas con intro. El filtro `thumbnail` puntúa los frames y evita los planos uniformes.",
+        "extraSafety": "Combinar con `blackframe` para descartar frames casi negros si el material tiene fundidos largos.",
+        "formats": "Generar el poster en los mismos tres formatos que las imágenes (AVIF/WebP/JPEG) y en el ladder de anchos: es una imagen más, y es la que se ve en la galería.",
+        "manualOverride": "Si poster.pickedBy es 'manual', el re-proceso DEBE respetar poster.atSec y no volver a elegir."
+      },
+      "previewLoop": {
+        "durationSec": 3,
+        "rule": "Clip corto, sin audio, resolución baja (480p o 720p), bitrate agresivo. Objetivo de peso: menos de ~500 KB.",
+        "startRule": "Arrancar en el frame del poster o un poco después, no en el segundo 0: el 0 suele ser negro.",
+        "args": [
+          "-ss",
+          "<startSec>",
+          "-t",
+          "3",
+          "-an",
+          "-c:v",
+          "libx264",
+          "-crf",
+          "28",
+          "-preset",
+          "slow",
+          "-vf",
+          "scale=-2:480",
+          "-movflags",
+          "+faststart"
+        ]
+      },
+      "hdrToneMap": {
+        "when": "El original declara BT.2020 con transferencia PQ (smpte2084) o HLG (arib-std-b67).",
+        "args": [
+          "-vf",
+          "zscale=t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,tonemap=hable:desat=0,zscale=t=bt709:m=bt709:r=tv,format=yuv420p"
+        ],
+        "why": "Opuesto al criterio de un pipeline embebido, donde HDR se marca para revisión manual. En la web, servir HDR sin tone-map se ve desaturado y lavado en la mayoría de los navegadores: el tone-map pierde menos que no hacerlo.",
+        "record": "Dejarlo en pipeline.decisions y colour.isHdrSource: es una decisión que alguien va a querer revisar mirando el resultado."
+      },
+      "colourTagging": {
+        "rule": "Taggear explícitamente la salida SDR: `-colorspace bt709 -color_primaries bt709 -color_trc bt709 -color_range tv`.",
+        "whyDifferentFromEmbedded": "En un decoder por hardware un tagging parcial del SPS puede impedir la negociación y el video no reproduce en absoluto. En un navegador no rompe la reproducción, pero cada navegador asume un default distinto para lo que falta y el resultado es un CORRIMIENTO DE COLOR visible entre Safari y Chrome. El síntoma es distinto, la solución es la misma: taggear los tres campos de forma coherente, nunca parcial."
+      }
+    },
+
+    "animatedImages": {
+      "rule": "GIF y WebP/APNG animados se convierten a VIDEO (mp4 + webm), no a imagen.",
+      "why": "Un GIF de 5 MB se vuelve un mp4 de ~200 KB con mejor calidad. Es la optimización de mayor rendimiento del pipeline entero.",
+      "args": [
+        "-movflags",
+        "+faststart",
+        "-pix_fmt",
+        "yuv420p",
+        "-vf",
+        "scale=trunc(iw/2)*2:trunc(ih/2)*2",
+        "-c:v",
+        "libx264",
+        "-crf",
+        "23",
+        "-an"
+      ],
+      "scaleNote": "El `trunc(iw/2)*2` no es decorativo: los GIF tienen dimensiones impares con frecuencia y H.264 con 4:2:0 las rechaza.",
+      "frontNote": "El registro queda kind 'video' con isAnimated true, y el front lo renderiza como <video autoplay muted loop playsinline> — no como <img>.",
+      "loopRule": "Preservar el comportamiento de loop: estos van siempre en loop, a diferencia de un video normal."
+    },
+
+    "placeholder": {
+      "goal": "Algo que pintar en el espacio reservado mientras el medio baja. Menos de ~1 KB o deja de ser una mejora.",
+      "method": "Escalar a 16-24 px de lado largo, encodear WebP (o AVIF) a calidad baja, y guardar como data URI base64 en colour.placeholder. El front lo pone como background con un blur de CSS.",
+      "args": ["-vf", "scale=20:-2", "-c:v", "libwebp", "-quality", "20"],
+      "dominantColour": "Alternativa más barata: un solo color. `-vf scale=1:1` y leer el pixel. Si el presupuesto de bytes es ajustado, el color dominante solo ya evita el flash de fondo blanco.",
+      "palette": "Para una paleta: `-vf palettegen=max_colors=6` y leer el PNG de paleta resultante."
+    },
+
+    "frontendContract": {
+      "comment": "Lo que el panel produce existe para que el front pueda hacer esto. Si el schema no alcanza para armarlo, el schema está mal.",
+      "images": "<picture> con un <source type=\"image/avif\"> y uno type=\"image/webp\", cada uno con srcset armado de renditions.images (path + ' ' + width + 'w') y un sizes acorde al layout; el <img> final apunta al JPEG/PNG. Siempre width/height o aspect-ratio en el contenedor.",
+      "video": "<video> con un <source> por rendition, orden av1/webm -> vp9/webm -> h264/mp4, poster del campo poster, y playsinline. Autoplay sólo muted.",
+      "cls": "intrinsic.aspectRatio va al CSS del contenedor ANTES de que cargue nada. Es lo único que evita el layout shift, y es gratis porque el dato ya está en el registro.",
+      "lazy": "loading=\"lazy\" en todo lo que está bajo el fold; la primera imagen visible va con fetchpriority=\"high\" y SIN lazy."
+    },
+
+    "errorOwnership": {
+      "comment": "Tres categorías que no se mezclan. Colapsarlas hace que un entorno mal configurado le reporte al usuario que su archivo está roto.",
+      "toolchain_unavailable": "ffmpeg/ffprobe no está, o le falta un encoder. El usuario no puede corregir nada en su archivo. Mensaje de instalación/configuración, y el panel debería detectarlo AL ARRANCAR, no en el primer upload.",
+      "invalid_media": "ffprobe corrió y rechazó el archivo: corrupto, truncado, o no es un medio. Mensaje accionable sobre el archivo.",
+      "unsupported_source": "Es un medio válido pero no se soporta (ej. un codec exótico sin decoder). Distinto de 'inválido': el archivo está bien, somos nosotros los que no llegamos.",
+      "processing_failed": "ffmpeg falló sobre un archivo YA validado. Es culpa NUESTRA: log de severidad alta, y el asset queda 'failed' para reintento, no descartado.",
+      "logHygiene": "La salida cruda de ffmpeg va a error.detail y al log, NUNCA a error.message: trae rutas locales y puede traer URLs con token."
+    },
+
+    "invariants": [
+      "Nunca upscalear: ni imagen, ni video, ni poster, ni placeholder.",
+      "Nunca re-encodear lo que ya cumple el target.",
+      "El original nunca se modifica en el lugar, y se archiva para poder re-derivar.",
+      "Idempotente: correr el pipeline dos veces sobre el mismo asset da el mismo resultado.",
+      "Ante cualquier error, el asset queda recuperable (status failed/stale), nunca a medio escribir.",
+      "Siempre existe una rendition fallback que funciona en todo navegador (h264/mp4 para video, jpeg/png para imagen).",
+      "Un asset sin `alt` no se publica.",
+      "Toda renditions escrita tiene su bytes y dimensiones reales medidos del archivo producido, no estimados."
+    ]
+  }
+}
