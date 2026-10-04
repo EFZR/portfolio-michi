@@ -46,9 +46,24 @@ export function askPassword(prompt: string): Promise<string> {
   const CTRL_C = '\u0003'
   const BACKSPACE = '\u007f'
 
+  const stdin = process.stdin
+
+  // Sin TTY, `setRawMode` no existe y el proceso se queda esperando datos que
+  // no van a llegar: cuelga sin decir nada, que es el peor fallo posible para
+  // un script interactivo. Pasa al correrlo desde un entorno que captura la
+  // salida en vez de dar una terminal de verdad.
+  if (!stdin.isTTY) {
+    process.stderr.write(
+      `\n✗ Este script pide una contraseña y necesita una terminal interactiva.\n` +
+        `  El entorno actual no la provee (stdin no es una TTY), así que se habría\n` +
+        `  quedado colgado esperando.\n\n` +
+        `  Corrélo directamente en tu terminal.\n\n`,
+    )
+    process.exit(1)
+  }
+
   return new Promise((resolve) => {
     process.stdout.write(prompt)
-    const stdin = process.stdin
     stdin.setRawMode?.(true)
     stdin.resume()
     stdin.setEncoding('utf8')
