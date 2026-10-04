@@ -1,0 +1,116 @@
+{
+  "id": "catalog",
+  "label": "Catálogo de servicios",
+  "target": {
+    "collection": "catalog"
+  },
+  "rules": [],
+  "format": 1,
+  "groups": [],
+  "version": 1,
+  "fields": [
+    {
+      "constraints": {
+        "minLength": 3,
+        "maxLength": 40,
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+      },
+      "ui": {
+        "control": "slug",
+        "counter": true,
+        "order": 1
+      },
+      "label": "Identificador",
+      "key": "id",
+      "help": "El mismo id que el rubro.",
+      "type": "text"
+    },
+    {
+      "key": "title",
+      "type": "text",
+      "ui": {
+        "counter": true,
+        "control": "input",
+        "order": 2
+      },
+      "label": "Título",
+      "localized": true,
+      "constraints": {
+        "maxLength": 18,
+        "minLength": 1
+      }
+    },
+    {
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 36
+      },
+      "label": "Nota",
+      "key": "note",
+      "type": "text",
+      "localized": true,
+      "ui": {
+        "counter": true,
+        "control": "input",
+        "order": 3
+      }
+    },
+    {
+      "key": "items",
+      "ui": {
+        "control": "container",
+        "sortable": true,
+        "order": 6
+      },
+      "element": {
+        "type": "group",
+        "key": "item",
+        "label": "Servicio",
+        "fields": [
+          {
+            "label": "Nombre",
+            "localized": true,
+            "type": "text",
+            "key": "name",
+            "ui": {
+              "counter": true,
+              "control": "input",
+              "order": 4
+            },
+            "constraints": {
+              "minLength": 1,
+              "maxLength": 40
+            }
+          },
+          {
+            "key": "description",
+            "label": "Qué incluye",
+            "localized": true,
+            "ui": {
+              "control": "textarea",
+              "rows": 2,
+              "counter": true,
+              "order": 5
+            },
+            "type": "text",
+            "constraints": {
+              "maxLength": 110,
+              "minLength": 1
+            }
+          }
+        ],
+        "ui": {
+          "control": "container"
+        }
+      },
+      "help": "La retícula es de 3 columnas; más de 12 obliga a scroll dentro del modal.",
+      "type": "list",
+      "label": "Servicios",
+      "constraints": {
+        "minItems": 1,
+        "maxItems": 12
+      }
+    }
+  ],
+  "description": "El desglose del modal de Servicios."
+}

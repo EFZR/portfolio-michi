@@ -1,0 +1,130 @@
+{
+  "description": "El titular en arco y el bloque de cierre del Home.",
+  "id": "contact",
+  "groups": [
+    {
+      "order": 1,
+      "id": "arc",
+      "label": "El arco"
+    },
+    {
+      "label": "El bloque de abajo",
+      "id": "block",
+      "order": 2
+    }
+  ],
+  "fields": [
+    {
+      "label": "Titular del arco",
+      "localized": true,
+      "ui": {
+        "group": "arc",
+        "control": "input",
+        "counter": true,
+        "order": 1
+      },
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 26
+      },
+      "type": "text",
+      "key": "arcTitle",
+      "help": "Va curvado sobre una bézier de 1859 unidades a 145px. No hay palanca de tamaño: si no cabe, no cabe."
+    },
+    {
+      "key": "arcAccent",
+      "ui": {
+        "group": "arc",
+        "counter": true,
+        "order": 2,
+        "control": "input"
+      },
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 10
+      },
+      "label": "Palabra acentuada",
+      "localized": true,
+      "help": "Se pinta en cursiva Ultraviolet al final del arco.",
+      "type": "text"
+    },
+    {
+      "constraints": {
+        "maxLength": 60
+      },
+      "ui": {
+        "control": "input",
+        "group": "block",
+        "order": 1,
+        "counter": true
+      },
+      "type": "text",
+      "localized": true,
+      "label": "Frase principal",
+      "key": "statement"
+    },
+    {
+      "key": "statementAccent",
+      "type": "text",
+      "ui": {
+        "group": "block",
+        "control": "input",
+        "order": 2,
+        "counter": true
+      },
+      "localized": true,
+      "label": "Palabra acentuada de la frase",
+      "constraints": {
+        "maxLength": 20
+      }
+    },
+    {
+      "help": "Admite {email} y {location}, que se sustituyen al pintar.",
+      "key": "phrase",
+      "type": "text",
+      "ui": {
+        "order": 3,
+        "counter": true,
+        "rows": 3,
+        "group": "block",
+        "control": "textarea"
+      },
+      "constraints": {
+        "maxLength": 160,
+        "template": {
+          "variables": [
+            "email",
+            "location"
+          ],
+          "requiredVariables": [
+            "email"
+          ]
+        }
+      },
+      "localized": true,
+      "label": "Frase de contacto"
+    }
+  ],
+  "version": 1,
+  "format": 1,
+  "label": "Contacto (portada)",
+  "rules": [
+    {
+      "separator": " ",
+      "anchor": "arcTitle",
+      "fields": [
+        "arcTitle",
+        "arcAccent"
+      ],
+      "max": 34,
+      "id": "arc-fits",
+      "message": "El titular y el acento suman más de 34 caracteres: no caben en el arco.",
+      "type": "combinedLength"
+    }
+  ],
+  "target": {
+    "collection": "config",
+    "prefix": "contact",
+    "document": "ui"
+  }
+}

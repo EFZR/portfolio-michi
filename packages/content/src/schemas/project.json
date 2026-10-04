@@ -1,0 +1,277 @@
+{
+  "format": 1,
+  "id": "project",
+  "target": {
+    "collection": "projects"
+  },
+  "version": 1,
+  "description": "Una ficha del portafolio.",
+  "label": "Proyecto",
+  "groups": [
+    {
+      "label": "Identidad",
+      "id": "identity",
+      "order": 1
+    },
+    {
+      "id": "content",
+      "order": 2,
+      "label": "Contenido"
+    },
+    {
+      "label": "Ficha técnica",
+      "id": "meta",
+      "order": 3
+    }
+  ],
+  "fields": [
+    {
+      "label": "Slug (URL)",
+      "ui": {
+        "control": "slug",
+        "group": "identity",
+        "order": 1
+      },
+      "key": "slug",
+      "help": "Es el id del documento. Cambiarlo rompe los enlaces ya publicados.",
+      "constraints": {
+        "minLength": 3,
+        "maxLength": 60,
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+      },
+      "type": "text"
+    },
+    {
+      "label": "Slug en inglés",
+      "type": "text",
+      "required": false,
+      "help": "Opcional. Si está vacío, /en usa el slug español.",
+      "constraints": {
+        "maxLength": 60,
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+      },
+      "ui": {
+        "control": "slug",
+        "order": 2,
+        "group": "identity"
+      },
+      "key": "slugEn"
+    },
+    {
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 40
+      },
+      "type": "text",
+      "localized": true,
+      "key": "title",
+      "label": "Título",
+      "ui": {
+        "group": "identity",
+        "counter": true,
+        "order": 3,
+        "control": "input"
+      }
+    },
+    {
+      "source": {
+        "orderBy": "order",
+        "value": "id",
+        "label": "name",
+        "collection": "categories"
+      },
+      "key": "category",
+      "label": "Rubro",
+      "ui": {
+        "group": "identity",
+        "order": 4,
+        "control": "select"
+      },
+      "type": "enum"
+    },
+    {
+      "localized": true,
+      "type": "text",
+      "help": "La ficha del grid lo recorta a dos líneas (~112 caracteres).",
+      "key": "summary",
+      "label": "Resumen",
+      "constraints": {
+        "maxLength": 110,
+        "minLength": 1
+      },
+      "ui": {
+        "rows": 2,
+        "group": "content",
+        "counter": true,
+        "control": "textarea",
+        "order": 1
+      }
+    },
+    {
+      "localized": true,
+      "ui": {
+        "order": 2,
+        "control": "textarea",
+        "counter": true,
+        "rows": 8,
+        "group": "content"
+      },
+      "key": "description",
+      "type": "text",
+      "help": "Por encima de 600 el modal pide scroll y deja de leerse como ficha.",
+      "label": "Descripción",
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 600
+      }
+    },
+    {
+      "key": "image",
+      "constraints": {
+        "formats": [
+          "image/jpeg",
+          "image/png",
+          "image/webp",
+          "image/avif"
+        ],
+        "maxSizeMB": 5,
+        "aspectRatio": {
+          "height": 5,
+          "width": 4,
+          "tolerance": 0.03
+        }
+      },
+      "ui": {
+        "control": "uploader",
+        "group": "content",
+        "order": 3,
+        "destino": "projects/{slug}/principal.webp"
+      },
+      "help": "Proporción 4:5 vertical — es la que usa la retícula del grid.",
+      "type": "image",
+      "label": "Imagen principal"
+    },
+    {
+      "localized": true,
+      "label": "Cliente",
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 40
+      },
+      "type": "text",
+      "ui": {
+        "group": "meta",
+        "order": 1,
+        "control": "input"
+      },
+      "key": "client"
+    },
+    {
+      "constraints": {
+        "max": 2100,
+        "min": 1990
+      },
+      "label": "Año",
+      "ui": {
+        "group": "meta",
+        "order": 2,
+        "control": "input"
+      },
+      "key": "year",
+      "type": "integer"
+    },
+    {
+      "ui": {
+        "order": 3,
+        "counter": true,
+        "group": "meta",
+        "control": "input"
+      },
+      "localized": true,
+      "constraints": {
+        "maxLength": 60,
+        "minLength": 1
+      },
+      "type": "text",
+      "key": "role",
+      "label": "Rol"
+    },
+    {
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 40
+      },
+      "type": "text",
+      "label": "Locación",
+      "ui": {
+        "order": 4,
+        "control": "input",
+        "group": "meta"
+      },
+      "key": "location",
+      "localized": true
+    },
+    {
+      "label": "Etiquetas",
+      "type": "list",
+      "constraints": {
+        "maxItems": 6
+      },
+      "ui": {
+        "order": 5,
+        "group": "meta",
+        "control": "container"
+      },
+      "element": {
+        "localized": true,
+        "label": "Etiqueta",
+        "type": "text",
+        "constraints": {
+          "maxLength": 24,
+          "minLength": 1
+        },
+        "key": "tag",
+        "ui": {
+          "control": "input"
+        }
+      },
+      "key": "tags"
+    },
+    {
+      "constraints": {
+        "max": 999,
+        "min": 0
+      },
+      "type": "integer",
+      "label": "Orden",
+      "key": "order",
+      "ui": {
+        "control": "stepper",
+        "group": "meta",
+        "order": 6
+      },
+      "help": "Menor primero. El orden del portafolio es jerarquía, no fecha."
+    },
+    {
+      "ui": {
+        "order": 7,
+        "control": "switch",
+        "group": "meta"
+      },
+      "help": "Los borradores no salen publicados, pero sí se ven aquí.",
+      "type": "boolean",
+      "key": "draft",
+      "label": "Borrador"
+    }
+  ],
+  "rules": [
+    {
+      "id": "unique-slug",
+      "type": "uniqueInCollection",
+      "fields": [
+        "slug"
+      ],
+      "message": "Ya existe un proyecto con ese slug."
+    }
+  ]
+}

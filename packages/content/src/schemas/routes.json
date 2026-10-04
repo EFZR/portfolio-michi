@@ -1,0 +1,122 @@
+{
+  "description": "El <title> de cada ruta.",
+  "groups": [],
+  "fields": [
+    {
+      "key": "home",
+      "ui": {
+        "order": 1,
+        "control": "input",
+        "counter": true
+      },
+      "localized": true,
+      "help": "Google corta los títulos en 70.",
+      "type": "text",
+      "label": "Inicio",
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 70
+      }
+    },
+    {
+      "localized": true,
+      "ui": {
+        "order": 2,
+        "counter": true,
+        "control": "input"
+      },
+      "key": "projects",
+      "constraints": {
+        "maxLength": 70,
+        "minLength": 1
+      },
+      "label": "Portafolio",
+      "type": "text"
+    },
+    {
+      "label": "Detalle de proyecto",
+      "key": "projectDetail",
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 70
+      },
+      "type": "text",
+      "localized": true,
+      "ui": {
+        "control": "input",
+        "counter": true,
+        "order": 3
+      }
+    },
+    {
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 70
+      },
+      "localized": true,
+      "key": "contact",
+      "label": "Contacto",
+      "type": "text",
+      "ui": {
+        "counter": true,
+        "order": 4,
+        "control": "input"
+      }
+    },
+    {
+      "ui": {
+        "order": 5,
+        "counter": true,
+        "control": "input"
+      },
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 70
+      },
+      "key": "blog",
+      "localized": true,
+      "type": "text",
+      "label": "Blog"
+    },
+    {
+      "type": "text",
+      "label": "Artículo",
+      "localized": true,
+      "key": "blogPost",
+      "ui": {
+        "control": "input",
+        "counter": true,
+        "order": 6
+      },
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 70
+      }
+    },
+    {
+      "localized": true,
+      "label": "404",
+      "key": "notFound",
+      "type": "text",
+      "constraints": {
+        "maxLength": 70,
+        "minLength": 1
+      },
+      "ui": {
+        "counter": true,
+        "order": 7,
+        "control": "input"
+      }
+    }
+  ],
+  "id": "routes",
+  "label": "Títulos de pestaña",
+  "version": 1,
+  "rules": [],
+  "target": {
+    "document": "ui",
+    "collection": "config",
+    "prefix": "routes"
+  },
+  "format": 1
+}

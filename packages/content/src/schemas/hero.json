@@ -1,0 +1,166 @@
+{
+  "fields": [
+    {
+      "elements": [
+        {
+          "constraints": {
+            "minLength": 1,
+            "maxLength": 12
+          },
+          "type": "text",
+          "ui": {
+            "control": "input",
+            "order": 1,
+            "counter": true
+          },
+          "key": "w1",
+          "label": "Palabra 1",
+          "localized": true
+        },
+        {
+          "localized": true,
+          "type": "text",
+          "constraints": {
+            "minLength": 1,
+            "maxLength": 12
+          },
+          "key": "w2",
+          "label": "Palabra 2",
+          "ui": {
+            "control": "input",
+            "order": 2,
+            "counter": true
+          }
+        },
+        {
+          "localized": true,
+          "label": "Palabra 3",
+          "key": "w3",
+          "type": "text",
+          "constraints": {
+            "minLength": 1,
+            "maxLength": 12
+          },
+          "ui": {
+            "counter": true,
+            "order": 3,
+            "control": "input"
+          }
+        },
+        {
+          "localized": true,
+          "type": "text",
+          "key": "w4",
+          "label": "Palabra 4",
+          "ui": {
+            "control": "input",
+            "order": 4,
+            "counter": true
+          },
+          "constraints": {
+            "minLength": 1,
+            "maxLength": 12
+          }
+        },
+        {
+          "key": "w5",
+          "constraints": {
+            "minLength": 1,
+            "maxLength": 10
+          },
+          "ui": {
+            "counter": true,
+            "order": 5,
+            "control": "input"
+          },
+          "type": "text",
+          "help": "Va en cursiva UV y es la que más sangra (ps-70 en lg).",
+          "label": "Palabra acentuada",
+          "localized": true
+        }
+      ],
+      "ui": {
+        "order": 6,
+        "control": "container"
+      },
+      "type": "tuple",
+      "key": "words",
+      "help": "Son EXACTAMENTE cinco: el template aplica sangrías distintas por índice. Una sexta no es copy, es rediseñar el Hero.",
+      "label": "Titular (5 palabras, una por línea)"
+    },
+    {
+      "type": "text",
+      "label": "Frase completa para lectores de pantalla",
+      "key": "aria",
+      "localized": true,
+      "ui": {
+        "control": "input",
+        "order": 7,
+        "counter": true
+      },
+      "constraints": {
+        "maxLength": 90,
+        "minLength": 1
+      }
+    },
+    {
+      "label": "Copy inferior",
+      "type": "text",
+      "help": "Caja de 20rem a text-sm: ~45 caracteres por línea, dos líneas.",
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 90
+      },
+      "ui": {
+        "rows": 2,
+        "control": "textarea",
+        "order": 8,
+        "counter": true
+      },
+      "localized": true,
+      "key": "copy"
+    },
+    {
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 28
+      },
+      "key": "scrollCue",
+      "localized": true,
+      "ui": {
+        "counter": true,
+        "order": 9,
+        "control": "input"
+      },
+      "type": "text",
+      "label": "Aviso de scroll"
+    },
+    {
+      "constraints": {
+        "maxLength": 120,
+        "minLength": 1
+      },
+      "localized": true,
+      "type": "text",
+      "ui": {
+        "control": "input",
+        "order": 10,
+        "counter": true
+      },
+      "key": "imageAlt",
+      "label": "Alt del retrato"
+    }
+  ],
+  "id": "hero",
+  "description": "El titular masivo de la portada.",
+  "version": 1,
+  "groups": [],
+  "format": 1,
+  "rules": [],
+  "target": {
+    "document": "ui",
+    "collection": "config",
+    "prefix": "hero"
+  },
+  "label": "Hero"
+}

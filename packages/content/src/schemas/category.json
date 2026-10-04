@@ -1,0 +1,150 @@
+{
+  "id": "category",
+  "label": "Rubro",
+  "target": {
+    "collection": "categories"
+  },
+  "description": "Los tres oficios. Son también los tres servicios.",
+  "rules": [],
+  "format": 1,
+  "groups": [],
+  "version": 1,
+  "fields": [
+    {
+      "label": "Identificador",
+      "constraints": {
+        "maxLength": 40,
+        "minLength": 3,
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+      },
+      "type": "text",
+      "help": "Lo referencian los proyectos y el desplegable del formulario.",
+      "key": "id",
+      "ui": {
+        "control": "slug",
+        "counter": true,
+        "order": 1
+      }
+    },
+    {
+      "label": "Nombre",
+      "constraints": {
+        "maxLength": 18,
+        "minLength": 1
+      },
+      "type": "text",
+      "help": "Es el titular de la diapositiva de Servicios: a más de 18 no cabe en una línea.",
+      "ui": {
+        "control": "input",
+        "order": 2,
+        "counter": true
+      },
+      "localized": true,
+      "key": "name"
+    },
+    {
+      "label": "Kicker",
+      "key": "kicker",
+      "constraints": {
+        "maxLength": 24,
+        "minLength": 1
+      },
+      "type": "text",
+      "ui": {
+        "order": 3,
+        "control": "input",
+        "counter": true
+      },
+      "help": "Va en versalitas con 0.3em de interletraje; a 24 ya roza el borde en móvil.",
+      "localized": true
+    },
+    {
+      "label": "Descripción",
+      "type": "text",
+      "constraints": {
+        "maxLength": 90,
+        "minLength": 1
+      },
+      "help": "Se revela al hover de la tarjeta de rubro, dos líneas.",
+      "localized": true,
+      "ui": {
+        "control": "textarea",
+        "order": 4,
+        "rows": 2,
+        "counter": true
+      },
+      "key": "description"
+    },
+    {
+      "key": "tagline",
+      "ui": {
+        "control": "input",
+        "order": 5,
+        "counter": true
+      },
+      "localized": true,
+      "help": "El \"Editorial · Producto · Retrato\" de la diapositiva.",
+      "type": "text",
+      "label": "Tagline",
+      "constraints": {
+        "maxLength": 40,
+        "minLength": 1
+      }
+    },
+    {
+      "label": "Detalle",
+      "key": "detail",
+      "type": "text",
+      "ui": {
+        "counter": true,
+        "order": 6,
+        "control": "input"
+      },
+      "help": "La frase bajo el titular de la diapositiva.",
+      "localized": true,
+      "constraints": {
+        "maxLength": 80,
+        "minLength": 1
+      }
+    },
+    {
+      "constraints": {
+        "maxSizeMB": 5,
+        "aspectRatio": {
+          "tolerance": 0.03,
+          "height": 5,
+          "width": 4
+        },
+        "formats": [
+          "image/jpeg",
+          "image/png",
+          "image/webp",
+          "image/avif"
+        ]
+      },
+      "ui": {
+        "order": 7,
+        "control": "uploader",
+        "destino": "categories/{slug}.webp"
+      },
+      "label": "Imagen",
+      "key": "image",
+      "help": "Proporción 4:5 vertical.",
+      "type": "image"
+    },
+    {
+      "key": "order",
+      "ui": {
+        "control": "stepper",
+        "order": 8
+      },
+      "constraints": {
+        "max": 99,
+        "min": 0
+      },
+      "help": "El orden es jerarquía, no alfabético.",
+      "type": "integer",
+      "label": "Orden"
+    }
+  ]
+}

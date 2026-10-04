@@ -1,0 +1,211 @@
+{
+  "id": "form",
+  "fields": [
+    {
+      "key": "nameLabel",
+      "ui": {
+        "control": "input",
+        "order": 1,
+        "counter": true
+      },
+      "label": "Etiqueta · nombre",
+      "localized": true,
+      "type": "text",
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 30
+      }
+    },
+    {
+      "ui": {
+        "order": 2,
+        "counter": true,
+        "control": "input"
+      },
+      "key": "namePlaceholder",
+      "localized": true,
+      "label": "Placeholder · nombre",
+      "type": "text",
+      "constraints": {
+        "maxLength": 40,
+        "minLength": 1
+      }
+    },
+    {
+      "ui": {
+        "order": 3,
+        "counter": true,
+        "control": "input"
+      },
+      "label": "Etiqueta · email",
+      "type": "text",
+      "key": "emailLabel",
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 30
+      },
+      "localized": true
+    },
+    {
+      "key": "emailPlaceholder",
+      "constraints": {
+        "maxLength": 40,
+        "minLength": 1
+      },
+      "ui": {
+        "control": "input",
+        "order": 4,
+        "counter": true
+      },
+      "label": "Placeholder · email",
+      "type": "text",
+      "localized": true
+    },
+    {
+      "label": "Etiqueta · oficio",
+      "localized": true,
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 30
+      },
+      "type": "text",
+      "ui": {
+        "control": "input",
+        "order": 5,
+        "counter": true
+      },
+      "key": "disciplineLabel"
+    },
+    {
+      "ui": {
+        "counter": true,
+        "control": "input",
+        "order": 6
+      },
+      "localized": true,
+      "type": "text",
+      "key": "disciplineOther",
+      "label": "Opción \"otra cosa\"",
+      "constraints": {
+        "maxLength": 24,
+        "minLength": 1
+      }
+    },
+    {
+      "ui": {
+        "order": 7,
+        "control": "input",
+        "counter": true
+      },
+      "key": "messageLabel",
+      "constraints": {
+        "maxLength": 30,
+        "minLength": 1
+      },
+      "localized": true,
+      "type": "text",
+      "label": "Etiqueta · mensaje"
+    },
+    {
+      "type": "text",
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 60
+      },
+      "localized": true,
+      "key": "messagePlaceholder",
+      "label": "Placeholder · mensaje",
+      "ui": {
+        "counter": true,
+        "order": 8,
+        "control": "input"
+      }
+    },
+    {
+      "label": "Error · falta el nombre",
+      "constraints": {
+        "maxLength": 90,
+        "minLength": 1
+      },
+      "type": "text",
+      "localized": true,
+      "ui": {
+        "control": "input",
+        "counter": true,
+        "order": 9
+      },
+      "key": "errorName"
+    },
+    {
+      "type": "text",
+      "label": "Error · falta el email",
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 90
+      },
+      "localized": true,
+      "key": "errorEmailEmpty",
+      "ui": {
+        "counter": true,
+        "order": 10,
+        "control": "input"
+      }
+    },
+    {
+      "constraints": {
+        "maxLength": 90,
+        "minLength": 1
+      },
+      "label": "Error · email mal escrito",
+      "type": "text",
+      "localized": true,
+      "ui": {
+        "order": 11,
+        "control": "input",
+        "counter": true
+      },
+      "key": "errorEmailFormat"
+    },
+    {
+      "localized": true,
+      "type": "text",
+      "ui": {
+        "order": 12,
+        "control": "input",
+        "counter": true
+      },
+      "label": "Error · falta el oficio",
+      "key": "errorDiscipline",
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 90
+      }
+    },
+    {
+      "type": "text",
+      "key": "errorMessage",
+      "constraints": {
+        "maxLength": 90,
+        "minLength": 1
+      },
+      "label": "Error · mensaje demasiado corto",
+      "ui": {
+        "counter": true,
+        "order": 13,
+        "control": "input"
+      },
+      "localized": true
+    }
+  ],
+  "description": "Etiquetas, placeholders y errores.",
+  "version": 1,
+  "groups": [],
+  "format": 1,
+  "rules": [],
+  "target": {
+    "prefix": "form",
+    "document": "ui",
+    "collection": "config"
+  },
+  "label": "Formulario de contacto"
+}

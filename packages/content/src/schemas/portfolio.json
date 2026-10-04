@@ -1,0 +1,165 @@
+{
+  "format": 1,
+  "id": "portfolio",
+  "target": {
+    "prefix": "portfolio",
+    "collection": "config",
+    "document": "ui"
+  },
+  "version": 1,
+  "description": "La vista /projects.",
+  "label": "Portafolio",
+  "groups": [],
+  "rules": [],
+  "fields": [
+    {
+      "key": "kicker",
+      "ui": {
+        "counter": true,
+        "order": 1,
+        "control": "input"
+      },
+      "constraints": {
+        "maxLength": 24,
+        "minLength": 1
+      },
+      "localized": true,
+      "type": "text",
+      "label": "Kicker"
+    },
+    {
+      "key": "title",
+      "type": "tuple",
+      "ui": {
+        "order": 4,
+        "control": "container"
+      },
+      "elements": [
+        {
+          "ui": {
+            "control": "input",
+            "order": 2,
+            "counter": true
+          },
+          "localized": true,
+          "label": "Línea 1",
+          "key": "l1",
+          "constraints": {
+            "maxLength": 16,
+            "minLength": 1
+          },
+          "type": "text"
+        },
+        {
+          "constraints": {
+            "maxLength": 16,
+            "minLength": 1
+          },
+          "key": "l2",
+          "ui": {
+            "control": "input",
+            "order": 3,
+            "counter": true
+          },
+          "type": "text",
+          "label": "Línea 2",
+          "localized": true
+        }
+      ],
+      "label": "Titular (2 líneas)"
+    },
+    {
+      "type": "text",
+      "ui": {
+        "rows": 3,
+        "control": "textarea",
+        "order": 5,
+        "counter": true
+      },
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 200
+      },
+      "label": "Bajada",
+      "key": "subhead",
+      "localized": true
+    },
+    {
+      "key": "stateAll",
+      "ui": {
+        "order": 6,
+        "counter": true,
+        "control": "input"
+      },
+      "type": "text",
+      "label": "Estado sin filtro",
+      "localized": true,
+      "constraints": {
+        "maxLength": 28,
+        "minLength": 1
+      }
+    },
+    {
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 28
+      },
+      "type": "text",
+      "localized": true,
+      "key": "stateFiltered",
+      "ui": {
+        "counter": true,
+        "control": "input",
+        "order": 7
+      },
+      "label": "Estado con filtro",
+      "help": "Admite {category}."
+    },
+    {
+      "constraints": {
+        "maxLength": 22,
+        "minLength": 1
+      },
+      "type": "text",
+      "localized": true,
+      "label": "Botón · quitar filtro",
+      "ui": {
+        "control": "input",
+        "counter": true,
+        "order": 8
+      },
+      "key": "ctaShowAll"
+    },
+    {
+      "help": "Admite {n}.",
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 30
+      },
+      "label": "Botón · ver más",
+      "type": "text",
+      "key": "ctaMore",
+      "ui": {
+        "counter": true,
+        "order": 9,
+        "control": "input"
+      },
+      "localized": true
+    },
+    {
+      "constraints": {
+        "multipleOf": 3,
+        "min": 3,
+        "max": 12
+      },
+      "key": "batch",
+      "type": "integer",
+      "help": "Múltiplo de 3: la retícula tiene 3 columnas y si no queda media fila coja.",
+      "label": "Proyectos por lote",
+      "ui": {
+        "control": "stepper",
+        "order": 10
+      }
+    }
+  ]
+}

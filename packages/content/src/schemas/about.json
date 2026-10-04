@@ -1,0 +1,136 @@
+{
+  "fields": [
+    {
+      "type": "text",
+      "label": "Kicker",
+      "help": "A 0.3em de interletraje, 24 caracteres ya rozan el borde en móvil.",
+      "key": "kicker",
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 24
+      },
+      "ui": {
+        "counter": true,
+        "order": 1,
+        "control": "input"
+      },
+      "localized": true
+    },
+    {
+      "label": "Statement (3 líneas)",
+      "elements": [
+        {
+          "key": "l1",
+          "type": "text",
+          "localized": true,
+          "label": "Línea 1",
+          "ui": {
+            "counter": true,
+            "control": "input",
+            "order": 2
+          },
+          "constraints": {
+            "maxLength": 14,
+            "minLength": 1
+          }
+        },
+        {
+          "localized": true,
+          "constraints": {
+            "minLength": 1,
+            "maxLength": 11
+          },
+          "key": "l2",
+          "ui": {
+            "counter": true,
+            "order": 3,
+            "control": "input"
+          },
+          "help": "Sangra 16vw, así que cabe menos.",
+          "type": "text",
+          "label": "Línea 2"
+        },
+        {
+          "key": "l3",
+          "ui": {
+            "counter": true,
+            "control": "input",
+            "order": 4
+          },
+          "localized": true,
+          "label": "Línea 3 (acentuada)",
+          "constraints": {
+            "minLength": 1,
+            "maxLength": 13
+          },
+          "type": "text"
+        }
+      ],
+      "type": "tuple",
+      "ui": {
+        "order": 5,
+        "control": "container"
+      },
+      "key": "statement"
+    },
+    {
+      "ui": {
+        "order": 6,
+        "control": "input",
+        "counter": true
+      },
+      "constraints": {
+        "maxLength": 90,
+        "minLength": 1
+      },
+      "key": "aria",
+      "localized": true,
+      "label": "Frase para lectores de pantalla",
+      "type": "text"
+    },
+    {
+      "ui": {
+        "control": "textarea",
+        "order": 7,
+        "rows": 3,
+        "counter": true
+      },
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 150
+      },
+      "localized": true,
+      "label": "Frase de apoyo",
+      "key": "copy",
+      "type": "text"
+    },
+    {
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 24
+      },
+      "label": "Texto del badge circular",
+      "key": "cueText",
+      "type": "text",
+      "help": "Se repite para cerrar la vuelta; si no divide la circunferencia, se solapa.",
+      "localized": true,
+      "ui": {
+        "counter": true,
+        "order": 8,
+        "control": "input"
+      }
+    }
+  ],
+  "groups": [],
+  "version": 1,
+  "id": "about",
+  "format": 1,
+  "rules": [],
+  "label": "Sobre mí",
+  "description": "El statement tipográfico de #about.",
+  "target": {
+    "prefix": "about",
+    "document": "ui",
+    "collection": "config"
+  }
+}

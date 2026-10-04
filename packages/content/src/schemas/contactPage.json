@@ -1,0 +1,190 @@
+{
+  "groups": [],
+  "label": "Página de contacto",
+  "description": "La vista /contact.",
+  "fields": [
+    {
+      "type": "text",
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 24
+      },
+      "key": "kicker",
+      "label": "Kicker",
+      "ui": {
+        "counter": true,
+        "control": "input",
+        "order": 1
+      },
+      "localized": true
+    },
+    {
+      "label": "Titular (2 líneas)",
+      "ui": {
+        "control": "container",
+        "order": 4
+      },
+      "type": "tuple",
+      "key": "title",
+      "elements": [
+        {
+          "constraints": {
+            "minLength": 1,
+            "maxLength": 16
+          },
+          "label": "Línea 1",
+          "ui": {
+            "order": 2,
+            "counter": true,
+            "control": "input"
+          },
+          "key": "l1",
+          "type": "text",
+          "localized": true
+        },
+        {
+          "key": "l2",
+          "ui": {
+            "counter": true,
+            "control": "input",
+            "order": 3
+          },
+          "type": "text",
+          "label": "Línea 2 (cursiva)",
+          "localized": true,
+          "constraints": {
+            "minLength": 1,
+            "maxLength": 16
+          }
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "constraints": {
+        "maxLength": 180,
+        "minLength": 1
+      },
+      "localized": true,
+      "key": "subhead",
+      "label": "Bajada",
+      "ui": {
+        "control": "textarea",
+        "rows": 3,
+        "order": 5,
+        "counter": true
+      }
+    },
+    {
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 24
+      },
+      "type": "text",
+      "label": "Título de \"Cómo funciona\"",
+      "ui": {
+        "order": 6,
+        "control": "input",
+        "counter": true
+      },
+      "localized": true,
+      "key": "howItWorks"
+    },
+    {
+      "ui": {
+        "control": "input",
+        "counter": true,
+        "order": 7
+      },
+      "type": "text",
+      "label": "Título de \"O directo\"",
+      "key": "direct",
+      "localized": true,
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 24
+      }
+    },
+    {
+      "label": "Frase de disponibilidad",
+      "type": "text",
+      "help": "Admite {location}.",
+      "ui": {
+        "counter": true,
+        "control": "input",
+        "order": 8
+      },
+      "localized": true,
+      "key": "locationPhrase",
+      "constraints": {
+        "maxLength": 120,
+        "minLength": 1
+      }
+    },
+    {
+      "label": "Pasos",
+      "type": "list",
+      "help": "El índice 01, 02… se genera al ordenar.",
+      "element": {
+        "type": "group",
+        "fields": [
+          {
+            "key": "title",
+            "ui": {
+              "counter": true,
+              "control": "input",
+              "order": 9
+            },
+            "constraints": {
+              "maxLength": 28,
+              "minLength": 1
+            },
+            "type": "text",
+            "localized": true,
+            "label": "Paso"
+          },
+          {
+            "type": "text",
+            "key": "detail",
+            "constraints": {
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "label": "Detalle",
+            "localized": true,
+            "ui": {
+              "order": 10,
+              "control": "textarea",
+              "rows": 2,
+              "counter": true
+            }
+          }
+        ],
+        "label": "Paso",
+        "key": "step",
+        "ui": {
+          "control": "container"
+        }
+      },
+      "key": "steps",
+      "constraints": {
+        "maxItems": 5,
+        "minItems": 2
+      },
+      "ui": {
+        "order": 11,
+        "control": "container",
+        "sortable": true
+      }
+    }
+  ],
+  "version": 1,
+  "rules": [],
+  "target": {
+    "prefix": "contactPage",
+    "document": "ui",
+    "collection": "config"
+  },
+  "id": "contactPage",
+  "format": 1
+}

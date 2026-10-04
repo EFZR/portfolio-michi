@@ -1,0 +1,253 @@
+{
+  "fields": [
+    {
+      "key": "slug",
+      "label": "Slug (URL)",
+      "ui": {
+        "order": 1,
+        "control": "slug",
+        "counter": true
+      },
+      "help": "Es el id del documento. Cambiarlo rompe los enlaces ya publicados.",
+      "constraints": {
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+        "maxLength": 60,
+        "minLength": 3
+      },
+      "type": "text"
+    },
+    {
+      "constraints": {
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+        "maxLength": 60
+      },
+      "required": false,
+      "key": "slugEn",
+      "type": "text",
+      "help": "Opcional. Vacío = /en usa el slug español.",
+      "label": "Slug en inglés",
+      "ui": {
+        "counter": true,
+        "order": 2,
+        "control": "slug"
+      }
+    },
+    {
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 70
+      },
+      "localized": true,
+      "ui": {
+        "counter": true,
+        "control": "input",
+        "order": 3
+      },
+      "key": "title",
+      "help": "A partir de 70 ocupa cuatro líneas en la tarjeta destacada.",
+      "label": "Título",
+      "type": "text"
+    },
+    {
+      "ui": {
+        "rows": 3,
+        "order": 4,
+        "counter": true,
+        "control": "textarea"
+      },
+      "localized": true,
+      "label": "Entradilla",
+      "help": "El listado la recorta a dos líneas (~170). Por encima se corta a mitad de frase.",
+      "constraints": {
+        "maxLength": 180,
+        "minLength": 1
+      },
+      "type": "text",
+      "key": "excerpt"
+    },
+    {
+      "ui": {
+        "control": "custom",
+        "order": 5
+      },
+      "localized": false,
+      "label": "Contenido",
+      "widget": "blockEditor",
+      "key": "content",
+      "constraints": {
+        "minItems": 1,
+        "maxItems": 120
+      },
+      "help": "Bloques tipados: párrafo, subtítulo, cita, lista, código e imagen.",
+      "type": "custom"
+    },
+    {
+      "label": "Portada",
+      "help": "Proporción 16:9 — es la del listado y la ficha.",
+      "type": "image",
+      "constraints": {
+        "aspectRatio": {
+          "height": 9,
+          "width": 16,
+          "tolerance": 0.03
+        },
+        "maxSizeMB": 5,
+        "formats": [
+          "image/jpeg",
+          "image/png",
+          "image/webp",
+          "image/avif"
+        ]
+      },
+      "key": "coverImage",
+      "ui": {
+        "order": 5,
+        "control": "uploader",
+        "destino": "articles/{slug}/portada.webp"
+      }
+    },
+    {
+      "ui": {
+        "control": "select",
+        "order": 7
+      },
+      "label": "Categoría",
+      "key": "category",
+      "source": {
+        "path": "blog.categories",
+        "collection": "config",
+        "document": "ui"
+      },
+      "type": "enum"
+    },
+    {
+      "label": "Autora",
+      "ui": {
+        "control": "input",
+        "counter": true,
+        "order": 6
+      },
+      "type": "text",
+      "key": "author",
+      "constraints": {
+        "maxLength": 40,
+        "minLength": 1
+      }
+    },
+    {
+      "constraints": {},
+      "label": "Fecha de publicación",
+      "type": "date",
+      "ui": {
+        "order": 9,
+        "control": "date"
+      },
+      "help": "Formato YYYY-MM-DD. Lo parsea lib/dates.ts a mano por el desfase UTC.",
+      "key": "publishedAt"
+    },
+    {
+      "constraints": {
+        "max": 90,
+        "min": 1
+      },
+      "key": "readTime",
+      "ui": {
+        "control": "stepper",
+        "order": 7
+      },
+      "type": "integer",
+      "label": "Minutos de lectura"
+    },
+    {
+      "key": "likesCount",
+      "ui": {
+        "readOnly": true,
+        "order": 11,
+        "control": "input"
+      },
+      "label": "Likes",
+      "constraints": {
+        "max": 1000000,
+        "min": 0
+      },
+      "help": "Lo escribe el público; aquí es solo lectura.",
+      "required": false,
+      "type": "integer"
+    },
+    {
+      "label": "Jerarquía",
+      "type": "enum",
+      "help": "Decide la FORMA de la tarjeta, no su sitio en el tiempo.",
+      "constraints": {
+        "options": [
+          "hero",
+          "high",
+          "normal"
+        ]
+      },
+      "ui": {
+        "order": 12,
+        "control": "radios"
+      },
+      "key": "priority"
+    },
+    {
+      "element": {
+        "key": "tag",
+        "ui": {
+          "counter": true,
+          "order": 8,
+          "control": "input"
+        },
+        "type": "text",
+        "label": "Etiqueta",
+        "localized": true,
+        "constraints": {
+          "minLength": 1,
+          "maxLength": 24
+        }
+      },
+      "label": "Etiquetas",
+      "type": "list",
+      "constraints": {
+        "maxItems": 8,
+        "minItems": 0
+      },
+      "key": "tags",
+      "ui": {
+        "control": "container",
+        "sortable": false,
+        "order": 9
+      }
+    },
+    {
+      "label": "Borrador",
+      "ui": {
+        "order": 14,
+        "control": "switch"
+      },
+      "key": "draft",
+      "type": "boolean",
+      "help": "Los borradores no salen publicados, pero sí se ven aquí."
+    }
+  ],
+  "groups": [],
+  "version": 1,
+  "id": "article",
+  "format": 1,
+  "rules": [
+    {
+      "type": "uniqueInCollection",
+      "message": "Ya existe un artículo con ese slug.",
+      "id": "unique-slug",
+      "fields": [
+        "slug"
+      ]
+    }
+  ],
+  "label": "Artículo",
+  "description": "Una nota del blog.",
+  "target": {
+    "collection": "articles"
+  }
+}

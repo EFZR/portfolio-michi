@@ -1,0 +1,220 @@
+{
+  "version": 1,
+  "label": "Navegación",
+  "description": "Barra superior y cajón.",
+  "target": {
+    "document": "ui",
+    "prefix": "nav",
+    "collection": "config"
+  },
+  "rules": [
+    {
+      "type": "sumMax",
+      "id": "nav-fits",
+      "max": 38,
+      "fields": [
+        "items"
+      ],
+      "anchor": "items",
+      "path": "label",
+      "message": "Los textos suman más de 38 caracteres: en tablet el botón se sale de la barra."
+    }
+  ],
+  "format": 1,
+  "groups": [],
+  "fields": [
+    {
+      "help": "El letter-swap escalona 30ms por letra; a 18 la animación dura medio segundo.",
+      "type": "text",
+      "key": "cta",
+      "localized": true,
+      "constraints": {
+        "maxLength": 18,
+        "minLength": 1
+      },
+      "ui": {
+        "counter": true,
+        "order": 2,
+        "control": "input"
+      },
+      "label": "Botón principal"
+    },
+    {
+      "label": "Abrir menú",
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 12
+      },
+      "type": "text",
+      "ui": {
+        "control": "input",
+        "counter": true,
+        "order": 3
+      },
+      "localized": true,
+      "key": "open"
+    },
+    {
+      "type": "text",
+      "label": "Cerrar menú",
+      "key": "close",
+      "ui": {
+        "control": "input",
+        "counter": true,
+        "order": 4
+      },
+      "localized": true,
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 12
+      }
+    },
+    {
+      "ui": {
+        "order": 5,
+        "control": "input",
+        "counter": true
+      },
+      "label": "Etiqueta accesible del logo",
+      "constraints": {
+        "maxLength": 60,
+        "minLength": 1
+      },
+      "type": "text",
+      "key": "logoAria",
+      "localized": true
+    },
+    {
+      "localized": true,
+      "type": "text",
+      "constraints": {
+        "maxLength": 60,
+        "minLength": 1
+      },
+      "ui": {
+        "counter": true,
+        "order": 6,
+        "control": "input"
+      },
+      "label": "Etiqueta accesible del cajón",
+      "key": "drawerAria"
+    },
+    {
+      "label": "Enlaces de la barra",
+      "constraints": {
+        "maxItems": 4,
+        "minItems": 2
+      },
+      "type": "list",
+      "element": {
+        "type": "group",
+        "key": "link",
+        "label": "Enlace",
+        "fields": [
+          {
+            "localized": true,
+            "constraints": {
+              "maxLength": 14,
+              "minLength": 1
+            },
+            "type": "text",
+            "ui": {
+              "control": "input",
+              "order": 1,
+              "counter": true
+            },
+            "label": "Texto",
+            "key": "label"
+          },
+          {
+            "label": "Destino",
+            "key": "to",
+            "constraints": {
+              "options": [
+                "/",
+                "/projects",
+                "/blog",
+                "/contact",
+                "/#about",
+                "/#process"
+              ]
+            },
+            "ui": {
+              "control": "select"
+            },
+            "type": "enum"
+          }
+        ],
+        "ui": {
+          "control": "container"
+        }
+      },
+      "ui": {
+        "control": "container",
+        "sortable": true,
+        "order": 7
+      },
+      "help": "A 768px comparten fila con el logo y el CTA.",
+      "key": "items"
+    },
+    {
+      "help": "La numeración 01, 02… se genera al ordenar; no se escribe.",
+      "type": "list",
+      "key": "drawer",
+      "ui": {
+        "control": "container",
+        "order": 8,
+        "sortable": true
+      },
+      "label": "Enlaces del cajón",
+      "constraints": {
+        "minItems": 3,
+        "maxItems": 7
+      },
+      "element": {
+        "key": "link",
+        "label": "Enlace",
+        "ui": {
+          "control": "container"
+        },
+        "type": "group",
+        "fields": [
+          {
+            "ui": {
+              "order": 1,
+              "control": "input",
+              "counter": true
+            },
+            "label": "Texto",
+            "type": "text",
+            "key": "label",
+            "localized": true,
+            "constraints": {
+              "minLength": 1,
+              "maxLength": 14
+            }
+          },
+          {
+            "label": "Destino",
+            "type": "enum",
+            "ui": {
+              "control": "select"
+            },
+            "constraints": {
+              "options": [
+                "/",
+                "/projects",
+                "/blog",
+                "/contact",
+                "/#about",
+                "/#process"
+              ]
+            },
+            "key": "to"
+          }
+        ]
+      }
+    }
+  ],
+  "id": "nav"
+}

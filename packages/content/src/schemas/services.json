@@ -1,0 +1,122 @@
+{
+  "fields": [
+    {
+      "label": "Kicker",
+      "type": "text",
+      "ui": {
+        "order": 1,
+        "counter": true,
+        "control": "input"
+      },
+      "key": "kicker",
+      "constraints": {
+        "maxLength": 24,
+        "minLength": 1
+      },
+      "localized": true
+    },
+    {
+      "localized": true,
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 70
+      },
+      "label": "Bajada",
+      "ui": {
+        "order": 2,
+        "control": "input",
+        "counter": true
+      },
+      "type": "text",
+      "key": "subhead"
+    },
+    {
+      "localized": true,
+      "type": "text",
+      "label": "Botón del catálogo",
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 22
+      },
+      "ui": {
+        "order": 3,
+        "control": "input",
+        "counter": true
+      },
+      "key": "cta"
+    },
+    {
+      "ui": {
+        "control": "input",
+        "order": 4,
+        "counter": true
+      },
+      "key": "modalEyebrow",
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 30
+      },
+      "localized": true,
+      "label": "Eyebrow del modal",
+      "type": "text"
+    },
+    {
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 40
+      },
+      "localized": true,
+      "ui": {
+        "order": 5,
+        "counter": true,
+        "control": "input"
+      },
+      "type": "text",
+      "key": "modalTitle",
+      "label": "Título del modal"
+    },
+    {
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 140
+      },
+      "localized": true,
+      "key": "modalClosing",
+      "type": "text",
+      "ui": {
+        "rows": 3,
+        "control": "textarea",
+        "order": 6,
+        "counter": true
+      },
+      "label": "Cierre del catálogo"
+    },
+    {
+      "key": "modalClosingLink",
+      "ui": {
+        "control": "input",
+        "order": 7,
+        "counter": true
+      },
+      "localized": true,
+      "type": "text",
+      "label": "Texto del enlace del cierre",
+      "constraints": {
+        "maxLength": 50,
+        "minLength": 1
+      }
+    }
+  ],
+  "rules": [],
+  "id": "services",
+  "groups": [],
+  "version": 1,
+  "label": "Servicios",
+  "target": {
+    "collection": "config",
+    "document": "ui",
+    "prefix": "services"
+  },
+  "format": 1,
+  "description": "Cabecera y modal del catálogo."
+}

@@ -1,0 +1,205 @@
+{
+  "format": 1,
+  "target": {
+    "collection": "config",
+    "prefix": "blog",
+    "document": "ui"
+  },
+  "label": "Blog",
+  "version": 1,
+  "description": "La vista /blog y el detalle.",
+  "groups": [],
+  "id": "blog",
+  "rules": [],
+  "fields": [
+    {
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 24
+      },
+      "localized": true,
+      "ui": {
+        "counter": true,
+        "order": 1,
+        "control": "input"
+      },
+      "label": "Kicker",
+      "key": "kicker",
+      "type": "text"
+    },
+    {
+      "key": "title",
+      "ui": {
+        "order": 4,
+        "control": "container"
+      },
+      "elements": [
+        {
+          "ui": {
+            "counter": true,
+            "order": 2,
+            "control": "input"
+          },
+          "localized": true,
+          "type": "text",
+          "key": "l1",
+          "label": "Línea 1",
+          "constraints": {
+            "maxLength": 16,
+            "minLength": 1
+          }
+        },
+        {
+          "label": "Línea 2",
+          "localized": true,
+          "constraints": {
+            "minLength": 1,
+            "maxLength": 16
+          },
+          "type": "text",
+          "ui": {
+            "order": 3,
+            "control": "input",
+            "counter": true
+          },
+          "key": "l2"
+        }
+      ],
+      "type": "tuple",
+      "label": "Titular (2 líneas)"
+    },
+    {
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 200
+      },
+      "key": "subhead",
+      "type": "text",
+      "ui": {
+        "counter": true,
+        "control": "textarea",
+        "rows": 3,
+        "order": 5
+      },
+      "label": "Bajada",
+      "localized": true
+    },
+    {
+      "constraints": {
+        "maxLength": 40,
+        "minLength": 1
+      },
+      "key": "emptyTitle",
+      "localized": true,
+      "ui": {
+        "order": 6,
+        "counter": true,
+        "control": "input"
+      },
+      "type": "text",
+      "label": "Sin resultados · título"
+    },
+    {
+      "ui": {
+        "rows": 2,
+        "counter": true,
+        "order": 7,
+        "control": "textarea"
+      },
+      "localized": true,
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 140
+      },
+      "key": "emptyDetail",
+      "label": "Sin resultados · detalle",
+      "type": "text"
+    },
+    {
+      "label": "Botón · limpiar filtros",
+      "key": "ctaShowAll",
+      "constraints": {
+        "maxLength": 22,
+        "minLength": 1
+      },
+      "type": "text",
+      "localized": true,
+      "ui": {
+        "control": "input",
+        "counter": true,
+        "order": 8
+      }
+    },
+    {
+      "localized": true,
+      "type": "text",
+      "constraints": {
+        "maxLength": 22,
+        "minLength": 1
+      },
+      "label": "Botón · volver al blog",
+      "ui": {
+        "counter": true,
+        "control": "input",
+        "order": 9
+      },
+      "key": "ctaBack"
+    },
+    {
+      "label": "Días que un artículo es \"nuevo\"",
+      "type": "integer",
+      "constraints": {
+        "max": 30,
+        "min": 1
+      },
+      "ui": {
+        "control": "stepper",
+        "order": 10
+      },
+      "key": "recentDays"
+    },
+    {
+      "ui": {
+        "control": "stepper",
+        "order": 11
+      },
+      "constraints": {
+        "max": 3650,
+        "min": 30
+      },
+      "label": "Días hasta considerarlo archivo",
+      "key": "archiveDays",
+      "type": "integer"
+    },
+    {
+      "label": "Categorías del blog",
+      "help": "Alimentan el filtro y el campo de cada artículo.",
+      "key": "categories",
+      "type": "list",
+      "element": {
+        "type": "text",
+        "ui": {
+          "counter": true,
+          "control": "input",
+          "order": 12
+        },
+        "localized": true,
+        "key": "category",
+        "label": "Categoría",
+        "constraints": {
+          "maxLength": 30,
+          "minLength": 1
+        }
+      },
+      "ui": {
+        "control": "container",
+        "order": 13,
+        "sortable": true
+      },
+      "constraints": {
+        "minItems": 2,
+        "maxItems": 10
+      }
+    }
+  ]
+}

@@ -1,0 +1,262 @@
+{
+  "id": "footer",
+  "groups": [],
+  "fields": [
+    {
+      "key": "kicker",
+      "constraints": {
+        "maxLength": 24,
+        "minLength": 1
+      },
+      "ui": {
+        "control": "input",
+        "order": 1,
+        "counter": true
+      },
+      "localized": true,
+      "type": "text",
+      "label": "Kicker"
+    },
+    {
+      "type": "text",
+      "label": "Botón",
+      "key": "cta",
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 18
+      },
+      "ui": {
+        "control": "input",
+        "counter": true,
+        "order": 2
+      },
+      "localized": true
+    },
+    {
+      "label": "Columna · navegación",
+      "key": "colNav",
+      "type": "text",
+      "localized": true,
+      "ui": {
+        "order": 3,
+        "control": "input",
+        "counter": true
+      },
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 20
+      }
+    },
+    {
+      "localized": true,
+      "constraints": {
+        "maxLength": 20,
+        "minLength": 1
+      },
+      "type": "text",
+      "ui": {
+        "order": 4,
+        "counter": true,
+        "control": "input"
+      },
+      "key": "colSocial",
+      "label": "Columna · redes"
+    },
+    {
+      "localized": true,
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 20
+      },
+      "ui": {
+        "control": "input",
+        "order": 5,
+        "counter": true
+      },
+      "label": "Columna · estudio",
+      "key": "colStudio",
+      "type": "text"
+    },
+    {
+      "ui": {
+        "rows": 2,
+        "control": "textarea",
+        "order": 6,
+        "counter": true
+      },
+      "key": "studioText",
+      "type": "text",
+      "constraints": {
+        "maxLength": 120,
+        "minLength": 1
+      },
+      "localized": true,
+      "label": "Texto de disponibilidad"
+    },
+    {
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 24
+      },
+      "ui": {
+        "order": 7,
+        "control": "input",
+        "counter": true
+      },
+      "localized": true,
+      "type": "text",
+      "key": "studioHighlight",
+      "label": "Palabra destacada"
+    },
+    {
+      "constraints": {
+        "maxLength": 24,
+        "minLength": 1
+      },
+      "ui": {
+        "order": 8,
+        "control": "input",
+        "counter": true
+      },
+      "localized": true,
+      "key": "backToTop",
+      "label": "Volver arriba",
+      "type": "text"
+    },
+    {
+      "localized": true,
+      "label": "Copyright",
+      "type": "text",
+      "constraints": {
+        "maxLength": 120,
+        "minLength": 1
+      },
+      "help": "Admite {year} y {author}.",
+      "ui": {
+        "counter": true,
+        "control": "input",
+        "order": 9
+      },
+      "key": "copyright"
+    },
+    {
+      "constraints": {
+        "minItems": 2,
+        "maxItems": 10
+      },
+      "element": {
+        "label": "Enlace",
+        "type": "group",
+        "fields": [
+          {
+            "constraints": {
+              "minLength": 1,
+              "maxLength": 14
+            },
+            "localized": true,
+            "type": "text",
+            "label": "Texto",
+            "ui": {
+              "counter": true,
+              "order": 1,
+              "control": "input"
+            },
+            "key": "label"
+          },
+          {
+            "label": "Destino",
+            "constraints": {
+              "options": [
+                "/",
+                "/projects",
+                "/blog",
+                "/contact",
+                "/#about",
+                "/#process"
+              ]
+            },
+            "key": "to",
+            "type": "enum",
+            "ui": {
+              "control": "select"
+            }
+          }
+        ],
+        "ui": {
+          "control": "container"
+        },
+        "key": "link"
+      },
+      "label": "Enlaces",
+      "ui": {
+        "sortable": true,
+        "control": "container",
+        "order": 10
+      },
+      "type": "list",
+      "key": "links"
+    },
+    {
+      "ui": {
+        "sortable": true,
+        "order": 12,
+        "control": "container"
+      },
+      "label": "Redes",
+      "constraints": {
+        "maxItems": 6,
+        "minItems": 0
+      },
+      "key": "social",
+      "type": "list",
+      "element": {
+        "type": "group",
+        "key": "network",
+        "label": "Red",
+        "ui": {
+          "control": "container"
+        },
+        "fields": [
+          {
+            "constraints": {
+              "maxLength": 20,
+              "minLength": 1
+            },
+            "label": "Red",
+            "ui": {
+              "counter": true,
+              "order": 11,
+              "control": "input"
+            },
+            "key": "label",
+            "type": "text"
+          },
+          {
+            "constraints": {
+              "format": "url",
+              "maxLength": 200,
+              "minLength": 1
+            },
+            "ui": {
+              "control": "url"
+            },
+            "key": "href",
+            "type": "text",
+            "label": "Enlace",
+            "help": "Hoy las tres apuntan a \"#\"."
+          }
+        ]
+      }
+    }
+  ],
+  "label": "Pie de página",
+  "rules": [],
+  "description": "El cierre del sitio.",
+  "target": {
+    "prefix": "footer",
+    "document": "ui",
+    "collection": "config"
+  },
+  "version": 1,
+  "format": 1
+}

@@ -1,0 +1,117 @@
+{
+  "id": "site",
+  "format": 1,
+  "version": 1,
+  "target": {
+    "prefix": "site",
+    "collection": "config",
+    "document": "ui"
+  },
+  "description": "Identidad y metadatos globales.",
+  "label": "Sitio",
+  "groups": [],
+  "fields": [
+    {
+      "ui": {
+        "control": "input",
+        "order": 1,
+        "counter": true
+      },
+      "label": "Nombre del sitio",
+      "key": "name",
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 40
+      },
+      "type": "text"
+    },
+    {
+      "ui": {
+        "order": 2,
+        "counter": true,
+        "control": "input"
+      },
+      "label": "Autora",
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 40
+      },
+      "type": "text",
+      "key": "author"
+    },
+    {
+      "label": "Email de contacto",
+      "key": "email",
+      "type": "text",
+      "help": "Se pinta gigante en el footer; por encima de 40 se parte en dos líneas.",
+      "constraints": {
+        "maxLength": 60,
+        "format": "email",
+        "minLength": 1
+      },
+      "ui": {
+        "order": 3,
+        "control": "email",
+        "counter": true
+      }
+    },
+    {
+      "key": "location",
+      "label": "Desde dónde trabajas",
+      "type": "text",
+      "ui": {
+        "control": "input",
+        "counter": true,
+        "order": 3
+      },
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 48
+      }
+    },
+    {
+      "label": "Meta descripción",
+      "localized": true,
+      "type": "text",
+      "help": "Google corta en 160.",
+      "constraints": {
+        "minLength": 1,
+        "maxLength": 160
+      },
+      "ui": {
+        "control": "textarea",
+        "counter": true,
+        "order": 4,
+        "rows": 3
+      },
+      "key": "description"
+    },
+    {
+      "constraints": {
+        "formats": [
+          "image/jpeg",
+          "image/png",
+          "image/webp",
+          "image/avif"
+        ],
+        "maxSizeMB": 5,
+        "aspectRatio": {
+          "height": 630,
+          "tolerance": 0.03,
+          "width": 1200
+        }
+      },
+      "type": "image",
+      "help": "Proporción 1.91:1 — la que usan redes y buscadores.",
+      "label": "Imagen al compartir",
+      "ui": {
+        "order": 5,
+        "control": "uploader",
+        "destino": "site/og.webp"
+      },
+      "key": "ogImage",
+      "required": false
+    }
+  ],
+  "rules": []
+}
