@@ -1,0 +1,23 @@
+/*
+  El panel NO define su propio sistema de diseño: importa el de la web.
+  Los tokens (@theme con la paleta 60/30/10 + Ultraviolet, las fuentes, el
+  rounded-md universal) viven en un solo archivo y las dos apps lo comparten.
+  Si la paleta cambia, cambia en los dos sitios a la vez.
+
+  Anton queda fuera a propósito: es exclusiva del Hero de la web y en un panel
+  de formularios no pinta nada.
+*/
+@import '../../../../web/src/assets/styles/main.css';
+
+/*
+  Tailwind v4 genera SOLO las clases que encuentra al escanear, y por defecto
+  escanea la app que compila. El panel monta componentes de la web —el
+  `ArticleContent` de la vista previa del editor de bloques— cuyas clases no
+  aparecen en ningún archivo de `apps/admin`: sin esto se generan a medias y la
+  previa MIENTE (se veía sin viñetas ni marcadores UV en las listas).
+
+  Se acota a `components/`, que es lo único que el panel reutiliza: apuntar a
+  todo `src` metería en el bundle las clases de las vistas y secciones de la
+  web, que aquí no se montan nunca.
+*/
+@source '../../../../web/src/components';
