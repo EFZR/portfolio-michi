@@ -18,7 +18,14 @@ import {
   type MediaAsset,
 } from './src/media'
 
-const BUCKET = 'michi-portfolio.firebasestorage.app'
+/**
+ * Bucket FALSO a propósito.
+ *
+ * Estas funciones solo construyen cadenas, así que el nombre real no aporta
+ * nada al test — y ponerlo hizo que el escáner de secretos de Netlify tumbara
+ * el despliegue al encontrar en el repo el valor de una variable de entorno.
+ */
+const BUCKET = 'proyecto-de-prueba.firebasestorage.app'
 
 function rendition(format: ImageFormat, width: number, hasAlpha = false): ImageRendition {
   const height = Math.round(width * 1.25)

@@ -19,6 +19,24 @@
 [build.environment]
   NODE_VERSION = "22"
 
+  # ── ESCÁNER DE SECRETOS ────────────────────────────────────────────────────
+  # Netlify tumba el build si encuentra el valor de una variable de entorno en
+  # el repo o en la salida. Con estas seis eso es inevitable Y correcto: el
+  # prefijo `VITE_` significa exactamente «esto viaja al navegador», así que
+  # TODAS acaban en texto plano dentro del bundle. No son credenciales —
+  # identifican el proyecto— y lo que protege los datos son las reglas de
+  # seguridad (ver .env.example).
+  #
+  # Además, `VITE_FIREBASE_PROJECT_ID` coincide con el nombre del sitio en
+  # Netlify, que aparece en el endpoint del actualizador del panel
+  # (`src-tauri/tauri.conf.json`). Esa URL no se puede quitar: es dónde el
+  # panel busca sus actualizaciones.
+  #
+  # Se omiten LAS CLAVES, no el escáner entero: `SECRETS_SCAN_ENABLED = false`
+  # habría sido una línea menos y dejaría de avisar el día que se filtre algo
+  # que sí es un secreto —una clave de servicio, el build hook—. Eso no se toca.
+  SECRETS_SCAN_OMIT_KEYS = "VITE_FIREBASE_API_KEY,VITE_FIREBASE_AUTH_DOMAIN,VITE_FIREBASE_PROJECT_ID,VITE_FIREBASE_STORAGE_BUCKET,VITE_FIREBASE_MESSAGING_SENDER_ID,VITE_FIREBASE_APP_ID"
+
 # VARIABLES QUE HAY QUE CONFIGURAR EN NETLIFY
 # (Site configuration → Environment variables), porque el `prebuild` baja el
 # contenido de Firestore y aquí no hay archivo `.env`:
