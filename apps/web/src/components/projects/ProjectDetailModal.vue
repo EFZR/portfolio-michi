@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router'
 import BaseModal from '@/components/ui/BaseModal.vue'
 import BaseBadge from '@/components/ui/BaseBadge.vue'
 import { categoryName, type Project } from '@/data/projects'
+import ResponsiveImage from '@/components/ui/ResponsiveImage.vue'
 
 interface Props {
   open: boolean
@@ -86,10 +87,11 @@ const ficha = computed(() => {
         enter-from-class="scale-[1.04] opacity-0"
       >
         <figure class="overflow-hidden rounded-md bg-surface">
-          <img
-            :src="project.image"
+          <ResponsiveImage
+            :media-id="project.image"
             :alt="`${project.title} — trabajo para ${project.client}`"
-            class="aspect-[16/10] w-full object-cover"
+            sizes="(min-width: 768px) 70vw, 95vw"
+            img-class="aspect-[16/10] w-full object-cover"
           />
         </figure>
       </Transition>

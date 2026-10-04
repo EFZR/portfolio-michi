@@ -88,26 +88,18 @@
     },
     {
       "constraints": {
-        "formats": [
-          "image/jpeg",
-          "image/png",
-          "image/webp",
-          "image/avif"
-        ],
-        "maxSizeMB": 5,
+        "kind": "image",
         "aspectRatio": {
           "height": 630,
           "tolerance": 0.03,
           "width": 1200
         }
       },
-      "type": "image",
+      "type": "media",
       "help": "Proporción 1.91:1 — la que usan redes y buscadores.",
       "label": "Imagen al compartir",
       "ui": {
-        "order": 5,
-        "control": "uploader",
-        "destino": "site/og.webp"
+        "order": 5
       },
       "key": "ogImage",
       "required": false

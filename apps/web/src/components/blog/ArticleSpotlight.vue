@@ -4,6 +4,7 @@ import ArticleStamp from './ArticleStamp.vue'
 import LikeButton from './LikeButton.vue'
 import { shortDate, timeAgo } from '@/lib/dates'
 import type { Article } from '@/data/articles'
+import ResponsiveImage from '@/components/ui/ResponsiveImage.vue'
 
 interface Props {
   article: Article
@@ -29,11 +30,11 @@ const { article } = defineProps<Props>()
       entero se lee como una página impresa y el color entra solo al señalar.
     -->
     <div class="relative overflow-hidden rounded-md bg-surface lg:col-span-7">
-      <img
-        :src="article.coverImage"
+      <ResponsiveImage
+        :media-id="article.coverImage"
         alt=""
-        aria-hidden="true"
-        class="aspect-[16/10] w-full scale-[1.03] object-cover grayscale transition-[transform,filter] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-100 group-hover:grayscale-0 group-focus-within:scale-100 group-focus-within:grayscale-0"
+        sizes="(min-width: 1024px) 58vw, 92vw"
+        img-class="aspect-[16/10] w-full scale-[1.03] object-cover grayscale transition-[transform,filter] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-100 group-hover:grayscale-0 group-focus-within:scale-100 group-focus-within:grayscale-0"
       />
 
       <!--

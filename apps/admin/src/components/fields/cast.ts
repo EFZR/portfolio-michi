@@ -139,7 +139,10 @@ export function documentoABloques(doc: Nodo | null | undefined): Bloque[] {
       case 'image':
         bloques.push({
           type: 'image',
-          src: String(nodo.attrs?.src ?? ''),
+          // Se persiste el ID de la biblioteca, no la URL: es la referencia
+          // estable. La URL que el editor tenía en `src` se vuelve a resolver
+          // al abrir, así que guardarla solo crearía una copia que envejece.
+          mediaId: String(nodo.attrs?.mediaId ?? ''),
           // El pie viaja en `title` porque el nodo de imagen del editor no
           // tiene campo propio para él. La web lo exige, así que se conserva.
           caption: String(nodo.attrs?.title ?? nodo.attrs?.alt ?? ''),
@@ -176,7 +179,19 @@ function aNodosTexto(t: RichText | undefined): Nodo[] {
     })
 }
 
-export function bloquesADocumento(bloques: readonly Bloque[] = []): Nodo {
+/**
+ * Resuelve el ID de un medio a una URL que el editor pueda pintar.
+ *
+ * Se INYECTA en vez de que el cast lea la biblioteca: así el cast sigue siendo
+ * una función pura y se puede probar sin Firestore ni sesión, que es lo que
+ * permite que los 23 tests del cast corran en milisegundos.
+ */
+export type ResolverMedio = (mediaId: string) => string | undefined
+
+export function bloquesADocumento(
+  bloques: readonly Bloque[] = [],
+  resolver?: ResolverMedio,
+): Nodo {
   const content: Nodo[] = []
 
   for (const b of bloques) {
@@ -214,12 +229,23 @@ export function bloquesADocumento(bloques: readonly Bloque[] = []): Nodo {
           content: b.code ? [{ type: 'text', text: String(b.code) }] : [],
         })
         break
-      case 'image':
+      case 'image': {
+        const mediaId = String(b.mediaId ?? '')
         content.push({
           type: 'image',
-          attrs: { src: String(b.src ?? ''), title: String(b.caption ?? ''), alt: String(b.caption ?? '') },
+          attrs: {
+            mediaId,
+            // Sin resolutor —o con un id que no está en la biblioteca— queda
+            // vacío y el editor muestra una imagen roto. Es lo correcto: es
+            // exactamente lo que pasaría en la web, y verlo acá es mejor que
+            // descubrirlo publicado.
+            src: resolver?.(mediaId) ?? '',
+            title: String(b.caption ?? ''),
+            alt: String(b.caption ?? ''),
+          },
         })
         break
+      }
     }
   }
 

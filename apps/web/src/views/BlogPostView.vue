@@ -13,6 +13,7 @@ import ArticleCard from '@/components/blog/ArticleCard.vue'
 import LikeButton from '@/components/blog/LikeButton.vue'
 import { articleByRoute, relatedArticles } from '@/data/articles'
 import { longDate, timeAgo } from '@/lib/dates'
+import ResponsiveImage from '@/components/ui/ResponsiveImage.vue'
 
 const route = useRoute()
 const reducedMotion = usePreferredReducedMotion()
@@ -161,10 +162,12 @@ onUnmounted(() => {
 
         <!-- Portada. `post-portada` recibe el zoom de entrada, separado del <img>. -->
         <div class="post-reveal mt-12 overflow-hidden rounded-md bg-surface sm:mt-16">
-          <img
-            :src="article.coverImage"
+          <ResponsiveImage
+            :media-id="article.coverImage"
             :alt="`Imagen de portada de ${article.title}`"
-            class="post-portada aspect-[16/9] w-full object-cover"
+            sizes="(min-width: 768px) 672px, 92vw"
+            priority
+            img-class="post-portada aspect-[16/9] w-full object-cover"
           />
         </div>
 

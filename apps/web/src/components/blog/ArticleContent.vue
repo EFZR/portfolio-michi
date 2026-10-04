@@ -3,13 +3,23 @@
 // vista previa del editor de bloques, y allí `@/` apunta a `apps/admin/src`.
 // Regla: todo componente de la web que el panel reutilice importa en relativo.
 import type { ContentBlock } from '../../data/articles'
+import type { MediaAsset } from '@princess/content/media'
 import RichText from './RichText.vue'
+import ResponsiveImage from '../ui/ResponsiveImage.vue'
 
 interface Props {
   blocks: readonly ContentBlock[]
+  /**
+   * Resolutor de medios para la vista previa del panel.
+   *
+   * La web no lo pasa: el defecto lee el contenido publicado. El panel sí,
+   * porque ahí hace falta ver la foto que se acaba de subir, que todavía no
+   * está en el snapshot.
+   */
+  resolverMedio?: (id: string) => MediaAsset | undefined
 }
 
-const { blocks } = defineProps<Props>()
+const { blocks, resolverMedio } = defineProps<Props>()
 </script>
 
 <template>
@@ -97,7 +107,13 @@ const { blocks } = defineProps<Props>()
       -->
       <figure v-else-if="block.type === 'image'" class="py-4">
         <div class="overflow-hidden rounded-md bg-surface">
-          <img :src="block.src" :alt="block.caption" loading="lazy" class="w-full object-cover" />
+          <ResponsiveImage
+            :media-id="block.mediaId"
+            :alt="block.caption"
+            :resolver="resolverMedio"
+            sizes="(min-width: 768px) 672px, 92vw"
+            img-class="w-full object-cover"
+          />
         </div>
         <figcaption class="mt-3 max-w-prose text-sm leading-relaxed text-muted-foreground">
           {{ block.caption }}

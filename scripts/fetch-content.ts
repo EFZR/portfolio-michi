@@ -79,7 +79,7 @@ async function lista(nombre: string, campoOrden?: string) {
 try {
   console.log(`Bajando de "${env.VITE_FIREBASE_PROJECT_ID}"…`)
 
-  const [ui, categories, catalog, projects, articles] = await Promise.all([
+  const [ui, categories, catalog, projects, articles, media] = await Promise.all([
     getDoc(doc(db, 'config', 'ui')).then((s) => {
       if (!s.exists()) throw new Error('config/ui no existe. ¿Falta la semilla?')
       return s.data()
@@ -88,6 +88,9 @@ try {
     lista('catalog'),
     lista('projects', 'order'),
     lista('articles'),
+    // La biblioteca de medios. Sin esto la web tendría los IDs pero no las
+    // renditions, así que no podría armar ni un `<picture>`.
+    lista('media'),
   ])
 
   // Los borradores no se publican. Se filtran AQUÍ y no en el componente: lo
@@ -101,6 +104,11 @@ try {
     catalog,
     projects: publicados(projects as { draft?: boolean }[]),
     articles: publicados(articles as { draft?: boolean }[]),
+    // Los medios NO se filtran por `draft`: no tienen ese campo. Lo que decide
+    // si uno se puede usar es tener `alt` y `basePath`, y eso lo comprueba el
+    // componente al pintar — un medio sin `alt` referenciado desde un
+    // proyecto publicado tiene que ser visible como problema, no desaparecer.
+    media,
   }
 
   writeFileSync(DEST, JSON.stringify(content, null, 2) + '\n', 'utf8')
@@ -110,6 +118,7 @@ try {
   console.log(`   ${content.projects.length} proyectos (${projects.length - content.projects.length} borradores fuera)`)
   console.log(`   ${content.articles.length} artículos (${articles.length - content.articles.length} borradores fuera)`)
   console.log(`   ${Object.keys(ui).length} grupos de micro-copy`)
+  console.log(`   ${content.media.length} medios en la biblioteca`)
   console.log(`\n→ ${DEST}`)
 } catch (e) {
   const msg = e instanceof Error ? e.message : String(e)

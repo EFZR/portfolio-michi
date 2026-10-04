@@ -121,11 +121,10 @@ export const BLOQUES: Record<string, TipoBloque> = {
     marca: '▣',
     campos: [
       {
-        key: 'src',
-        type: 'image',
+        key: 'mediaId',
+        type: 'media',
         label: 'Imagen',
-        constraints: { maxSizeMB: 5 },
-        ui: { control: 'uploader' },
+        constraints: { kind: 'image' },
       },
       // Obligatorio a propósito: una imagen sin pie en un artículo es decoración.
       texto('caption', 'Pie de foto', 160, { help: 'Obligatorio.' }),

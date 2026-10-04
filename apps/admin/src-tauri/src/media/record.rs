@@ -133,6 +133,15 @@ pub struct AssetRecord {
     /// primero bloquea la publicación, el segundo no.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub alt: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub caption: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub credit: Option<String>,
+    /// Etiquetas libres. El importador marca con `provisional` las imágenes de
+    /// relleno, para que se pueda listar qué falta reemplazar por una foto
+    /// real en vez de que se olvide a los dos meses.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub tags: Vec<String>,
     pub source: SourceRecord,
     pub intrinsic: Intrinsic,
     pub colour: Colour,
@@ -234,6 +243,7 @@ pub fn build(
     slug: String,
     title: String,
     alt: Option<String>,
+    tags: Vec<String>,
     info: &SourceInfo,
     derived: Derived,
     archived_at: String,
@@ -252,6 +262,9 @@ pub fn build(
         kind: info.kind,
         title,
         alt,
+        caption: None,
+        credit: None,
+        tags,
         source: SourceRecord {
             filename: info.filename.clone(),
             bytes: info.bytes,

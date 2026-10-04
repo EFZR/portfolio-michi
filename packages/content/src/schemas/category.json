@@ -109,28 +109,20 @@
     },
     {
       "constraints": {
-        "maxSizeMB": 5,
+        "kind": "image",
         "aspectRatio": {
           "tolerance": 0.03,
           "height": 5,
           "width": 4
-        },
-        "formats": [
-          "image/jpeg",
-          "image/png",
-          "image/webp",
-          "image/avif"
-        ]
+        }
       },
       "ui": {
-        "order": 7,
-        "control": "uploader",
-        "destino": "categories/{slug}.webp"
+        "order": 7
       },
       "label": "Imagen",
       "key": "image",
       "help": "Proporción 4:5 vertical.",
-      "type": "image"
+      "type": "media"
     },
     {
       "key": "order",

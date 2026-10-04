@@ -84,7 +84,14 @@ export interface CodeBlock {
 
 export interface ImageBlock {
   type: 'image'
-  src: string
+  /**
+   * ID de un documento de la biblioteca (`media/<id>`), no una URL.
+   *
+   * Guardar la referencia y no la dirección es lo que permite que la misma
+   * foto se use en varios artículos, y que al cambiar la escalera de anchos
+   * no haya que reeditar nada.
+   */
+  mediaId: string
   /** Pie de foto. Obligatorio: una imagen sin pie en un artículo es decoración. */
   caption: string
 }

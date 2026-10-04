@@ -11,6 +11,7 @@ import { useDisclosure } from '@/composables/useDisclosure'
 import { CATEGORIES } from '@/data/projects'
 import { CATALOG as catalog } from '@/data/catalog'
 import { UI } from '@/data/ui'
+import ResponsiveImage from '@/components/ui/ResponsiveImage.vue'
 
 /**
  * Las diapositivas salen de `CATEGORIES`: el rubro y el servicio SON la misma
@@ -274,12 +275,12 @@ onUnmounted(() => {
             <figure
               class="slide-media group relative min-h-0 overflow-hidden rounded-md bg-surface sm:col-span-7 sm:col-start-6 sm:row-start-1"
             >
-              <img
-                :src="service.image"
+              <ResponsiveImage
+                :media-id="service.image"
                 alt=""
-                aria-hidden="true"
-                :loading="i === 0 ? 'eager' : 'lazy'"
-                class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                sizes="(min-width: 640px) 58vw, 100vw"
+                :priority="i === 0"
+                img-class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
               />
             </figure>
 

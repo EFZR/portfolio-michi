@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Category } from '@/data/projects'
+import ResponsiveImage from '@/components/ui/ResponsiveImage.vue'
 
 interface Props {
   category: Category
@@ -51,12 +52,12 @@ const emit = defineEmits<{
       hacia el reposo, no hacia el ruido: es la diferencia entre "revista" y
       "banner". Ease largo (900ms) para que se lea como un enfoque.
     -->
-    <img
-      :src="category.image"
+    <ResponsiveImage
+      :media-id="category.image"
       alt=""
-      aria-hidden="true"
-      loading="lazy"
-      class="absolute inset-0 h-full w-full scale-[1.08] object-cover grayscale transition-[transform,filter] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-100 group-hover:grayscale-0 group-focus-visible:scale-100 group-focus-visible:grayscale-0 group-data-[activa=true]:scale-100 group-data-[activa=true]:grayscale-0"
+      sizes="(min-width: 640px) 33vw, 92vw"
+      wrapper-class="absolute inset-0 block h-full w-full"
+      img-class="h-full w-full scale-[1.08] object-cover grayscale transition-[transform,filter] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-100 group-hover:grayscale-0 group-focus-visible:scale-100 group-focus-visible:grayscale-0 group-data-[activa=true]:scale-100 group-data-[activa=true]:grayscale-0"
     />
 
     <!--

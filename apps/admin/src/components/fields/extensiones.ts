@@ -36,4 +36,31 @@ export const CitaConAutor = Blockquote.extend({
  * campo propio, y la web lo exige: una imagen sin pie en un artículo es
  * decoración.
  */
-export const ImagenConPie = Image.configure({ inline: false, allowBase64: false })
+/**
+ * La imagen del editor guarda el ID de la biblioteca además de la URL.
+ *
+ * Los dos atributos hacen trabajos distintos y ninguno sobra:
+ *   - `mediaId` es lo que se PERSISTE. Es la referencia estable; si mañana
+ *     cambia el bucket o la escalera de anchos, el artículo sigue apuntando
+ *     bien.
+ *   - `src` es lo que el editor PINTA. ProseMirror necesita una URL concreta
+ *     para mostrar algo, y se resuelve desde `mediaId` al abrir.
+ *
+ * El id viaja en `data-media-id` para que sobreviva al HTML intermedio de
+ * ProseMirror: sin `renderHTML`/`parseHTML` se perdería en cuanto el editor
+ * serializara y volviera a leer el documento, que es exactamente el fallo
+ * silencioso que ya nos costó la imagen y el `cite` de las citas.
+ */
+export const ImagenConPie = Image.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      mediaId: {
+        default: null,
+        renderHTML: (attrs: Record<string, unknown>) =>
+          attrs.mediaId ? { 'data-media-id': String(attrs.mediaId) } : {},
+        parseHTML: (el: HTMLElement) => el.getAttribute('data-media-id'),
+      },
+    }
+  },
+}).configure({ inline: false, allowBase64: false })

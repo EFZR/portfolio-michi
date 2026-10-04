@@ -128,13 +128,7 @@
     {
       "key": "image",
       "constraints": {
-        "formats": [
-          "image/jpeg",
-          "image/png",
-          "image/webp",
-          "image/avif"
-        ],
-        "maxSizeMB": 5,
+        "kind": "image",
         "aspectRatio": {
           "height": 5,
           "width": 4,
@@ -142,13 +136,11 @@
         }
       },
       "ui": {
-        "control": "uploader",
         "group": "content",
-        "order": 3,
-        "destino": "projects/{slug}/principal.webp"
+        "order": 3
       },
       "help": "Proporción 4:5 vertical — es la que usa la retícula del grid.",
-      "type": "image",
+      "type": "media",
       "label": "Imagen principal"
     },
     {

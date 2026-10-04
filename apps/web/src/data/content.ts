@@ -71,6 +71,7 @@ interface ContenidoCrudo {
   catalog: unknown[]
   projects: unknown[]
   articles: unknown[]
+  media?: unknown[]
 }
 
 const fuente = crudo as unknown as ContenidoCrudo
@@ -84,4 +85,13 @@ export const RAW = {
   catalog: resolver<unknown[]>(fuente.catalog, ACTIVE_LOCALE),
   projects: resolver<unknown[]>(fuente.projects, ACTIVE_LOCALE),
   articles: resolver<unknown[]>(fuente.articles, ACTIVE_LOCALE),
+  /**
+   * La biblioteca NO pasa por `resolver`, y es deliberado: un registro de medio
+   * no tiene ningún campo `{ es, en }`, así que recorrerlo solo clonaría 46
+   * objetos grandes al cargar el módulo para no cambiar nada.
+   *
+   * Si algún día el `alt` se traduce —y debería, cuando existan `/es` y
+   * `/en`— esto pasa a ser una llamada a `resolver` como las demás.
+   */
+  media: (fuente.media ?? []) as unknown[],
 }

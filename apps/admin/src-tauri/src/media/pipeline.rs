@@ -160,6 +160,7 @@ pub fn normalize(
     src: &Path,
     title: &str,
     alt: Option<String>,
+    tags: Vec<String>,
     manual_poster_at: Option<f64>,
 ) -> MediaResult<AssetRecord> {
     let started = Instant::now();
@@ -226,6 +227,7 @@ pub fn normalize(
             title.to_string()
         },
         alt,
+        tags,
         &info,
         derived,
         archived.to_string_lossy().into_owned(),
@@ -287,6 +289,7 @@ pub async fn normalize_media(
     path: String,
     title: String,
     alt: Option<String>,
+    tags: Option<Vec<String>>,
     // R7 — si la usuaria corrigió el poster a mano se respeta su segundo y no
     // se vuelve a elegir.
     poster_at_sec: Option<f64>,
@@ -297,7 +300,7 @@ pub async fn normalize_media(
     })?;
 
     tauri::async_runtime::spawn_blocking(move || {
-        normalize(&root, Path::new(&path), &title, alt, poster_at_sec)
+        normalize(&root, Path::new(&path), &title, alt, tags.unwrap_or_default(), poster_at_sec)
     })
     .await
     .map_err(|e| {
@@ -352,7 +355,7 @@ mod tests {
         let antes = std::fs::metadata(&src).unwrap().len();
 
         let root = dir.join("datos");
-        let a = normalize(&root, &src, "Retrato en el muelle", Some("Una foto".into()), None)
+        let a = normalize(&root, &src, "Retrato en el muelle", Some("Una foto".into()), vec![], None)
             .expect("la normalización debe funcionar");
 
         assert_eq!(a.slug, "retrato-en-el-muelle");
@@ -440,7 +443,7 @@ mod tests {
         )
         .unwrap();
 
-        let a = normalize(&dir.join("d"), &src, "Con alfa", Some("x".into()), None).unwrap();
+        let a = normalize(&dir.join("d"), &src, "Con alfa", Some("x".into()), vec![], None).unwrap();
         use crate::media::images::ImageFormat;
         let formatos: Vec<_> = a.renditions.images.iter().map(|r| r.format).collect();
         assert!(!formatos.contains(&ImageFormat::Avif), "el AVIF perdería el alfa");
@@ -463,8 +466,8 @@ mod tests {
         let src = fuente_realista(&dir, 400, 300);
         let root = dir.join("datos");
 
-        let a = normalize(&root, &src, "Prueba", None, None).unwrap();
-        let b = normalize(&root, &src, "Prueba", None, None).unwrap();
+        let a = normalize(&root, &src, "Prueba", None, vec![], None).unwrap();
+        let b = normalize(&root, &src, "Prueba", None, vec![], None).unwrap();
 
         assert_eq!(a.id, b.id);
         assert_eq!(a.slug, b.slug);
@@ -486,14 +489,14 @@ mod tests {
         std::fs::create_dir_all(&dir).unwrap();
         let src = fuente_realista(&dir, 400, 300);
 
-        let sin = normalize(&dir.join("d1"), &src, "Sin alt", None, None).unwrap();
+        let sin = normalize(&dir.join("d1"), &src, "Sin alt", None, vec![], None).unwrap();
         assert!(!sin.can_publish());
         assert!(!sin.renditions.images.is_empty(), "se procesó igual");
         assert!(sin.pipeline.warnings.iter().any(|w| w.contains("texto alternativo")));
 
         // `Some("")` es «decorativa», declarado a propósito. No es lo mismo
         // que ausente y no puede colapsarse con él.
-        let deco = normalize(&dir.join("d2"), &src, "Decorativa", Some(String::new()), None).unwrap();
+        let deco = normalize(&dir.join("d2"), &src, "Decorativa", Some(String::new()), vec![], None).unwrap();
         assert!(deco.can_publish(), "una imagen decorativa sí se publica");
 
         std::fs::remove_dir_all(&dir).ok();
@@ -549,7 +552,7 @@ mod tests {
         let src = clip(&dir, 1280, 720, 6, true);
         let root = dir.join("datos");
 
-        let a = normalize(&root, &src, "Showreel", Some("Un clip".into()), None).unwrap();
+        let a = normalize(&root, &src, "Showreel", Some("Un clip".into()), vec![], None).unwrap();
         let carpeta = root.join("media").join(&a.slug);
 
         assert_eq!(a.kind, Kind::Video);
@@ -642,7 +645,7 @@ mod tests {
         std::fs::create_dir_all(&dir).unwrap();
         let src = clip(&dir, 854, 480, 4, false);
 
-        let a = normalize(&dir.join("d"), &src, "Mudo", Some("x".into()), None).unwrap();
+        let a = normalize(&dir.join("d"), &src, "Mudo", Some("x".into()), vec![], None).unwrap();
         assert!(!a.intrinsic.has_audio);
         for v in &a.renditions.videos {
             assert!(!v.has_audio);
@@ -667,7 +670,7 @@ mod tests {
             .join("tests/fixtures/anim-impar.gif");
         let antes = std::fs::metadata(&gif).unwrap().len();
 
-        let a = normalize(&dir.join("d"), gif.as_path(), "Animado", Some("x".into()), None).unwrap();
+        let a = normalize(&dir.join("d"), gif.as_path(), "Animado", Some("x".into()), vec![], None).unwrap();
         assert_eq!(a.kind, Kind::Video, "un GIF animado es vídeo, no imagen");
         assert!(a.intrinsic.is_animated);
         assert_eq!(a.renditions.videos.len(), 1, "un loop no necesita escalera");

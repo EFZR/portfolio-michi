@@ -5,6 +5,7 @@ import ArticleStamp from './ArticleStamp.vue'
 import LikeButton from './LikeButton.vue'
 import { isArchived, shortDate } from '@/lib/dates'
 import type { Article } from '@/data/articles'
+import ResponsiveImage from '@/components/ui/ResponsiveImage.vue'
 
 interface Props {
   article: Article
@@ -39,12 +40,11 @@ const sobrio = computed(() => isArchived(article.publishedAt))
     <div
       class="col-start-2 row-span-2 hidden overflow-hidden rounded-md bg-surface sm:col-start-2 sm:row-span-1 sm:block"
     >
-      <img
-        :src="article.coverImage"
+      <ResponsiveImage
+        :media-id="article.coverImage"
         alt=""
-        aria-hidden="true"
-        loading="lazy"
-        :class="[
+        sizes="80px"
+        :img-class="[
           'aspect-square w-20 object-cover transition-[transform,filter] duration-700 ease-out',
           'group-hover:scale-105 group-focus-within:scale-105',
           sobrio ? 'grayscale' : 'grayscale-[0.6] group-hover:grayscale-0',

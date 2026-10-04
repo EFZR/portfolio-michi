@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { categoryName, type Project } from '@/data/projects'
+import ResponsiveImage from '@/components/ui/ResponsiveImage.vue'
 
 interface Props {
   project: Project
@@ -48,12 +49,11 @@ function pad(n: number): string {
     <figure
       class="relative aspect-[4/5] overflow-hidden rounded-md bg-surface ring-1 ring-inset ring-transparent transition-[box-shadow] duration-500 group-focus-visible:ring-primary"
     >
-      <img
-        :src="project.image"
+      <ResponsiveImage
+        :media-id="project.image"
         alt=""
-        aria-hidden="true"
-        loading="lazy"
-        class="h-full w-full object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04] group-focus-visible:scale-[1.04]"
+        sizes="(min-width: 1024px) 410px, (min-width: 640px) 48vw, 92vw"
+        img-class="h-full w-full object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04] group-focus-visible:scale-[1.04]"
       />
 
       <!-- Velo mínimo que se retira al hover: la foto "despierta" sin cambiar de color. -->

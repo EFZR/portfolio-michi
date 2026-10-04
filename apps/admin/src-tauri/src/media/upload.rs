@@ -19,6 +19,11 @@ use serde::{Deserialize, Serialize};
 use std::path::Path;
 use tauri::{Emitter, Manager};
 
+/// Qué hacer con el progreso. Se inyecta en vez de emitir un evento de Tauri
+/// directamente: así `upload_dir` sirve igual desde el panel (que emite a la
+/// webview) y desde la línea de comandos (que imprime).
+pub type AlAvanzar<'a> = &'a (dyn Fn(&UploadProgress) + Sync);
+
 /// La API v0 de Firebase Storage, que es la que usa el SDK de cliente y la que
 /// respeta las reglas de seguridad.
 const API: &str = "https://firebasestorage.googleapis.com/v0/b";
@@ -90,12 +95,12 @@ struct AssetPeek {
 /// Se sube el `asset.json` también: es el registro canónico junto al medio, y
 /// permite reconstruir la colección de Firestore desde Storage si hiciera
 /// falta.
-async fn upload_dir(
-    app: &tauri::AppHandle,
+pub async fn upload_dir(
     dir: &Path,
     bucket: &str,
     token: &str,
     slug: &str,
+    al_avanzar: AlAvanzar<'_>,
 ) -> MediaResult<UploadReport> {
     let registro = std::fs::read_to_string(dir.join("asset.json")).map_err(|e| {
         MediaError::failed("No se encontró el registro del medio para subirlo.")
@@ -143,17 +148,14 @@ async fn upload_dir(
     let mut failed = Vec::new();
 
     for (i, (nombre, peso)) in archivos.iter().enumerate() {
-        let _ = app.emit(
-            "media:upload",
-            UploadProgress {
-                slug: slug.to_string(),
-                file: nombre.clone(),
-                done: i,
-                total,
-                bytes_sent: enviados,
-                bytes_total,
-            },
-        );
+        al_avanzar(&UploadProgress {
+            slug: slug.to_string(),
+            file: nombre.clone(),
+            done: i,
+            total,
+            bytes_sent: enviados,
+            bytes_total,
+        });
 
         let objeto = format!("{base_path}/{nombre}");
         let url = format!("{API}/{bucket}/o?uploadType=media&name={}", encode(&objeto));
@@ -204,17 +206,14 @@ async fn upload_dir(
         }
     }
 
-    let _ = app.emit(
-        "media:upload",
-        UploadProgress {
-            slug: slug.to_string(),
-            file: String::new(),
-            done: total,
-            total,
-            bytes_sent: enviados,
-            bytes_total,
-        },
-    );
+    al_avanzar(&UploadProgress {
+        slug: slug.to_string(),
+        file: String::new(),
+        done: total,
+        total,
+        bytes_sent: enviados,
+        bytes_total,
+    });
 
     Ok(UploadReport { base_path, files: total - failed.len(), bytes: enviados, failed })
 }
@@ -245,7 +244,11 @@ pub async fn upload_media(
             .with_detail(format!("no existe {}", dir.display())));
     }
 
-    upload_dir(&app, &dir, &bucket, &token, &limpio).await
+    let destino = app.clone();
+    upload_dir(&dir, &bucket, &token, &limpio, &move |p| {
+        let _ = destino.emit("media:upload", p);
+    })
+    .await
 }
 
 #[cfg(test)]

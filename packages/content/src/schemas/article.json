@@ -84,26 +84,18 @@
     {
       "label": "Portada",
       "help": "Proporción 16:9 — es la del listado y la ficha.",
-      "type": "image",
+      "type": "media",
       "constraints": {
+        "kind": "image",
         "aspectRatio": {
           "height": 9,
           "width": 16,
           "tolerance": 0.03
-        },
-        "maxSizeMB": 5,
-        "formats": [
-          "image/jpeg",
-          "image/png",
-          "image/webp",
-          "image/avif"
-        ]
+        }
       },
       "key": "coverImage",
       "ui": {
-        "order": 5,
-        "control": "uploader",
-        "destino": "articles/{slug}/portada.webp"
+        "order": 5
       }
     },
     {
