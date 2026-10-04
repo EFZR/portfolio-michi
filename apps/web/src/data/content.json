@@ -981,7 +981,7 @@
       }
     }
   ],
-  "fetchedAt": "2026-10-04T10:15:44.822Z",
+  "fetchedAt": "2026-10-04T10:36:48.623Z",
   "media": [
     {
       "basePath": "media/ff5c3159e705bc43",
@@ -7546,7 +7546,9 @@
       "updatedAt": "2026-10-04T09:33:22.929Z"
     },
     {
+      "alt": "",
       "basePath": "media/04b202760a47d6bd",
+      "caption": "",
       "colour": {
         "dominant": "#968E75",
         "isHdrSource": false,
@@ -7554,6 +7556,7 @@
         "sourceColourSpace": "sin declarar"
       },
       "createdAt": "2026-10-04T09:33:30.726Z",
+      "credit": "",
       "id": "04b202760a47d6bd",
       "intrinsic": {
         "aspectRatio": 1.7777777777777777,
@@ -7736,7 +7739,7 @@
         "provisional"
       ],
       "title": "Tu marca no necesita más contenido",
-      "updatedAt": "2026-10-04T09:33:30.726Z"
+      "updatedAt": "2026-10-04T10:18:07.528Z"
     },
     {
       "basePath": "media/c1c646961c273bf6",

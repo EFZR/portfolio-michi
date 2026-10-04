@@ -360,17 +360,15 @@ onMounted(() => biblioteca.cargar())
             Esta ya no es provisional
           </button>
         </form>
+      </div>
 
-        <!--
-          BARRA PEGADA AL FONDO del diálogo.
-          `sticky bottom-0` funciona porque el cuerpo del diálogo es el
-          contenedor con scroll; los márgenes negativos la estiran hasta los
-          bordes por encima del padding de BaseModal (px-6 / sm:px-10). Así
-          guardar y borrar se ven siempre, sin importar dónde esté el scroll.
-        -->
-        <div
-          class="sticky bottom-0 -mx-6 -mb-8 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-border bg-background px-6 py-5 sm:-mx-10 sm:-mb-10 sm:px-10"
-        >
+      <!--
+        El footer del diálogo: fuera del scroll, siempre visible. Antes era un
+        `sticky bottom-0` dentro del cuerpo, que flota sobre el contenido en
+        vez de ser parte del marco.
+      -->
+      <template v-if="abierto" #footer>
+        <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
           <button
             type="submit"
             form="ficha-medio"
@@ -427,7 +425,7 @@ onMounted(() => biblioteca.cargar())
             Para borrarla, quitala primero de donde se usa.
           </span>
         </div>
-      </div>
+      </template>
     </BaseModal>
   </div>
 </template>

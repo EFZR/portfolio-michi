@@ -213,9 +213,30 @@ const sizeClasses: Record<ModalSize, string> = {
               </button>
             </header>
 
-            <div class="overflow-y-auto px-6 py-8 sm:px-10 sm:py-10">
+            <!--
+              `min-h-0` no es decorativo: un hijo de flex no se encoge por
+              debajo de su contenido sin él, así que sin `min-h-0` el cuerpo
+              empujaría el footer fuera del panel en vez de hacer scroll.
+            -->
+            <div class="min-h-0 flex-1 overflow-y-auto px-6 py-8 sm:px-10 sm:py-10">
               <slot />
             </div>
+
+            <!--
+              Footer opcional, FUERA del contenedor con scroll.
+              El panel es `flex flex-col`, así que cabecera y footer quedan
+              fijos y solo el cuerpo se desplaza. Es la diferencia con un
+              `sticky bottom-0` dentro del cuerpo: eso flota sobre el contenido
+              y depende de la posición del scroll; esto es estructura.
+              Sin contenido no renderiza nada, así que los diálogos que ya
+              existían no cambian.
+            -->
+            <footer
+              v-if="$slots.footer"
+              class="shrink-0 border-t border-border px-6 py-5 sm:px-10 sm:py-6"
+            >
+              <slot name="footer" />
+            </footer>
           </div>
         </Transition>
       </div>
