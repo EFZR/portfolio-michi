@@ -3,6 +3,10 @@ name = "princess-admin"
 version = "0.1.0"
 description = "Panel administrativo de my Princess"
 edition = "2021"
+# Con dos binarios (`princess-admin` y `media-cli`), `cargo run` sin `--bin`
+# no sabe cuál arrancar y falla. Lo usa `tauri dev`, así que sin esto el panel
+# no se puede levantar.
+default-run = "princess-admin"
 
 [lib]
 name = "princess_admin_lib"

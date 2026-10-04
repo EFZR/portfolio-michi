@@ -1,6 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Princess Admin",
+  "mainBinaryName": "princess-admin",
   "version": "0.1.0",
   "identifier": "app.myprincess.admin",
   "build": {
@@ -25,7 +26,9 @@
   },
   "plugins": {
     "updater": {
-      "endpoints": ["https://michi-portfolio.netlify.app/updates/latest.json"],
+      "endpoints": [
+        "https://michi-portfolio.netlify.app/updates/latest.json"
+      ],
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDhGRTI4NjA5NzY4MDk2MUEKUldRYWxvQjJDWWJpajNoemtITnMrQTQ2eUZOM3BWaGV3S0l2VW40Wk8vU3RtSUoyWUxVT0JQalIK",
       "windows": {
         "installMode": "passive"
@@ -34,7 +37,12 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["deb", "appimage"],
-    "icon": ["icons/icon.png"]
+    "targets": [
+      "deb",
+      "appimage"
+    ],
+    "icon": [
+      "icons/icon.png"
+    ]
   }
 }
