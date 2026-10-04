@@ -15,6 +15,10 @@ tauri-build = { version = "2", features = [] }
 tauri = { version = "2", features = [] }
 tauri-plugin-updater = "2"
 tauri-plugin-process = "2"
+# Subida a Storage desde Rust. NO es una dependencia nueva de verdad: ya está
+# en el árbol porque la arrastra tauri-plugin-updater. Con rustls para no
+# depender de OpenSSL del sistema.
+reqwest = { version = "0.13", default-features = false, features = ["rustls", "charset", "http2"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 # sha256 del original: lo exige el esquema (`source.sha256`) y es lo que

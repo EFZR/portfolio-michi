@@ -9,7 +9,8 @@
     ".": "./src/index.ts",
     "./meta": "./src/meta/index.ts",
     "./compiler": "./src/compiler/index.ts",
-    "./locales": "./src/meta/locales.ts"
+    "./locales": "./src/meta/locales.ts",
+    "./media": "./src/media/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json"

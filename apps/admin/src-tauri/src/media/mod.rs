@@ -11,4 +11,5 @@ pub mod pipeline;
 pub mod probe;
 pub mod record;
 pub mod toolchain;
+pub mod upload;
 pub mod video;
