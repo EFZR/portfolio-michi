@@ -14,9 +14,18 @@
  * Si una regla ocultara algo que la web necesita, el fallo saldría AQUÍ, en el
  * build, y no en producción con la página a medio pintar.
  *
- * SI LA RED FALLA, no rompe el build: se queda con el `content.json` que ya
- * está commiteado y lo dice en voz alta. Un despliegue con contenido de ayer es
- * infinitamente mejor que un despliegue fallido.
+ * DOS FALLOS QUE NO SE MEZCLAN:
+ *
+ *   - LA RED falla, o Firestore no responde → no rompe el build: se queda con
+ *     el `content.json` commiteado y lo dice en voz alta. Un despliegue con
+ *     contenido de ayer es infinitamente mejor que un despliegue fallido, y
+ *     mañana funciona solo.
+ *
+ *   - FALTAN LAS CREDENCIALES → rompe el build, diciendo cuáles. Esto no se
+ *     arregla solo: es una configuración que alguien tiene que poner. Dejarlo
+ *     pasar publicaría el contenido de la semana pasada en silencio, lo que
+ *     vacía de sentido el botón «Publicar» del panel. Mejor un build rojo con
+ *     el nombre de las seis variables.
  */
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { initializeApp } from 'firebase/app'
@@ -26,6 +35,28 @@ import { readEnv } from './env'
 const DEST = 'apps/web/src/data/content.json'
 
 const env = readEnv()
+
+const VARIABLES = [
+  'VITE_FIREBASE_API_KEY',
+  'VITE_FIREBASE_AUTH_DOMAIN',
+  'VITE_FIREBASE_PROJECT_ID',
+  'VITE_FIREBASE_STORAGE_BUCKET',
+  'VITE_FIREBASE_MESSAGING_SENDER_ID',
+  'VITE_FIREBASE_APP_ID',
+] as const
+
+const faltan = VARIABLES.filter((v) => !env[v])
+if (faltan.length) {
+  console.error('\n✗ Faltan las credenciales de Firebase para bajar el contenido:\n')
+  for (const v of faltan) console.error(`    ${v}`)
+  console.error(
+    '\n  En tu máquina: copiá .env.example a .env y rellenalas.' +
+      '\n  En Netlify:    Site configuration → Environment variables.\n' +
+      '\n  No son secretas: viajan en el bundle igual (ver .env.example).\n',
+  )
+  process.exit(1)
+}
+
 const app = initializeApp(
   {
     apiKey: env.VITE_FIREBASE_API_KEY,

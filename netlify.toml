@@ -3,22 +3,34 @@
 # repo se revisa en el pull request — un ajuste en un panel web, no.
 #
 # OJO AL MIGRAR: un `netlify.toml` GANA sobre lo configurado en la interfaz.
-# Hay que comprobar que estos tres valores coinciden con lo que el sitio tenía
-# (Site configuration → Build & deploy → Build settings) antes del primer push.
 
 [build]
-  # Netlify hace `cd` aquí antes de todo, así que `publish` y `command` son
-  # relativos a esta carpeta.
-  base = "apps/web"
-  publish = "dist"
-
-  # `npm install` en la raíz del workspace instala TODO el monorepo y enlaza
-  # `@princess/contenido`; sin `--prefix` Netlify instalaría solo apps/web y el
-  # paquete compartido quedaría sin resolver.
-  command = "npm install --prefix ../.. && npm run build"
+  # SIN `base`, o sea la raíz del repo. Es el arreglo: con `base = "apps/web"`
+  # Netlify hacía `cd apps/web` y corría ahí SU PROPIO `npm install` antes de
+  # ejecutar el comando de abajo. En esa carpeta no hay lockfile y la
+  # dependencia `"@princess/content": "*"` no existe en el registro público, así
+  # que la instalación fallaba antes de llegar a nuestra línea.
+  #
+  # Desde la raíz, npm encuentra el `package-lock.json` y los workspaces, enlaza
+  # `@princess/content` localmente y `npm run build` delega en `apps/web`.
+  publish = "apps/web/dist"
+  command = "npm run build"
 
 [build.environment]
   NODE_VERSION = "22"
 
-# El SPA fallback sigue viniendo de `apps/web/public/_redirects` (`/* /index.html 200`).
-# Se deja ahí y no aquí para no partir la configuración de rutas en dos sitios.
+# VARIABLES QUE HAY QUE CONFIGURAR EN NETLIFY
+# (Site configuration → Environment variables), porque el `prebuild` baja el
+# contenido de Firestore y aquí no hay archivo `.env`:
+#
+#   VITE_FIREBASE_API_KEY              VITE_FIREBASE_STORAGE_BUCKET
+#   VITE_FIREBASE_AUTH_DOMAIN          VITE_FIREBASE_MESSAGING_SENDER_ID
+#   VITE_FIREBASE_PROJECT_ID           VITE_FIREBASE_APP_ID
+#
+# No son secretas: viajan en el bundle igual (ver .env.example). Si faltan, el
+# build falla a propósito y dice cuáles — un despliegue silencioso con el
+# contenido de la semana pasada vacía de sentido el botón «Publicar» del panel.
+
+# El SPA fallback sigue viniendo de `apps/web/public/_redirects`
+# (`/* /index.html 200`), que Vite copia a `dist/`. Se deja ahí y no aquí para
+# no partir la configuración de rutas en dos sitios.
