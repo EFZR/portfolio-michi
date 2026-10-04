@@ -1,0 +1,564 @@
+{
+  "site": {
+    "name": "Princess Portfolio",
+    "author": "Michi My Princess",
+    "email": "karolmpalmam@gmail.com",
+    "location": "Tegucigalpa, Honduras",
+    "description": {
+      "es": "Fotógrafa, directora de arte y mercadóloga. Imágenes que comunican, conectan y convierten.",
+      "en": ""
+    }
+  },
+  "routes": {
+    "home": {
+      "es": "Princess Portfolio — Inicio",
+      "en": ""
+    },
+    "projects": {
+      "es": "Portafolio · Princess Portfolio",
+      "en": ""
+    },
+    "projectDetail": {
+      "es": "Proyecto · Princess Portfolio",
+      "en": ""
+    },
+    "contact": {
+      "es": "Contacto · Princess Portfolio",
+      "en": ""
+    },
+    "blog": {
+      "es": "Blog · Princess Portfolio",
+      "en": ""
+    },
+    "blogPost": {
+      "es": "Artículo · Princess Portfolio",
+      "en": ""
+    },
+    "notFound": {
+      "es": "404 · Página no encontrada",
+      "en": ""
+    }
+  },
+  "nav": {
+    "cta": {
+      "es": "Hablemos",
+      "en": ""
+    },
+    "open": {
+      "es": "Menú",
+      "en": ""
+    },
+    "close": {
+      "es": "Cerrar",
+      "en": ""
+    },
+    "logoAria": {
+      "es": "Inicio — my Princess",
+      "en": ""
+    },
+    "drawerAria": {
+      "es": "Navegación del pie",
+      "en": ""
+    },
+    "items": [
+      {
+        "label": {
+          "es": "Portafolio",
+          "en": ""
+        },
+        "to": "/projects"
+      },
+      {
+        "label": {
+          "es": "Blog",
+          "en": ""
+        },
+        "to": "/blog"
+      },
+      {
+        "label": {
+          "es": "Sobre mí",
+          "en": ""
+        },
+        "to": "/#about"
+      }
+    ],
+    "drawer": [
+      {
+        "label": {
+          "es": "Inicio",
+          "en": ""
+        },
+        "to": "/"
+      },
+      {
+        "label": {
+          "es": "Portafolio",
+          "en": ""
+        },
+        "to": "/projects"
+      },
+      {
+        "label": {
+          "es": "Blog",
+          "en": ""
+        },
+        "to": "/blog"
+      },
+      {
+        "label": {
+          "es": "Sobre mí",
+          "en": ""
+        },
+        "to": "/#about"
+      },
+      {
+        "label": {
+          "es": "Contacto",
+          "en": ""
+        },
+        "to": "/contact"
+      }
+    ]
+  },
+  "hero": {
+    "words": [
+      {
+        "es": "tu",
+        "en": ""
+      },
+      {
+        "es": "siguiente",
+        "en": ""
+      },
+      {
+        "es": "nivel",
+        "en": ""
+      },
+      {
+        "es": "empieza",
+        "en": ""
+      },
+      {
+        "es": "aquí",
+        "en": ""
+      }
+    ],
+    "aria": {
+      "es": "Tu siguiente nivel empieza aquí",
+      "en": ""
+    },
+    "copy": {
+      "es": "Visualiza, ilustra, dirige. Hace que las ideas existan.",
+      "en": ""
+    },
+    "scrollCue": {
+      "es": "(Scroll para ver más)",
+      "en": ""
+    },
+    "imageAlt": {
+      "es": "Retrato",
+      "en": ""
+    }
+  },
+  "about": {
+    "kicker": {
+      "es": "¿Qué hago?",
+      "en": ""
+    },
+    "statement": [
+      {
+        "es": "Mercadóloga,",
+        "en": ""
+      },
+      {
+        "es": "fotógrafa",
+        "en": ""
+      },
+      {
+        "es": "& modelo.",
+        "en": ""
+      }
+    ],
+    "aria": {
+      "es": "Soy mercadóloga, fotógrafa y modelo",
+      "en": ""
+    },
+    "copy": {
+      "es": "Uno la mirada estética con la estrategia de marca: creo imágenes que comunican, conectan y convierten.",
+      "en": ""
+    },
+    "cueText": {
+      "es": "DESLIZA · SCROLL · ",
+      "en": ""
+    }
+  },
+  "services": {
+    "kicker": {
+      "es": "Servicios",
+      "en": ""
+    },
+    "subhead": {
+      "es": "Tres frentes, una misma mirada.",
+      "en": ""
+    },
+    "cta": {
+      "es": "Catálogo completo",
+      "en": ""
+    },
+    "modalEyebrow": {
+      "es": "Todo lo que hago",
+      "en": ""
+    },
+    "modalTitle": {
+      "es": "Catálogo de servicios",
+      "en": ""
+    },
+    "modalClosing": {
+      "es": "¿Tu proyecto no encaja en ninguna casilla? Suele ser la mejor señal —",
+      "en": ""
+    },
+    "modalClosingLink": {
+      "es": "escríbeme y lo armamos a medida",
+      "en": ""
+    }
+  },
+  "contact": {
+    "arcTitle": {
+      "es": "Estás listo para trabajar",
+      "en": ""
+    },
+    "arcAccent": {
+      "es": "juntos",
+      "en": ""
+    },
+    "statement": {
+      "es": "Hagamos algo que la gente",
+      "en": ""
+    },
+    "statementAccent": {
+      "es": "recuerde",
+      "en": ""
+    },
+    "phrase": {
+      "es": "Escríbeme a {email} — trabajo desde {location}, con la agenda abierta.",
+      "en": ""
+    }
+  },
+  "contactPage": {
+    "kicker": {
+      "es": "Contacto",
+      "en": ""
+    },
+    "title": [
+      {
+        "es": "Cuéntame",
+        "en": ""
+      },
+      {
+        "es": "qué traes",
+        "en": ""
+      }
+    ],
+    "subhead": {
+      "es": "No hace falta que lo tengas resuelto. Con que me digas qué quieres que pase, ya tenemos por dónde empezar.",
+      "en": ""
+    },
+    "howItWorks": {
+      "es": "Cómo funciona",
+      "en": ""
+    },
+    "direct": {
+      "es": "O directo",
+      "en": ""
+    },
+    "locationPhrase": {
+      "es": "Trabajo desde {location}, con la agenda abierta.",
+      "en": ""
+    },
+    "steps": [
+      {
+        "title": {
+          "es": "Te respondo",
+          "en": ""
+        },
+        "detail": {
+          "es": "En un par de días, con mis dudas y una idea de tiempos.",
+          "en": ""
+        }
+      },
+      {
+        "title": {
+          "es": "Nos llamamos",
+          "en": ""
+        },
+        "detail": {
+          "es": "Media hora para ver si encajamos. No cobro por esta parte.",
+          "en": ""
+        }
+      },
+      {
+        "title": {
+          "es": "Te paso propuesta",
+          "en": ""
+        },
+        "detail": {
+          "es": "Alcance, calendario y precio cerrado. Sin letra pequeña.",
+          "en": ""
+        }
+      }
+    ]
+  },
+  "form": {
+    "nameLabel": {
+      "es": "Cómo te llamas",
+      "en": ""
+    },
+    "namePlaceholder": {
+      "es": "Tu nombre",
+      "en": ""
+    },
+    "emailLabel": {
+      "es": "A dónde te escribo",
+      "en": ""
+    },
+    "emailPlaceholder": {
+      "es": "tucorreo@ejemplo.com",
+      "en": ""
+    },
+    "disciplineLabel": {
+      "es": "Qué necesitas",
+      "en": ""
+    },
+    "disciplineOther": {
+      "es": "Otra cosa",
+      "en": ""
+    },
+    "messageLabel": {
+      "es": "Cuéntame",
+      "en": ""
+    },
+    "messagePlaceholder": {
+      "es": "Estoy montando una marca de…",
+      "en": ""
+    },
+    "errorName": {
+      "es": "Me falta tu nombre.",
+      "en": ""
+    },
+    "errorEmailEmpty": {
+      "es": "Sin un correo no puedo responderte.",
+      "en": ""
+    },
+    "errorEmailFormat": {
+      "es": "Ese correo no parece completo, revísalo.",
+      "en": ""
+    },
+    "errorDiscipline": {
+      "es": "Dime por dónde va la cosa.",
+      "en": ""
+    },
+    "errorMessage": {
+      "es": "Cuéntame un poco más, aunque sean dos líneas.",
+      "en": ""
+    }
+  },
+  "portfolio": {
+    "kicker": {
+      "es": "Portafolio",
+      "en": ""
+    },
+    "title": [
+      {
+        "es": "Trabajo",
+        "en": ""
+      },
+      {
+        "es": "seleccionado",
+        "en": ""
+      }
+    ],
+    "subhead": {
+      "es": "Treinta historias que ya salieron de mi cabeza. Entra por el oficio que te llame o recórrelas revueltas, como fueron pasando.",
+      "en": ""
+    },
+    "stateAll": {
+      "es": "Todo revuelto",
+      "en": ""
+    },
+    "stateFiltered": {
+      "es": "Solo {category}",
+      "en": ""
+    },
+    "ctaShowAll": {
+      "es": "Verlo todo",
+      "en": ""
+    },
+    "ctaMore": {
+      "es": "Ver {n} historias más",
+      "en": ""
+    },
+    "batch": 6
+  },
+  "blog": {
+    "kicker": {
+      "es": "Blog",
+      "en": ""
+    },
+    "title": [
+      {
+        "es": "Notas",
+        "en": ""
+      },
+      {
+        "es": "de taller",
+        "en": ""
+      }
+    ],
+    "subhead": {
+      "es": "Lo que voy aprendiendo mientras trabajo. Sin fórmulas ni listas de diez pasos: solo lo que me funcionó y lo que no.",
+      "en": ""
+    },
+    "emptyTitle": {
+      "es": "Por aquí no hay nada",
+      "en": ""
+    },
+    "emptyDetail": {
+      "es": "Prueba con otra palabra, o quita el filtro y échale un ojo a todo.",
+      "en": ""
+    },
+    "ctaShowAll": {
+      "es": "Ver todo",
+      "en": ""
+    },
+    "ctaBack": {
+      "es": "Ver todas las notas",
+      "en": ""
+    },
+    "recentDays": 7,
+    "archiveDays": 365,
+    "categories": [
+      {
+        "es": "Dirección de arte",
+        "en": ""
+      },
+      {
+        "es": "Detrás de cámara",
+        "en": ""
+      },
+      {
+        "es": "Marketing",
+        "en": ""
+      },
+      {
+        "es": "Oficio",
+        "en": ""
+      },
+      {
+        "es": "Herramientas",
+        "en": ""
+      }
+    ]
+  },
+  "footer": {
+    "kicker": {
+      "es": "¿Trabajamos juntos?",
+      "en": ""
+    },
+    "cta": {
+      "es": "Hablemos",
+      "en": ""
+    },
+    "colNav": {
+      "es": "Navegación",
+      "en": ""
+    },
+    "colSocial": {
+      "es": "Redes",
+      "en": ""
+    },
+    "colStudio": {
+      "es": "Estudio",
+      "en": ""
+    },
+    "studioText": {
+      "es": "Disponible para proyectos freelance y colaboraciones.",
+      "en": ""
+    },
+    "studioHighlight": {
+      "es": "freelance",
+      "en": ""
+    },
+    "backToTop": {
+      "es": "Volver arriba",
+      "en": ""
+    },
+    "copyright": {
+      "es": "© {year} {author}. Todos los derechos reservados.",
+      "en": ""
+    },
+    "links": [
+      {
+        "label": {
+          "es": "Inicio",
+          "en": ""
+        },
+        "to": "/"
+      },
+      {
+        "label": {
+          "es": "Portafolio",
+          "en": ""
+        },
+        "to": "/projects"
+      },
+      {
+        "label": {
+          "es": "Blog",
+          "en": ""
+        },
+        "to": "/blog"
+      },
+      {
+        "label": {
+          "es": "Proceso",
+          "en": ""
+        },
+        "to": "/#process"
+      },
+      {
+        "label": {
+          "es": "Sobre mí",
+          "en": ""
+        },
+        "to": "/#about"
+      },
+      {
+        "label": {
+          "es": "Contacto",
+          "en": ""
+        },
+        "to": "/contact"
+      }
+    ],
+    "social": []
+  },
+  "notFound": {
+    "kicker": {
+      "es": "404",
+      "en": ""
+    },
+    "title": {
+      "es": "Página no encontrada",
+      "en": ""
+    },
+    "copy": {
+      "es": "El recurso que buscas no existe o fue movido.",
+      "en": ""
+    },
+    "cta": {
+      "es": "Volver al inicio",
+      "en": ""
+    }
+  }
+}
