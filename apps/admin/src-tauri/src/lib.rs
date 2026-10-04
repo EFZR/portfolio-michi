@@ -12,7 +12,10 @@ pub fn run() {
         // Único punto por el que la webview puede llegar a un proceso del
         // sistema. Deliberadamente no se usa `tauri-plugin-shell`: ver la
         // cabecera de media/toolchain.rs.
-        .invoke_handler(tauri::generate_handler![media::toolchain::probe_toolchain])
+        .invoke_handler(tauri::generate_handler![
+            media::toolchain::probe_toolchain,
+            media::probe::probe_media
+        ])
         .run(tauri::generate_context!())
         .expect("error al arrancar la aplicación");
 }

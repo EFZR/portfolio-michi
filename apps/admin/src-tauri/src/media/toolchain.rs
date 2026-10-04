@@ -10,10 +10,10 @@
 //! Nunca se construye una línea de shell: `Command` recibe el programa y los
 //! argumentos por separado, así que no hay interpretación de metacaracteres.
 
+use crate::media::cmd;
 use serde::Serialize;
 use std::collections::BTreeMap;
-use std::process::{Command, Stdio};
-use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
+use std::time::{Instant, SystemTime, UNIX_EPOCH};
 
 /// Encoders que el pipeline puede llegar a necesitar. El orden es el del brief.
 const ENCODERS: &[&str] = &[
@@ -39,11 +39,6 @@ const FILTERS: &[&str] = &[
     "blackframe",
     "transpose",
 ];
-
-/// Un sondeo no debería tardar más que esto. `-encoders` responde en
-/// milisegundos; el tope existe para un binario colgado (un montaje de red que
-/// no responde), que si no dejaría el arranque del panel esperando para siempre.
-const TIMEOUT: Duration = Duration::from_secs(10);
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -118,67 +113,21 @@ const fn install_hint() -> &'static str {
     }
 }
 
-/// Resultado crudo de ejecutar un binario. Solo se construye si el proceso
-/// terminó con éxito, así que quien lo recibe puede fiarse de `stdout`.
-struct Capture {
-    stdout: String,
+/// Ejecuta un sondeo y devuelve su stdout.
+///
+/// Envuelve el runner compartido (`media::cmd`) y aplana el error a texto: el
+/// informe del toolchain no propaga `MediaError` porque no describe un archivo,
+/// describe el equipo. Lo que sobrevive del error es el detalle, que va al log.
+fn probe_stdout(args: &[&str]) -> Result<String, String> {
+    cmd::run("ffmpeg", args, cmd::SHORT, true)
+        .map(|o| o.stdout)
+        .map_err(|e| e.detail.unwrap_or(e.message))
 }
 
-/// Ejecuta `program args...` con tope de tiempo, matando el proceso si se pasa.
-///
-/// Se lee la salida al final en vez de en paralelo: `-encoders` produce ~10 KB,
-/// holgadamente por debajo del buffer de la tubería, así que el hijo no se
-/// bloquea escribiendo. Si algún día se sondea algo mucho más verboso, esto
-/// hay que cambiarlo por hilos lectores.
-fn run(program: &str, args: &[&str]) -> Result<Capture, String> {
-    let mut child = Command::new(program)
-        .args(args)
-        .stdin(Stdio::null())
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
-        .spawn()
-        .map_err(|e| format!("no se pudo ejecutar `{program}`: {e}"))?;
-
-    let deadline = Instant::now() + TIMEOUT;
-    loop {
-        match child.try_wait() {
-            Ok(Some(_)) => break,
-            Ok(None) => {
-                if Instant::now() >= deadline {
-                    let _ = child.kill();
-                    let _ = child.wait();
-                    return Err(format!("`{program}` no respondió en {}s", TIMEOUT.as_secs()));
-                }
-                std::thread::sleep(Duration::from_millis(20));
-            }
-            Err(e) => return Err(format!("fallo esperando a `{program}`: {e}")),
-        }
-    }
-
-    let out = child
-        .wait_with_output()
-        .map_err(|e| format!("fallo leyendo la salida de `{program}`: {e}"))?;
-
-    // Comprobar el estado NO es ceremonia. Sin esto, un `-encoders` que falle
-    // deja un stdout vacío que se parsea como "no hay ningún encoder", y el
-    // panel le diría a la usuaria que su ffmpeg no sirve para nada cuando el
-    // problema es otro. El stderr se arrastra porque es el único sitio donde
-    // ffmpeg explica por qué falló — y por eso va a `detail`, no al mensaje.
-    if !out.status.success() {
-        let stderr = String::from_utf8_lossy(&out.stderr);
-        return Err(format!(
-            "`{program} {}` terminó con {} — {}",
-            args.join(" "),
-            out.status
-                .code()
-                .map_or_else(|| "señal".to_string(), |c| c.to_string()),
-            stderr.trim()
-        ));
-    }
-
-    Ok(Capture {
-        stdout: String::from_utf8_lossy(&out.stdout).into_owned(),
-    })
+fn probe_stdout_of(program: &str, args: &[&str]) -> Result<String, String> {
+    cmd::run(program, args, cmd::SHORT, true)
+        .map(|o| o.stdout)
+        .map_err(|e| e.detail.unwrap_or(e.message))
 }
 
 /// Extrae la versión de la primera línea de `-version`.
@@ -401,12 +350,12 @@ pub async fn probe_toolchain() -> ToolchainReport {
 fn probe_blocking() -> ToolchainReport {
     let started = Instant::now();
 
-    let ffmpeg_version = match run("ffmpeg", &["-hide_banner", "-version"]) {
-        Ok(c) => c.stdout,
+    let ffmpeg_version = match probe_stdout(&["-hide_banner", "-version"]) {
+        Ok(out) => out,
         Err(e) => return unavailable(e, started),
     };
-    let ffprobe_version = match run("ffprobe", &["-hide_banner", "-version"]) {
-        Ok(c) => c.stdout,
+    let ffprobe_version = match probe_stdout_of("ffprobe", &["-hide_banner", "-version"]) {
+        Ok(out) => out,
         // ffmpeg sin ffprobe es raro pero posible en builds recortadas, y sin
         // ffprobe no hay R2: no se puede clasificar el archivo antes de tocarlo.
         Err(e) => return unavailable(e, started),
@@ -414,15 +363,15 @@ fn probe_blocking() -> ToolchainReport {
 
     let mut detail: Option<String> = None;
 
-    let encoder_names = match run("ffmpeg", &["-hide_banner", "-encoders"]) {
-        Ok(c) => parse_names(&c.stdout),
+    let encoder_names = match probe_stdout(&["-hide_banner", "-encoders"]) {
+        Ok(out) => parse_names(&out),
         Err(e) => {
             detail = Some(e);
             Default::default()
         }
     };
-    let filter_names = match run("ffmpeg", &["-hide_banner", "-filters"]) {
-        Ok(c) => parse_names(&c.stdout),
+    let filter_names = match probe_stdout(&["-hide_banner", "-filters"]) {
+        Ok(out) => parse_names(&out),
         Err(e) => {
             detail = Some(match detail {
                 Some(prev) => format!("{prev}\n{e}"),
