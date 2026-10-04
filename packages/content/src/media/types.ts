@@ -67,9 +67,12 @@ export interface MediaAsset {
   kind: MediaKind
   title: string
   /**
-   * Ausente = nadie lo escribió todavía y NO se publica.
-   * Cadena vacía = «imagen decorativa», declarado a propósito.
-   * Los dos estados no se colapsan.
+   * Qué se ve en la imagen. Opcional.
+   *
+   * No bloquea la publicación (decisión del proyecto, apartándose del R12):
+   * exigirlo dejaba las fotos ya procesadas inservibles hasta describirlas
+   * una por una. Lo leen los lectores de pantalla y los buscadores, así que
+   * conviene ponerlo — pero la foto se sirve igual sin él.
    */
   alt?: string
   caption?: string

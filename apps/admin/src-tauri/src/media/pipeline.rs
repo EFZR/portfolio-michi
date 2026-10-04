@@ -254,17 +254,6 @@ pub fn normalize(
         )));
     }
 
-    // R12: el asset se produce igual sin `alt`, pero no se va a poder
-    // publicar. Se avisa acá y no se falla: hacerlo fallar obligaría a
-    // re-encodear todo después de escribir una frase.
-    if !asset.can_publish() {
-        asset.pipeline.warnings.push(
-            "Falta el texto alternativo. El archivo quedó preparado pero no se puede \
-             publicar hasta describirlo (o marcarlo como decorativo con un texto vacío)."
-                .into(),
-        );
-    }
-
     // De una sola escritura: o está el registro completo o no está. Un JSON a
     // medio escribir sería un asset irrecuperable, que es lo que el
     // invariante 5 prohíbe.
@@ -481,23 +470,27 @@ mod tests {
     }
 
     #[test]
-    fn sin_alt_se_prepara_igual_pero_no_se_publica() {
-        // R12. Falla al publicar, no al procesar: hacerlo fallar al procesar
-        // obligaría a re-encodear todo después de escribir una frase.
+    fn sin_alt_se_publica_igual() {
+        // DECISIÓN DEL PROYECTO, apartándose del R12 del contrato: el texto
+        // alternativo no bloquea la publicación. Exigirlo dejaba 45 fotos ya
+        // procesadas inservibles hasta escribir 45 descripciones, y convertía
+        // cada subida en dos tareas.
+        //
+        // El coste queda escrito donde se decidió (`record::can_publish`): un
+        // lector de pantalla y un buscador no sabrán qué hay en la foto.
         let dir = std::env::temp_dir().join("princess-alt");
         std::fs::remove_dir_all(&dir).ok();
         std::fs::create_dir_all(&dir).unwrap();
         let src = fuente_realista(&dir, 400, 300);
 
         let sin = normalize(&dir.join("d1"), &src, "Sin alt", None, vec![], None).unwrap();
-        assert!(!sin.can_publish());
-        assert!(!sin.renditions.images.is_empty(), "se procesó igual");
-        assert!(sin.pipeline.warnings.iter().any(|w| w.contains("texto alternativo")));
-
-        // `Some("")` es «decorativa», declarado a propósito. No es lo mismo
-        // que ausente y no puede colapsarse con él.
-        let deco = normalize(&dir.join("d2"), &src, "Decorativa", Some(String::new()), vec![], None).unwrap();
-        assert!(deco.can_publish(), "una imagen decorativa sí se publica");
+        assert_eq!(sin.alt, None);
+        assert!(sin.can_publish(), "el alt no es una puerta");
+        assert!(!sin.renditions.images.is_empty());
+        assert!(
+            !sin.pipeline.warnings.iter().any(|w| w.contains("texto alternativo")),
+            "ya no se avisa de algo que no bloquea nada"
+        );
 
         std::fs::remove_dir_all(&dir).ok();
     }

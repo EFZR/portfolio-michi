@@ -1,13 +1,5 @@
 import { computed, ref, shallowRef, type ComputedRef, type Ref } from 'vue'
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  updateDoc,
-} from 'firebase/firestore'
+import { collection, deleteDoc, doc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore'
 import { deleteObject, listAll, ref as storageRef } from 'firebase/storage'
 import { getFirebaseAuth, getFirebaseStorage, getFirestoreDb } from '@princess/content'
 import type { MediaAsset, MediaKind } from '@princess/content/media'
@@ -110,8 +102,6 @@ export interface UseMediaLibraryReturn {
    * referenciado desde algún sitio.
    */
   borrar: (id: string) => Promise<boolean>
-  /** Cuántos medios no se pueden publicar porque les falta el `alt` (R12). */
-  sinAlt: ComputedRef<number>
 }
 
 /** Lo que se puede editar de un medio desde la biblioteca. */
@@ -211,13 +201,27 @@ export function useMediaLibrary(): UseMediaLibraryReturn {
         opciones.kind === 'video'
           ? [{ name: 'Vídeo', extensions: ['mp4', 'mov', 'webm', 'gif'] }]
           : opciones.kind === 'image'
-            ? [{ name: 'Imagen', extensions: ['jpg', 'jpeg', 'png', 'webp', 'avif', 'tif', 'tiff'] }]
+            ? [
+                {
+                  name: 'Imagen',
+                  extensions: ['jpg', 'jpeg', 'png', 'webp', 'avif', 'tif', 'tiff'],
+                },
+              ]
             : [
                 {
                   name: 'Imagen o vídeo',
                   extensions: [
-                    'jpg', 'jpeg', 'png', 'webp', 'avif', 'tif', 'tiff',
-                    'mp4', 'mov', 'webm', 'gif',
+                    'jpg',
+                    'jpeg',
+                    'png',
+                    'webp',
+                    'avif',
+                    'tif',
+                    'tiff',
+                    'mp4',
+                    'mov',
+                    'webm',
+                    'gif',
                   ],
                 },
               ]
@@ -233,7 +237,10 @@ export function useMediaLibrary(): UseMediaLibraryReturn {
       // (todavía no se ve la foto) para algo que se corrige en dos segundos
       // después.
       const nombre = ruta.split(/[\\/]/).pop() ?? 'medio'
-      const title = nombre.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').trim()
+      const title = nombre
+        .replace(/\.[^.]+$/, '')
+        .replace(/[-_]+/g, ' ')
+        .trim()
 
       progreso.value = { paso: 'procesando', archivo: nombre, porcentaje: -1 }
       await escuchar()
@@ -304,7 +311,9 @@ export function useMediaLibrary(): UseMediaLibraryReturn {
 
     try {
       await updateDoc(doc(db(), 'media', id), parche)
-      assets.value = assets.value.map((a) => (a.id === id ? { ...a, ...parche } as MediaAsset : a))
+      assets.value = assets.value.map((a) =>
+        a.id === id ? ({ ...a, ...parche } as MediaAsset) : a,
+      )
       return true
     } catch (e) {
       error.value = 'No se pudo guardar. Revisá la conexión.'
@@ -448,7 +457,6 @@ export function useMediaLibrary(): UseMediaLibraryReturn {
     error,
     progreso,
     ocupado: computed(() => progreso.value !== null),
-    sinAlt: computed(() => assets.value.filter((a) => a.alt === undefined).length),
     cargar,
     guardar,
     usosDe,

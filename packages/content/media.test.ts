@@ -283,12 +283,12 @@ describe('videoOf', () => {
   })
 })
 
-describe('canPublish — R12', () => {
-  it('un alt ausente bloquea la publicación', () => {
-    expect(canPublish(imagen({ alt: undefined }))).toBe(false)
-  })
-
-  it('un alt vacío NO la bloquea: es "decorativa", declarado a propósito', () => {
+describe('canPublish', () => {
+  it('el alt NO bloquea la publicación', () => {
+    // Decisión del proyecto, apartándose del R12 del contrato: exigirlo
+    // dejaba 45 fotos ya procesadas inservibles hasta describirlas una por
+    // una. Lo que bloquea es no tener archivos servibles.
+    expect(canPublish(imagen({ alt: undefined }))).toBe(true)
     expect(canPublish(imagen({ alt: '' }))).toBe(true)
   })
 

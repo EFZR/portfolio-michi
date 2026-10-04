@@ -163,7 +163,14 @@ export function videoOf(asset: MediaAsset, bucket: string): VideoModel | null {
   }
 }
 
-/** R12 — un asset sin `alt` no se publica. Cadena vacía sí: es «decorativa». */
+/**
+ * ¿Se puede servir este asset?
+ *
+ * El `alt` NO entra en la cuenta, y es una decisión del proyecto que se aparta
+ * del R12 del contrato: exigirlo dejaba 45 fotos ya procesadas inservibles
+ * hasta escribir 45 descripciones. Sigue siendo un campo recomendable; ya no
+ * es una puerta.
+ */
 export function canPublish(asset: MediaAsset): boolean {
-  return asset.alt !== undefined && asset.status === 'ready' && !!asset.basePath
+  return asset.status === 'ready' && !!asset.basePath
 }

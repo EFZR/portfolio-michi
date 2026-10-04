@@ -162,14 +162,19 @@ pub struct AssetRecord {
 }
 
 impl AssetRecord {
-    /// R12 — un asset sin `alt` no se publica.
+    /// ¿Se puede servir este asset?
     ///
-    /// Es una consulta y no una validación que corra sola: el pipeline
-    /// produce el asset igual, y es la publicación la que se bloquea. Si
-    /// fallara el procesamiento por falta de `alt`, habría que re-encodear
-    /// todo después de escribir una frase.
+    /// DECISIÓN DEL PROYECTO, que se aparta del R12 del contrato: el `alt` NO
+    /// bloquea la publicación. El contrato pedía que un asset sin texto
+    /// alternativo no se publicara; en la práctica eso dejaba 45 fotos
+    /// procesadas inservibles hasta escribir 45 descripciones, y convertía
+    /// cada subida en dos tareas.
+    ///
+    /// El coste es real y conviene tenerlo escrito: un lector de pantalla y un
+    /// buscador no sabrán qué hay en una foto sin `alt`. Sigue siendo un campo
+    /// editable y recomendable; ya no es una puerta.
     pub fn can_publish(&self) -> bool {
-        self.alt.is_some() && self.status == Status::Ready && self.fallback_exists()
+        self.status == Status::Ready && self.fallback_exists()
     }
 
     /// Invariante 6 para los dos tipos: una imagen necesita jpeg o png, un
