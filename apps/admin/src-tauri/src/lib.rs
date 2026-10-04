@@ -9,6 +9,9 @@ pub fn run() {
         .plugin(tauri_plugin_updater::Builder::new().build())
         // Reiniciar la app tras instalar la actualización.
         .plugin(tauri_plugin_process::init())
+        // Selector de archivos nativo para elegir la foto o el vídeo a
+        // procesar. Solo `open`: el panel no necesita guardar archivos.
+        .plugin(tauri_plugin_dialog::init())
         // Único punto por el que la webview puede llegar a un proceso del
         // sistema. Deliberadamente no se usa `tauri-plugin-shell`: ver la
         // cabecera de media/toolchain.rs.

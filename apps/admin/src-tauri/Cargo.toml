@@ -15,6 +15,10 @@ tauri-build = { version = "2", features = [] }
 tauri = { version = "2", features = [] }
 tauri-plugin-updater = "2"
 tauri-plugin-process = "2"
+# Selector de archivos nativo. Hace falta porque el pipeline recibe una RUTA
+# del sistema y un `<input type="file">` del webview no la expone: el navegador
+# la oculta por seguridad y solo entrega un objeto File.
+tauri-plugin-dialog = "2"
 # Subida a Storage desde Rust. NO es una dependencia nueva de verdad: ya está
 # en el árbol porque la arrastra tauri-plugin-updater. Con rustls para no
 # depender de OpenSSL del sistema.
