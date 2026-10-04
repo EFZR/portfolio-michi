@@ -347,7 +347,9 @@ pub async fn probe_toolchain() -> ToolchainReport {
         .unwrap_or_else(|e| unavailable(format!("el hilo del sondeo falló: {e}"), Instant::now()))
 }
 
-fn probe_blocking() -> ToolchainReport {
+/// Público porque el pipeline lo llama directo: necesita el informe en el
+/// hilo bloqueante en el que ya está, sin pasar por el comando async.
+pub fn probe_blocking() -> ToolchainReport {
     let started = Instant::now();
 
     let ffmpeg_version = match probe_stdout(&["-hide_banner", "-version"]) {

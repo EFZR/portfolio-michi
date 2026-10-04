@@ -14,7 +14,8 @@ pub fn run() {
         // cabecera de media/toolchain.rs.
         .invoke_handler(tauri::generate_handler![
             media::toolchain::probe_toolchain,
-            media::probe::probe_media
+            media::probe::probe_media,
+            media::pipeline::normalize_media
         ])
         .run(tauri::generate_context!())
         .expect("error al arrancar la aplicación");

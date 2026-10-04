@@ -20,3 +20,8 @@ serde_json = "1"
 # sha256 del original: lo exige el esquema (`source.sha256`) y es lo que
 # sostiene la idempotencia — reconocer que este archivo ya se procesó.
 sha2 = "0.10"
+# El LQIP se guarda como data URI dentro del registro (R3/placeholder).
+base64 = "0.22"
+# Marcas de tiempo ISO 8601 para el registro. A mano habría que escribir un
+# calendario (años bisiestos incluidos) y no vale la pena el riesgo.
+chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }

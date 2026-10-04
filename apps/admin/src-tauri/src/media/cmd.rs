@@ -38,7 +38,11 @@ pub fn run<S: AsRef<OsStr>>(
     let mut child = Command::new(program)
         .args(args)
         .stdin(Stdio::null())
-        .stdout(if cap_stdout { Stdio::piped() } else { Stdio::null() })
+        .stdout(if cap_stdout {
+            Stdio::piped()
+        } else {
+            Stdio::null()
+        })
         .stderr(Stdio::piped())
         .spawn()
         .map_err(|e| {
@@ -84,9 +88,16 @@ pub fn run<S: AsRef<OsStr>>(
         // El mensaje público queda genérico a propósito. Quién convierte esto
         // en `invalid_media` o `unsupported_source` es quien llamó, que sabe
         // qué estaba intentando; aquí solo se sabe que el proceso falló.
-        return Err(MediaError::failed("Falló el procesamiento del archivo.")
-            .with_detail(format!("{program} salió con {:?}\n{}", out.status.code(), stderr.trim())));
+        return Err(
+            MediaError::failed("Falló el procesamiento del archivo.").with_detail(format!(
+                "{program} salió con {:?}\n{}",
+                out.status.code(),
+                stderr.trim()
+            )),
+        );
     }
 
-    Ok(Output { stdout: String::from_utf8_lossy(&out.stdout).into_owned() })
+    Ok(Output {
+        stdout: String::from_utf8_lossy(&out.stdout).into_owned(),
+    })
 }

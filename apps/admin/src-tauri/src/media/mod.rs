@@ -6,5 +6,8 @@
 
 pub mod cmd;
 pub mod error;
+pub mod images;
+pub mod pipeline;
 pub mod probe;
+pub mod record;
 pub mod toolchain;

@@ -2459,6 +2459,8 @@ checksum = "925383efa346730478fb4838dbe9137d2a47675ad789c546d150a6e1dd4ab31c"
 name = "princess-admin"
 version = "0.1.0"
 dependencies = [
+ "base64 0.22.1",
+ "chrono",
  "serde",
  "serde_json",
  "sha2",
