@@ -22,7 +22,8 @@
     "schemas:pull": "vite-node scripts/schemas.ts -- pull",
     "seed": "vite-node scripts/seed.ts",
     "fetch:content": "vite-node scripts/fetch-content.ts",
-    "verify:media": "vite-node scripts/verify-media.ts"
+    "verify:media": "vite-node scripts/verify-media.ts",
+    "media:import": "vite-node scripts/import-media.ts"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^5.0.2",
