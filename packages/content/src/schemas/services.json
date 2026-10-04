@@ -110,7 +110,7 @@
   "rules": [],
   "id": "services",
   "groups": [],
-  "version": 1,
+  "version": 2,
   "label": "Servicios",
   "target": {
     "collection": "config",

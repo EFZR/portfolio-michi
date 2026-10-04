@@ -1,7 +1,7 @@
 {
   "id": "site",
   "format": 1,
-  "version": 1,
+  "version": 2,
   "target": {
     "prefix": "site",
     "collection": "config",

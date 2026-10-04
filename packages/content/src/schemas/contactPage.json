@@ -178,7 +178,7 @@
       }
     }
   ],
-  "version": 1,
+  "version": 2,
   "rules": [],
   "target": {
     "prefix": "contactPage",

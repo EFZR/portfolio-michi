@@ -4,7 +4,7 @@
   "target": {
     "collection": "projects"
   },
-  "version": 1,
+  "version": 2,
   "description": "Una ficha del portafolio.",
   "label": "Proyecto",
   "groups": [

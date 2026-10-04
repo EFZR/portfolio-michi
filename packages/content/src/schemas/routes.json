@@ -111,7 +111,7 @@
   ],
   "id": "routes",
   "label": "Títulos de pestaña",
-  "version": 1,
+  "version": 2,
   "rules": [],
   "target": {
     "document": "ui",
