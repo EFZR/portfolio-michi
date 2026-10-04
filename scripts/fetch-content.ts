@@ -79,7 +79,7 @@ async function lista(nombre: string, campoOrden?: string) {
 try {
   console.log(`Bajando de "${env.VITE_FIREBASE_PROJECT_ID}"…`)
 
-  const [ui, categories, catalog, projects, articles, media] = await Promise.all([
+  const [ui, categories, catalog, projects, articles] = await Promise.all([
     getDoc(doc(db, 'config', 'ui')).then((s) => {
       if (!s.exists()) throw new Error('config/ui no existe. ¿Falta la semilla?')
       return s.data()
@@ -88,14 +88,54 @@ try {
     lista('catalog'),
     lista('projects', 'order'),
     lista('articles'),
-    // La biblioteca de medios. Sin esto la web tendría los IDs pero no las
-    // renditions, así que no podría armar ni un `<picture>`.
-    lista('media'),
   ])
 
   // Los borradores no se publican. Se filtran AQUÍ y no en el componente: lo
   // que no entra en el bundle no se puede filtrar mal más adelante.
   const publicados = <T extends { draft?: boolean }>(xs: T[]) => xs.filter((x) => !x.draft)
+
+  // ── LA BIBLIOTECA DE MEDIOS, SOLO LO REFERENCIADO ──────────────────────────
+  //
+  // Se piden los medios UNO POR UNO en vez de listar la colección, y no es un
+  // detalle: las reglas cierran el `list` a la admin justamente para que no se
+  // pueda enumerar la biblioteca. Lo que protege es a los borradores — el id
+  // de una foto subida para un proyecto sin publicar no aparece en ningún
+  // sitio público, y 16 hexadecimales son 64 bits.
+  //
+  // Cuesta lo mismo: Firestore factura por documento leído, no por consulta.
+  // Y tiene dos ventajas: `content.json` solo lleva lo que se usa, y un medio
+  // de un borrador NUNCA entra en el bundle publicado.
+  const referencias = new Set<string>()
+  const anotar = (v: unknown) => {
+    if (typeof v === 'string' && /^[0-9a-f]{8,64}$/.test(v)) referencias.add(v)
+  }
+
+  for (const p of publicados(projects as { draft?: boolean }[]) as Record<string, unknown>[]) {
+    anotar(p.image)
+  }
+  for (const c of categories as Record<string, unknown>[]) anotar(c.image)
+  anotar(((ui as Record<string, unknown>).site as Record<string, unknown>)?.ogImage)
+
+  for (const a of publicados(articles as { draft?: boolean }[]) as Record<string, unknown>[]) {
+    anotar(a.coverImage)
+    // El contenido es una lista plana en los artículos sembrados y un
+    // `{ es, en }` en los que se editen desde el panel. Conviven a propósito.
+    const bloques = Array.isArray(a.content)
+      ? a.content
+      : Object.values((a.content ?? {}) as Record<string, unknown[]>).flat()
+    for (const b of bloques as Record<string, unknown>[]) {
+      if (b?.type === 'image') anotar(b.mediaId)
+    }
+  }
+
+  const medios = await Promise.all(
+    [...referencias].map(async (id) => {
+      const snap = await getDoc(doc(db, 'media', id))
+      return snap.exists() ? { id, ...snap.data() } : null
+    }),
+  )
+  const huerfanos = [...referencias].filter((_, i) => medios[i] === null)
+  const media = medios.filter((m): m is Record<string, unknown> => m !== null)
 
   const content = {
     fetchedAt: new Date().toISOString(),
@@ -118,7 +158,15 @@ try {
   console.log(`   ${content.projects.length} proyectos (${projects.length - content.projects.length} borradores fuera)`)
   console.log(`   ${content.articles.length} artículos (${articles.length - content.articles.length} borradores fuera)`)
   console.log(`   ${Object.keys(ui).length} grupos de micro-copy`)
-  console.log(`   ${content.media.length} medios en la biblioteca`)
+  console.log(`   ${content.media.length} medios referenciados`)
+  if (huerfanos.length) {
+    // Una referencia a un medio que ya no existe. No rompe el build —la web
+    // pinta el hueco vacío— pero es una imagen que falta en el sitio
+    // publicado, y eso tiene que decirse en voz alta.
+    console.warn(`\n⚠  ${huerfanos.length} referencia(s) a medios que no existen:`)
+    for (const id of huerfanos) console.warn(`     ${id}`)
+    console.warn('')
+  }
   console.log(`\n→ ${DEST}`)
 } catch (e) {
   const msg = e instanceof Error ? e.message : String(e)

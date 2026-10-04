@@ -95,15 +95,32 @@ service cloud.firestore {
     // guardan solo el id que apunta acá, así que la misma foto se referencia
     // desde varios sitios sin duplicarse.
     //
-    // LECTURA PÚBLICA porque el prebuild de la web la baja SIN autenticarse, a
-    // propósito: así lee exactamente lo que ve un visitante y, si una regla
-    // ocultara algo que la web necesita, el fallo sale en el build y no en
-    // producción con la página a medio pintar.
+    // `get` PÚBLICO Y `list` NO, y la distinción es toda la protección:
+    //
+    // El prebuild baja los medios SIN autenticarse —igual que el resto del
+    // contenido— pero pide solo los que el contenido PUBLICADO referencia, uno
+    // por id. Eso es un `get`, no un `list`.
+    //
+    // Cerrar el `list` evita que se pueda enumerar la biblioteca. Y el id es
+    // el sha256 del original recortado a 16 hexadecimales: 64 bits, no se
+    // adivina. Así una foto subida para un proyecto en borrador queda
+    // inalcanzable sin haber movido un solo archivo.
+    //
+    // La ALTERNATIVA ERA PEOR: dos prefijos en Storage (uno privado y uno
+    // público) y promover al publicar. Pero con SDK de cliente no hay copia
+    // del lado del servidor —ni `copy()` en el SDK ni endpoint en la API v0—,
+    // así que «mover» sería bajar y volver a subir desde la máquina de Karol:
+    // ~270 MB de tráfico por publicar 30 fotos de cámara, minutos de espera, y
+    // la URL cambiando cada vez.
     //
     // El id del documento es el sha256 del original recortado, no un
     // aleatorio: subir dos veces el mismo archivo da el mismo documento, que
     // es la deduplicación que una biblioteca necesita.
-    match /media/{id}        { allow read: if true; allow write: if isAdmin(); }
+    match /media/{id} {
+      allow get: if true;
+      allow list: if isAdmin();
+      allow write: if isAdmin();
+    }
 
     // ───────────────────────────── Esquemas ───────────────────────────────
     // NO son públicos. Describen la forma del backend y al visitante no le

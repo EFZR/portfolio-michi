@@ -18,8 +18,17 @@ import {
   initializeTestEnvironment,
   type RulesTestEnvironment,
 } from '@firebase/rules-unit-testing'
-import { doc, getDoc, setDoc, updateDoc, serverTimestamp, deleteDoc } from 'firebase/firestore'
-import { afterAll, beforeAll, beforeEach, describe, it } from 'vitest'
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+  serverTimestamp,
+  deleteDoc,
+} from 'firebase/firestore'
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 
 const ADMIN_UID = 'P6sA78EI10QVrPDbg0CAxEL1f8o2'
 const OTRO_UID = 'intruso-con-cuenta-valida'
@@ -168,11 +177,28 @@ describe('el formulario de contacto', () => {
 })
 
 describe('la biblioteca de medios', () => {
-  it('cualquiera la lee: el prebuild de la web la baja SIN autenticarse', async () => {
-    // Es deliberado. Así el build lee exactamente lo que ve un visitante y, si
-    // una regla ocultara algo que la web necesita, el fallo sale en el build y
-    // no en producción con la página a medio pintar.
+  it('cualquiera trae un medio POR ID: el prebuild lo necesita sin autenticarse', async () => {
     await assertSucceeds(getDoc(doc(anon(), 'media/a3019c0e70e8a473')))
+  })
+
+  it('pero NADIE puede enumerar la biblioteca salvo la admin', async () => {
+    // Es toda la protección de los borradores. Sin esto, cualquiera lista la
+    // colección y descubre el id —y por tanto la URL— de una foto subida para
+    // un proyecto que todavía no se publicó.
+    //
+    // Y es lo que permite NO mover archivos entre carpetas al publicar: con
+    // SDK de cliente eso sería bajar y volver a subir desde la máquina de
+    // Karol, porque no hay copia del lado del servidor.
+    await assertFails(getDocs(collection(anon(), 'media')))
+    await assertFails(getDocs(collection(otro(), 'media')))
+    await assertSucceeds(getDocs(collection(admin(), 'media')))
+  })
+
+  it('un id no se adivina: son 16 hexadecimales, 64 bits', async () => {
+    // El `get` abierto solo sirve si ya conocés el id. Un id inexistente
+    // devuelve un documento vacío, no la biblioteca.
+    const snap = await getDoc(doc(anon(), 'media/0000000000000000'))
+    expect(snap.exists()).toBe(false)
   })
 
   it('solo la admin escribe', async () => {
