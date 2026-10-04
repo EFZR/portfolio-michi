@@ -324,7 +324,7 @@ pub fn probe(path: &Path) -> MediaResult<SourceInfo> {
     }
 
     let frames = nb_frames(video);
-    let duration_sec = format
+    let duration_raw = format
         .get("duration")
         .and_then(Value::as_str)
         .and_then(|s| s.parse::<f64>().ok())
@@ -342,7 +342,7 @@ pub fn probe(path: &Path) -> MediaResult<SourceInfo> {
     // contenedor no dice cuántos frames tiene.
     let varios_frames = match frames {
         Some(n) => n > 1,
-        None => duration_sec.is_some(),
+        None => duration_raw.is_some(),
     };
 
     let is_animated = es_animado_declarado || gif_animado;
@@ -356,6 +356,12 @@ pub fn probe(path: &Path) -> MediaResult<SourceInfo> {
         // AVIF/HEIC: contenedor de vídeo con un solo frame y sin duración.
         Kind::Image
     };
+
+    // Una imagen fija NO tiene duración. El demuxer `image2` reporta
+    // `duration: 0.040000` igual que el GIF de un cuadro —es el retardo
+    // nominal del frame, no una duración— y dejarlo pasar ponía
+    // `intrinsic.durationSec: 0.04` en el registro de un JPEG.
+    let duration_sec = duration_raw.filter(|_| kind == Kind::Video);
 
     let has_audio = streams
         .iter()
@@ -557,6 +563,16 @@ mod tests {
         let i = probe(&fixture(1)).unwrap();
         assert_eq!(i.display_matrix, Some(IDENTIDAD));
         assert!(!i.swaps_axes);
+    }
+
+    #[test]
+    fn una_imagen_fija_no_tiene_duracion() {
+        // El demuxer `image2` reporta `duration: 0.040000` para un JPEG —el
+        // retardo nominal de un frame—, y eso acabó en el registro como
+        // `intrinsic.durationSec: 0.04`. Lo vi mirando la salida real.
+        let i = probe(&fixture(1)).unwrap();
+        assert_eq!(i.duration_sec, None);
+        assert_eq!(i.fps, None);
     }
 
     #[test]

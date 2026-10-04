@@ -707,3 +707,4 @@ mod tests {
         assert_eq!(ladder(301, false), vec![300]);
     }
 }
+
